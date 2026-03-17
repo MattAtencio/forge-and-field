@@ -1,0 +1,67 @@
+.nav {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+  padding: 6px 0 max(6px, env(safe-area-inset-bottom));
+  background: rgba(255, 255, 255, 0.03);
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  flex-shrink: 0;
+}
+
+.tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  background: none;
+  border: none;
+  color: #6b6b80;
+  cursor: pointer;
+  padding: 4px 8px;
+  border-radius: 8px;
+  transition: color 0.2s, background 0.2s;
+  position: relative;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.tab:active:not(.locked) {
+  background: rgba(249, 115, 22, 0.1);
+}
+
+.active {
+  color: #f97316;
+}
+
+.locked {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.tabIcon {
+  font-size: 1.2rem;
+  line-height: 1;
+}
+
+.tabLabel {
+  font-size: 0.6rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.badge {
+  position: absolute;
+  top: -2px;
+  right: 0;
+  background: #ef4444;
+  color: #fff;
+  font-size: 0.55rem;
+  font-weight: 700;
+  min-width: 14px;
+  height: 14px;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 3px;
+}

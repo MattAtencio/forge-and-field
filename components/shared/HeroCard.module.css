@@ -1,0 +1,84 @@
+.card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 12px;
+  width: 100%;
+  cursor: pointer;
+  color: #e8e8f0;
+  text-align: left;
+  transition: border-color 0.2s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.card:active {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.selected {
+  border-color: #f97316;
+  box-shadow: 0 0 12px rgba(249, 115, 22, 0.15);
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.icon {
+  font-size: 1.3rem;
+}
+
+.name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  display: block;
+}
+
+.title {
+  font-size: 0.6rem;
+  color: #8888a0;
+}
+
+.level {
+  margin-left: auto;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #f97316;
+  background: rgba(249, 115, 22, 0.12);
+  padding: 2px 8px;
+  border-radius: 8px;
+}
+
+.statsRow {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 6px;
+}
+
+.stat {
+  font-size: 0.65rem;
+  color: #a0a0b8;
+  font-variant-numeric: tabular-nums;
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.power {
+  font-size: 0.65rem;
+  color: #c0c0d4;
+  font-weight: 600;
+}
+
+.status {
+  font-size: 0.6rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}

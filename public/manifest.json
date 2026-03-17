@@ -1,0 +1,14 @@
+{
+  "name": "Forge & Field",
+  "short_name": "Forge&Field",
+  "description": "Collect resources, craft gear, and send heroes on expeditions.",
+  "display": "standalone",
+  "start_url": "/",
+  "background_color": "#07070f",
+  "theme_color": "#f97316",
+  "orientation": "portrait",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}

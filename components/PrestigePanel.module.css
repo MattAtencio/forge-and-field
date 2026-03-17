@@ -1,0 +1,210 @@
+.panel {
+  background: rgba(255, 215, 0, 0.04);
+  border: 1px solid rgba(255, 215, 0, 0.12);
+  border-radius: 14px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.title {
+  font-family: var(--font-dm-serif), serif;
+  font-size: 0.9rem;
+  color: #fbbf24;
+}
+
+.tierBadge {
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: #fbbf24;
+  background: rgba(251, 191, 36, 0.12);
+  padding: 2px 8px;
+  border-radius: 8px;
+}
+
+.starInfo {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.starCount {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #fbbf24;
+}
+
+.totalStars {
+  font-size: 0.6rem;
+  color: #6b6b80;
+}
+
+.actions {
+  display: flex;
+  gap: 8px;
+}
+
+.shopBtn {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid rgba(251, 191, 36, 0.2);
+  border-radius: 8px;
+  background: rgba(251, 191, 36, 0.08);
+  color: #fbbf24;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.shopBtn:active { background: rgba(251, 191, 36, 0.15); }
+
+.rebirthBtn {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(168, 85, 247, 0.15);
+  color: #a855f7;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  animation: glow 2s infinite;
+}
+
+.rebirthBtn:active { background: rgba(168, 85, 247, 0.25); }
+
+@keyframes glow {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(168, 85, 247, 0.3); }
+  50% { box-shadow: 0 0 8px 2px rgba(168, 85, 247, 0.15); }
+}
+
+/* Confirm Modal */
+.confirmModal {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.confirmText {
+  font-size: 0.8rem;
+  color: #e8e8f0;
+}
+
+.confirmWarn {
+  font-size: 0.7rem;
+  color: #f59e0b;
+  background: rgba(245, 158, 11, 0.08);
+  border: 1px solid rgba(245, 158, 11, 0.15);
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.confirmActions {
+  display: flex;
+  gap: 8px;
+}
+
+.cancelBtn {
+  flex: 1;
+  padding: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  background: transparent;
+  color: #a0a0b8;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.confirmBtn {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(168, 85, 247, 0.2);
+  color: #a855f7;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+/* Shop */
+.shopList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.bonusCard {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.bonusMaxed {
+  opacity: 0.5;
+}
+
+.bonusHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.bonusIcon { font-size: 1rem; }
+
+.bonusInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+}
+
+.bonusName {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #e8e8f0;
+}
+
+.bonusDesc {
+  font-size: 0.6rem;
+  color: #8888a0;
+}
+
+.bonusStacks {
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: #6b6b80;
+}
+
+.buyBtn {
+  width: 100%;
+  padding: 8px;
+  border: none;
+  border-radius: 6px;
+  background: rgba(251, 191, 36, 0.12);
+  color: #fbbf24;
+  font-size: 0.7rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.buyBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.buyBtn:active:not(:disabled) {
+  background: rgba(251, 191, 36, 0.2);
+}

@@ -1,0 +1,245 @@
+.screen {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 12px;
+}
+
+.heading {
+  font-family: var(--font-dm-serif), serif;
+  font-size: 1.2rem;
+  color: #22c55e;
+}
+
+.subheading {
+  font-size: 0.7rem;
+  color: #8888a0;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 8px;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+}
+
+/* Active */
+.activeCard {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  padding: 10px;
+  margin-bottom: 6px;
+}
+
+.activeHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.activeName {
+  flex: 1;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.activeTime {
+  font-size: 0.7rem;
+  color: #f59e0b;
+  font-variant-numeric: tabular-nums;
+}
+
+.progressBar {
+  height: 4px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background: #22c55e;
+  border-radius: 2px;
+  transition: width 1s linear;
+}
+
+/* Completed */
+.completedCard {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(34, 197, 94, 0.06);
+  border: 1px solid rgba(34, 197, 94, 0.15);
+  border-radius: 10px;
+  padding: 10px 12px;
+  margin-bottom: 6px;
+  font-size: 0.8rem;
+}
+
+.claimBtn {
+  background: #22c55e;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 14px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  cursor: pointer;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
+  50% { box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
+}
+
+/* Region Map */
+.regionList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.regionCard {
+  background: var(--region-bg, rgba(255, 255, 255, 0.03));
+  border: 1px solid var(--region-border, rgba(255, 255, 255, 0.06));
+  border-radius: 12px;
+  padding: 14px;
+  cursor: pointer;
+  color: #e8e8f0;
+  text-align: left;
+  width: 100%;
+  transition: border-color 0.15s, box-shadow 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.regionCard:active:not(.regionLocked) {
+  border-color: var(--region-accent);
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.05);
+}
+
+.regionLocked {
+  opacity: 0.35;
+  cursor: not-allowed;
+}
+
+.regionCleared {
+  border-color: var(--region-border);
+}
+
+.regionHeader {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.regionIcon {
+  font-size: 1.6rem;
+  flex-shrink: 0;
+}
+
+.regionInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.regionName {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--region-accent, #e8e8f0);
+}
+
+.regionDesc {
+  font-size: 0.65rem;
+  color: #8888a0;
+}
+
+.clearedBadge {
+  color: #22c55e;
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.regionMeta {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+  font-size: 0.6rem;
+  color: #6b6b80;
+}
+
+/* Send Modal */
+.sendModal {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.modalDesc {
+  font-size: 0.75rem;
+  color: #a0a0b8;
+}
+
+.modalMeta {
+  font-size: 0.7rem;
+  color: #8888a0;
+}
+
+.bossLabel {
+  color: #ef4444;
+  font-weight: 800;
+  font-size: 0.6rem;
+}
+
+.rewardPreview {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.rewardChip {
+  font-size: 0.65rem;
+  color: #a0a0b8;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+
+.heroPicker {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.empty {
+  text-align: center;
+  color: #6b6b80;
+  font-size: 0.8rem;
+  padding: 12px 0;
+}
+
+.sendBtn {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.sendBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.sendBtn:active:not(:disabled) {
+  background: rgba(34, 197, 94, 0.25);
+}

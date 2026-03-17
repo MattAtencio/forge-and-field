@@ -1,0 +1,38 @@
+export const HERO_TEMPLATES = [
+  {
+    id: "warrior",
+    name: "Aldric",
+    title: "Iron Vanguard",
+    icon: "\u2694\uFE0F",
+    baseStats: { hp: 60, atk: 12, def: 10, spd: 4 },
+    statGrowth: { hp: 8, atk: 2, def: 2, spd: 1 },
+    unlockLevel: 1,
+  },
+  {
+    id: "ranger",
+    name: "Lyra",
+    title: "Swift Arrow",
+    icon: "\u{1F3F9}",
+    baseStats: { hp: 40, atk: 10, def: 5, spd: 12 },
+    statGrowth: { hp: 5, atk: 2, def: 1, spd: 3 },
+    unlockLevel: 5,
+  },
+  {
+    id: "mage",
+    name: "Theron",
+    title: "Arcane Scholar",
+    icon: "\u{1F9D9}",
+    baseStats: { hp: 35, atk: 15, def: 3, spd: 8 },
+    statGrowth: { hp: 4, atk: 3, def: 1, spd: 2 },
+    unlockLevel: 10,
+  },
+  {
+    id: "paladin",
+    name: "Sera",
+    title: "Divine Shield",
+    icon: "\u{1F6E1}\uFE0F",
+    baseStats: { hp: 70, atk: 8, def: 14, spd: 3 },
+    statGrowth: { hp: 10, atk: 1, def: 3, spd: 1 },
+    unlockLevel: 15,
+  },
+];

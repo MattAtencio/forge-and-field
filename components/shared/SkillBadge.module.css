@@ -1,0 +1,64 @@
+.badge {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 8px;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.02);
+  transition: opacity 0.15s;
+}
+
+.unlocked {
+  border-color: rgba(168, 85, 247, 0.2);
+  background: rgba(168, 85, 247, 0.06);
+}
+
+.locked {
+  opacity: 0.4;
+}
+
+.icon {
+  font-size: 1rem;
+  flex-shrink: 0;
+}
+
+.info {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  flex: 1;
+  min-width: 0;
+}
+
+.name {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #e8e8f0;
+}
+
+.desc {
+  font-size: 0.6rem;
+  color: #8888a0;
+}
+
+.lockLabel {
+  font-size: 0.6rem;
+  font-weight: 700;
+  color: #6b6b80;
+  background: rgba(255, 255, 255, 0.04);
+  padding: 2px 6px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.activeTag {
+  font-size: 0.55rem;
+  font-weight: 700;
+  color: #f59e0b;
+  background: rgba(245, 158, 11, 0.12);
+  padding: 2px 6px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}

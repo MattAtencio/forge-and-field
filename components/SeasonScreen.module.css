@@ -1,0 +1,140 @@
+.screen {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 12px;
+}
+
+.banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid var(--season-color, rgba(255, 255, 255, 0.06));
+  border-radius: 14px;
+  padding: 16px;
+}
+
+.bannerIcon {
+  font-size: 2rem;
+}
+
+.bannerName {
+  font-family: var(--font-dm-serif), serif;
+  font-size: 1.1rem;
+  color: var(--season-color, #f97316);
+}
+
+.bannerDesc {
+  font-size: 0.7rem;
+  color: #a0a0b8;
+  margin-top: 2px;
+}
+
+.meta {
+  display: flex;
+  gap: 8px;
+}
+
+.metaItem {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  padding: 10px;
+  text-align: center;
+}
+
+.metaLabel {
+  display: block;
+  font-size: 0.6rem;
+  color: #6b6b80;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 4px;
+}
+
+.metaValue {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #e8e8f0;
+}
+
+.xpSection {
+  padding: 0 4px;
+}
+
+.subheading {
+  font-size: 0.7rem;
+  color: #8888a0;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 8px;
+}
+
+.track {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.tier {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 10px;
+  padding: 10px;
+  opacity: 0.5;
+  transition: opacity 0.2s;
+}
+
+.tierReady {
+  opacity: 1;
+  border-color: rgba(34, 197, 94, 0.3);
+  background: rgba(34, 197, 94, 0.04);
+}
+
+.tierClaimed {
+  opacity: 0.6;
+}
+
+.tierXP {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: #a0a0b8;
+  min-width: 50px;
+  text-align: center;
+}
+
+.tierReward {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.rewardChip {
+  font-size: 0.65rem;
+  color: #c0c0d4;
+}
+
+.claimBtn {
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.claimBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  color: #6b6b80;
+  background: rgba(255, 255, 255, 0.04);
+}

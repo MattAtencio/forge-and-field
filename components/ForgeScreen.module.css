@@ -1,0 +1,289 @@
+.forge {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 12px;
+}
+
+.heading {
+  font-family: var(--font-dm-serif), serif;
+  font-size: 1.2rem;
+  color: #f97316;
+}
+
+.subheading {
+  font-size: 0.75rem;
+  color: #8888a0;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 8px;
+}
+
+/* Crafting Queue */
+.queue {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.queueItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 0;
+}
+
+.queueItem + .queueItem {
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+  padding-top: 10px;
+}
+
+.queueIcon { font-size: 1.2rem; }
+
+.queueInfo { flex: 1; }
+
+.queueName {
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: block;
+  margin-bottom: 4px;
+}
+
+.queueBar {
+  height: 4px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.queueFill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 1s linear;
+}
+
+.queueTime {
+  font-size: 0.7rem;
+  color: #a0a0b8;
+  font-variant-numeric: tabular-nums;
+}
+
+.queueActions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.cancelBtn {
+  background: none;
+  border: none;
+  color: #6b6b80;
+  cursor: pointer;
+  font-size: 0.8rem;
+  padding: 2px 4px;
+}
+
+.cancelBtn:hover { color: #ef4444; }
+
+.collectBtn {
+  background: #22c55e;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 14px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  cursor: pointer;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(34, 197, 94, 0.4); }
+  50% { box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
+}
+
+/* Tabs */
+.tabs {
+  display: flex;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 10px;
+  padding: 3px;
+}
+
+.tab {
+  flex: 1;
+  padding: 8px;
+  border: none;
+  background: none;
+  color: #6b6b80;
+  font-size: 0.75rem;
+  font-weight: 600;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.tabActive {
+  background: rgba(249, 115, 22, 0.12);
+  color: #f97316;
+}
+
+/* Recipe List */
+.recipeList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.recipeCard {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
+  padding: 12px;
+}
+
+.recipeHeader {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.recipeIcon { font-size: 1.2rem; }
+
+.recipeName {
+  font-size: 0.8rem;
+  font-weight: 600;
+  display: block;
+}
+
+.recipeTier {
+  font-size: 0.6rem;
+  color: #6b6b80;
+  text-transform: capitalize;
+}
+
+.ingredients {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.ingredient {
+  font-size: 0.7rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.craftTime {
+  font-size: 0.65rem;
+  color: #6b6b80;
+}
+
+.recipeStats {
+  display: flex;
+  gap: 10px;
+  font-size: 0.6rem;
+  color: #8888a0;
+  margin-bottom: 8px;
+}
+
+.craftBtn {
+  width: 100%;
+  padding: 8px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(249, 115, 22, 0.15);
+  color: #f97316;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.craftBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.craftBtn:active:not(:disabled) {
+  background: rgba(249, 115, 22, 0.25);
+}
+
+/* Inventory */
+.inventoryGrid {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.empty {
+  text-align: center;
+  color: #6b6b80;
+  font-size: 0.8rem;
+  padding: 24px 0;
+}
+
+/* Item Detail Modal */
+.itemDetail {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.itemDetailHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.itemDetailIcon { font-size: 2rem; }
+
+.itemDetailRarity {
+  font-size: 0.75rem;
+  font-weight: 700;
+  display: block;
+}
+
+.itemDetailSlot {
+  font-size: 0.65rem;
+  color: #6b6b80;
+  text-transform: capitalize;
+}
+
+.itemDetailStats {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.itemDetailStat {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.75rem;
+  color: #a0a0b8;
+}
+
+.equippedNote {
+  font-size: 0.7rem;
+  color: #f59e0b;
+  text-align: center;
+}
+
+.sellBtn {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(239, 68, 68, 0.15);
+  color: #ef4444;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.sellBtn:active {
+  background: rgba(239, 68, 68, 0.25);
+}
