@@ -9,6 +9,7 @@ const TABS = [
   { key: "barracks", label: "Barracks", icon: "\u2694\uFE0F", unlockLevel: 3 },
   { key: "expedition", label: "Explore", icon: "\u{1F5FA}\uFE0F", unlockLevel: 5 },
   { key: "season", label: "Season", icon: "\u{1F31F}", unlockLevel: 7 },
+  { key: "village", label: "Village", icon: "\u{1F3D8}\uFE0F", unlockLevel: 8 },
 ];
 
 export default function NavBar() {

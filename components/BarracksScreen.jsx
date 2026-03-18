@@ -5,6 +5,7 @@ import { useGameState, useGameDispatch } from "@/lib/gameContext";
 import { getEffectiveStats, getHeroPower, canLevelUp, getUnequippedItems, getRestDuration, getPotionCost } from "@/lib/hero";
 import { getHeroTemplate } from "@/lib/hero";
 import { getUnlockedTitles, getTitleById } from "@/data/titles";
+import { getBuildingEffect } from "@/data/village";
 import { getHeroLevelCost } from "@/data/progression";
 import { HERO_TEMPLATES } from "@/data/heroes";
 import { getRarityColor } from "@/lib/rarity";
@@ -127,6 +128,9 @@ export default function BarracksScreen() {
             const canAffordPotion = Object.entries(potCost).every(
               ([res, amt]) => (state.resources[res] || 0) >= amt
             );
+            const apoLevel = state.village?.apothecary || 0;
+            const apoEffect = apoLevel > 0 ? getBuildingEffect("apothecary", apoLevel) : null;
+            const restMult = apoEffect?.restDurationMult || 1.0;
             const needsRecovery = endurance.current < endurance.max;
 
             return (
@@ -154,10 +158,10 @@ export default function BarracksScreen() {
                       onClick={() => dispatch({
                         type: "REST_HERO",
                         heroId: selectedHero.id,
-                        duration: getRestDuration(selectedHero),
+                        duration: getRestDuration(selectedHero, restMult),
                       })}
                     >
-                      Rest ({Math.ceil(getRestDuration(selectedHero) / 1000)}s)
+                      Rest ({Math.ceil(getRestDuration(selectedHero, restMult) / 1000)}s)
                     </button>
                     <button
                       className={styles.potionBtn}
@@ -210,6 +214,7 @@ export default function BarracksScreen() {
                 key={skill.id}
                 skill={skill}
                 unlocked={selectedHero.level >= skill.unlockHeroLevel}
+                heroLevel={selectedHero.level}
               />
             ))}
           </div>

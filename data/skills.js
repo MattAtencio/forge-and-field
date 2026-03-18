@@ -8,6 +8,11 @@ export const HERO_SKILLS = {
       unlockHeroLevel: 3,
       description: "+15% DEF when HP below 50%",
       effect: { trigger: "hp_below_50", stat: "def", bonus: 0.15 },
+      tiers: [
+        { level: 3, bonus: 0.15, label: "+15% DEF" },
+        { level: 5, bonus: 0.25, label: "+25% DEF" },
+        { level: 8, bonus: 0.35, label: "+35% DEF" },
+      ],
     },
     {
       id: "shield_bash",
@@ -18,6 +23,11 @@ export const HERO_SKILLS = {
       cooldown: 3,
       description: "Deal ATK dmg, reduce enemy ATK 20% for 2 turns",
       effect: { damage: 1.0, debuff: { stat: "atk", amount: 0.2, duration: 2 } },
+      tiers: [
+        { level: 7, damage: 1.0, debuffAmount: 0.2, label: "1.0x ATK, -20% ATK" },
+        { level: 10, damage: 1.3, debuffAmount: 0.3, label: "1.3x ATK, -30% ATK" },
+        { level: 15, damage: 1.6, debuffAmount: 0.4, label: "1.6x ATK, -40% ATK" },
+      ],
     },
     {
       id: "veterans_resolve",
@@ -27,6 +37,11 @@ export const HERO_SKILLS = {
       unlockHeroLevel: 12,
       description: "+10% ATK and DEF on expeditions",
       effect: { context: "expedition", stats: { atk: 0.1, def: 0.1 } },
+      tiers: [
+        { level: 12, stats: { atk: 0.1, def: 0.1 }, label: "+10% ATK/DEF" },
+        { level: 16, stats: { atk: 0.15, def: 0.15 }, label: "+15% ATK/DEF" },
+        { level: 20, stats: { atk: 0.2, def: 0.2 }, label: "+20% ATK/DEF" },
+      ],
     },
   ],
   ranger: [
@@ -38,6 +53,11 @@ export const HERO_SKILLS = {
       unlockHeroLevel: 3,
       description: "25% chance to act twice per turn",
       effect: { trigger: "combat_turn", doubleActionChance: 0.25 },
+      tiers: [
+        { level: 3, doubleActionChance: 0.25, label: "25% double action" },
+        { level: 5, doubleActionChance: 0.35, label: "35% double action" },
+        { level: 8, doubleActionChance: 0.45, label: "45% double action" },
+      ],
     },
     {
       id: "piercing_shot",
@@ -48,6 +68,11 @@ export const HERO_SKILLS = {
       cooldown: 4,
       description: "1.5x ATK, ignore 50% DEF",
       effect: { damage: 1.5, defIgnore: 0.5 },
+      tiers: [
+        { level: 7, damage: 1.5, defIgnore: 0.5, label: "1.5x ATK, 50% ignore" },
+        { level: 10, damage: 2.0, defIgnore: 0.6, label: "2.0x ATK, 60% ignore" },
+        { level: 14, damage: 2.5, defIgnore: 0.7, label: "2.5x ATK, 70% ignore" },
+      ],
     },
     {
       id: "pathfinder",
@@ -57,6 +82,11 @@ export const HERO_SKILLS = {
       unlockHeroLevel: 12,
       description: "-15% expedition duration",
       effect: { context: "expedition", durationMult: 0.85 },
+      tiers: [
+        { level: 12, durationMult: 0.85, label: "-15% duration" },
+        { level: 16, durationMult: 0.75, label: "-25% duration" },
+        { level: 20, durationMult: 0.65, label: "-35% duration" },
+      ],
     },
   ],
   mage: [
@@ -68,6 +98,11 @@ export const HERO_SKILLS = {
       unlockHeroLevel: 3,
       description: "+20% ATK in combat",
       effect: { context: "combat", stats: { atk: 0.2 } },
+      tiers: [
+        { level: 3, stats: { atk: 0.2 }, label: "+20% ATK" },
+        { level: 5, stats: { atk: 0.3 }, label: "+30% ATK" },
+        { level: 8, stats: { atk: 0.4 }, label: "+40% ATK" },
+      ],
     },
     {
       id: "meteor_strike",
@@ -78,6 +113,11 @@ export const HERO_SKILLS = {
       cooldown: 5,
       description: "2x ATK damage to all enemies",
       effect: { damage: 2.0, aoe: true },
+      tiers: [
+        { level: 7, damage: 2.0, label: "2.0x AOE" },
+        { level: 10, damage: 2.5, label: "2.5x AOE" },
+        { level: 14, damage: 3.0, label: "3.0x AOE" },
+      ],
     },
     {
       id: "enchanter",
@@ -87,6 +127,11 @@ export const HERO_SKILLS = {
       unlockHeroLevel: 12,
       description: "+10% crafting stat bonus",
       effect: { context: "crafting", statBonus: 0.1 },
+      tiers: [
+        { level: 12, statBonus: 0.1, label: "+10% craft stats" },
+        { level: 16, statBonus: 0.15, label: "+15% craft stats" },
+        { level: 20, statBonus: 0.2, label: "+20% craft stats" },
+      ],
     },
   ],
   paladin: [
@@ -98,6 +143,11 @@ export const HERO_SKILLS = {
       unlockHeroLevel: 3,
       description: "Party members gain +10% DEF",
       effect: { context: "combat", partyStats: { def: 0.1 } },
+      tiers: [
+        { level: 3, partyStats: { def: 0.1 }, label: "+10% party DEF" },
+        { level: 5, partyStats: { def: 0.15 }, label: "+15% party DEF" },
+        { level: 8, partyStats: { def: 0.2 }, label: "+20% party DEF" },
+      ],
     },
     {
       id: "divine_heal",
@@ -108,6 +158,11 @@ export const HERO_SKILLS = {
       cooldown: 4,
       description: "Restore 30% max HP to all allies",
       effect: { heal: 0.3, aoe: true },
+      tiers: [
+        { level: 7, heal: 0.3, label: "30% HP heal" },
+        { level: 10, heal: 0.4, label: "40% HP heal" },
+        { level: 14, heal: 0.5, label: "50% HP heal" },
+      ],
     },
     {
       id: "blessed_forge",
@@ -117,6 +172,11 @@ export const HERO_SKILLS = {
       unlockHeroLevel: 12,
       description: "-10% crafting time",
       effect: { context: "crafting", durationMult: 0.9 },
+      tiers: [
+        { level: 12, durationMult: 0.9, label: "-10% craft time" },
+        { level: 16, durationMult: 0.8, label: "-20% craft time" },
+        { level: 20, durationMult: 0.7, label: "-30% craft time" },
+      ],
     },
   ],
 };

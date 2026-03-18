@@ -14,6 +14,7 @@ const NAV_TILES = [
   { screen: "barracks", icon: "\u2694\uFE0F", label: "Barracks", desc: "Manage your heroes", color: "#3b82f6", unlockLevel: 3 },
   { screen: "expedition", icon: "\u{1F5FA}\uFE0F", label: "Expeditions", desc: "Send heroes on quests", color: "#22c55e", unlockLevel: 5 },
   { screen: "season", icon: "\u{1F31F}", label: "Season", desc: "Weekly events & rewards", color: "#a855f7", unlockLevel: 7 },
+  { screen: "village", icon: "\u{1F3D8}\uFE0F", label: "Village", desc: "Upgrade your settlement", color: "#f59e0b", unlockLevel: 8 },
 ];
 
 function getNextGoal(player) {
@@ -35,7 +36,7 @@ function getNextUnlock(playerLevel) {
     if (lv > playerLevel) {
       const u = LEVEL_UNLOCKS[lv];
       const label = u.screens?.[0] || u.features?.[0] || "new content";
-      const names = { barracks: "Barracks", expedition: "Expeditions", season: "Seasons", hero_2: "New Hero", hero_3: "Mage Hero", hero_4: "Paladin Hero", hero_equipment: "Equipment", tier3_recipes: "Tier 3 Recipes", gem_generation: "Gem Generation", season_rewards: "Season Rewards" };
+      const names = { barracks: "Barracks", expedition: "Expeditions", season: "Seasons", village: "Village", hero_2: "New Hero", hero_3: "Mage Hero", hero_4: "Paladin Hero", hero_equipment: "Equipment", tier3_recipes: "Tier 3 Recipes", gem_generation: "Gem Generation", season_rewards: "Season Rewards", village_buildings: "Village" };
       return { level: lv, label: names[label] || label };
     }
   }
