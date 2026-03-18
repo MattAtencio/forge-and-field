@@ -1,0 +1,134 @@
+.screen {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding-top: 12px;
+}
+
+.heading {
+  font-family: var(--font-dm-serif), serif;
+  font-size: 1.2rem;
+  color: #f59e0b;
+}
+
+.subtitle {
+  font-size: 0.7rem;
+  color: #8888a0;
+  margin-top: -8px;
+}
+
+.buildingList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.buildingCard {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 14px;
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.maxed {
+  border-color: rgba(245, 158, 11, 0.2);
+}
+
+.buildingHeader {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.buildingIcon {
+  font-size: 1.6rem;
+  width: 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(245, 158, 11, 0.08);
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+
+.buildingInfo {
+  flex: 1;
+  min-width: 0;
+}
+
+.buildingName {
+  font-family: var(--font-dm-serif), serif;
+  font-size: 0.9rem;
+  color: #e8e8f0;
+  display: block;
+}
+
+.buildingDesc {
+  font-size: 0.65rem;
+  color: #8888a0;
+}
+
+.levelBadge {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #f59e0b;
+  background: rgba(245, 158, 11, 0.12);
+  padding: 3px 10px;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+
+.currentEffect {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #22c55e;
+  background: rgba(34, 197, 94, 0.08);
+  border-radius: 8px;
+  padding: 6px 10px;
+  text-align: center;
+}
+
+.upgradeSection {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.upgradeCost {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+
+.costChip {
+  font-size: 0.7rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.upgradeBtn {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(245, 158, 11, 0.15);
+  color: #f59e0b;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.upgradeBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.upgradeBtn:active:not(:disabled) {
+  background: rgba(245, 158, 11, 0.25);
+}

@@ -45,6 +45,18 @@ export const RECIPES = [
     unlockLevel: 1,
   },
 
+  {
+    id: "apprentice_staff",
+    name: "Apprentice Staff",
+    icon: "\u{1FA84}",
+    tier: 1,
+    slot: "weapon",
+    ingredients: { wood: 15, herbs: 10 },
+    duration: 30000,
+    baseStats: { atk: 4, def: 0, spd: 3 },
+    unlockLevel: 1,
+  },
+
   // Tier 2 — Mid-game
   {
     id: "iron_sword",
@@ -113,6 +125,29 @@ export const RECIPES = [
     unlockLevel: 5,
   },
 
+  {
+    id: "crystal_wand",
+    name: "Crystal Wand",
+    icon: "\u{1FA84}",
+    tier: 2,
+    slot: "weapon",
+    ingredients: { herbs: 20, gems: 2, gold: 60 },
+    duration: 65000,
+    baseStats: { atk: 10, def: 0, spd: 4 },
+    unlockLevel: 5,
+  },
+  {
+    id: "arcane_tome",
+    name: "Arcane Tome",
+    icon: "\u{1F4D6}",
+    tier: 2,
+    slot: "accessory",
+    ingredients: { herbs: 15, gems: 1, gold: 50 },
+    duration: 55000,
+    baseStats: { atk: 6, def: 3, spd: 5 },
+    unlockLevel: 5,
+  },
+
   // Tier 3 — Late-game
   {
     id: "mithril_blade",
@@ -157,6 +192,17 @@ export const RECIPES = [
     duration: 210000,
     baseStats: { atk: 28, def: 2, spd: -4 },
     unlockLevel: 11,
+  },
+  {
+    id: "void_staff",
+    name: "Void Staff",
+    icon: "\u{1FA84}",
+    tier: 3,
+    slot: "weapon",
+    ingredients: { herbs: 35, gems: 6, gold: 200 },
+    duration: 190000,
+    baseStats: { atk: 20, def: 0, spd: 6 },
+    unlockLevel: 12,
   },
   {
     id: "guardian_plate",

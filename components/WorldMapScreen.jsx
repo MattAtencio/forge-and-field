@@ -7,6 +7,7 @@ import { EXPEDITIONS } from "@/data/expeditions";
 import { getRegionExpeditions, canSendExpedition, generateRewards, getEffectiveExpeditionDuration } from "@/lib/expedition";
 import { getExpeditionDurabilityCost } from "@/lib/rarity";
 import { getExpeditionEnduranceCost } from "@/lib/hero";
+import { getBuildingEffect } from "@/data/village";
 import { RESOURCES } from "@/data/resources";
 import HeroCard from "./shared/HeroCard";
 import Modal from "./shared/Modal";
@@ -54,9 +55,17 @@ export default function WorldMapScreen() {
     if (!selectedExpedition) return;
     if (!canSendExpedition(selectedExpedition, selectedHeroes, state.heroes, state.inventory)) return;
 
-    const effectiveDuration = getEffectiveExpeditionDuration(
+    let effectiveDuration = getEffectiveExpeditionDuration(
       selectedExpedition, selectedHeroes, state.heroes
     );
+    // Apply War Camp bonus
+    const warCampLevel = state.village?.war_camp || 0;
+    if (warCampLevel > 0) {
+      const warEffect = getBuildingEffect("war_camp", warCampLevel);
+      if (warEffect?.expeditionDurationMult) {
+        effectiveDuration = Math.round(effectiveDuration * warEffect.expeditionDurationMult);
+      }
+    }
 
     dispatch({
       type: "SEND_EXPEDITION",

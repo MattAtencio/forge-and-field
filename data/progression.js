@@ -27,6 +27,7 @@ export const LEVEL_UNLOCKS = {
   3: { screens: ["barracks"], features: ["hero_equipment"] },
   5: { screens: ["expedition"], features: ["hero_2"] },
   7: { screens: ["season"], features: ["season_rewards"] },
+  8: { screens: ["village"], features: ["village_buildings"] },
   10: { features: ["hero_3", "tier3_recipes"] },
   15: { features: ["hero_4", "gem_generation"] },
 };

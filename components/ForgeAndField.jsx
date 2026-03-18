@@ -11,6 +11,7 @@ import ForgeScreen from "./ForgeScreen";
 import BarracksScreen from "./BarracksScreen";
 import WorldMapScreen from "./WorldMapScreen";
 import SeasonScreen from "./SeasonScreen";
+import VillageScreen from "./VillageScreen";
 import OnboardingModal from "./onboarding/OnboardingModal";
 import WelcomeBackModal from "./WelcomeBackModal";
 import SettingsModal from "./SettingsModal";
@@ -72,6 +73,8 @@ function GameShell() {
         return <WorldMapScreen />;
       case "season":
         return <SeasonScreen />;
+      case "village":
+        return <VillageScreen />;
       case "hub":
       default:
         return <HubScreen onOpenSettings={() => setShowSettings(true)} />;
