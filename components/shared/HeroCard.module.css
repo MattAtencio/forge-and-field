@@ -64,6 +64,20 @@
   font-variant-numeric: tabular-nums;
 }
 
+.enduranceBar {
+  height: 3px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 2px;
+  overflow: hidden;
+  margin-bottom: 6px;
+}
+
+.enduranceFill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.3s ease;
+}
+
 .footer {
   display: flex;
   justify-content: space-between;

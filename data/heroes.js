@@ -6,6 +6,8 @@ export const HERO_TEMPLATES = [
     icon: "\u2694\uFE0F",
     baseStats: { hp: 60, atk: 12, def: 10, spd: 4 },
     statGrowth: { hp: 8, atk: 2, def: 2, spd: 1 },
+    baseEndurance: 100,
+    enduranceGrowth: 5,
     unlockLevel: 1,
   },
   {
@@ -15,6 +17,8 @@ export const HERO_TEMPLATES = [
     icon: "\u{1F3F9}",
     baseStats: { hp: 40, atk: 10, def: 5, spd: 12 },
     statGrowth: { hp: 5, atk: 2, def: 1, spd: 3 },
+    baseEndurance: 80,
+    enduranceGrowth: 4,
     unlockLevel: 5,
   },
   {
@@ -24,6 +28,8 @@ export const HERO_TEMPLATES = [
     icon: "\u{1F9D9}",
     baseStats: { hp: 35, atk: 15, def: 3, spd: 8 },
     statGrowth: { hp: 4, atk: 3, def: 1, spd: 2 },
+    baseEndurance: 70,
+    enduranceGrowth: 3,
     unlockLevel: 10,
   },
   {
@@ -33,6 +39,8 @@ export const HERO_TEMPLATES = [
     icon: "\u{1F6E1}\uFE0F",
     baseStats: { hp: 70, atk: 8, def: 14, spd: 3 },
     statGrowth: { hp: 10, atk: 1, def: 3, spd: 1 },
+    baseEndurance: 120,
+    enduranceGrowth: 6,
     unlockLevel: 15,
   },
 ];

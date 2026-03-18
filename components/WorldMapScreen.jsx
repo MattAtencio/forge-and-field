@@ -5,10 +5,13 @@ import { useGameState, useGameDispatch } from "@/lib/gameContext";
 import { REGIONS } from "@/data/regions";
 import { EXPEDITIONS } from "@/data/expeditions";
 import { getRegionExpeditions, canSendExpedition, generateRewards, getEffectiveExpeditionDuration } from "@/lib/expedition";
+import { getExpeditionDurabilityCost } from "@/lib/rarity";
+import { getExpeditionEnduranceCost } from "@/lib/hero";
 import { RESOURCES } from "@/data/resources";
 import HeroCard from "./shared/HeroCard";
 import Modal from "./shared/Modal";
 import CombatReplayModal from "./CombatReplayModal";
+import RewardSummaryModal from "./RewardSummaryModal";
 import RegionDetailModal from "./RegionDetailModal";
 import styles from "./WorldMapScreen.module.css";
 
@@ -19,6 +22,7 @@ export default function WorldMapScreen() {
   const [selectedExpedition, setSelectedExpedition] = useState(null);
   const [selectedHeroes, setSelectedHeroes] = useState([]);
   const [combatPending, setCombatPending] = useState(null); // { combatResult, rewards, expeditionId }
+  const [rewardPending, setRewardPending] = useState(null); // { rewards, expeditionId, templateId, expeditionName }
 
   const now = Date.now();
   const idleHeroes = state.heroes.filter((h) => h.status === "idle");
@@ -71,15 +75,32 @@ export default function WorldMapScreen() {
     if (rewards.combatResult) {
       setCombatPending({ combatResult: rewards.combatResult, rewards, expeditionId: exp.id, templateId: exp.templateId });
     } else {
-      finalizeClaim(exp.id, rewards, exp.templateId);
+      setRewardPending({ rewards, expeditionId: exp.id, templateId: exp.templateId, expeditionName: template?.name || "Expedition" });
     }
   };
 
-  const finalizeClaim = (expeditionId, rewards, templateId) => {
+  const finalizeClaim = (expeditionId, rewards, templateId, combatOutcome) => {
+    const claimTemplate = EXPEDITIONS.find((e) => e.id === templateId);
+    const baseDurabilityCost = claimTemplate ? getExpeditionDurabilityCost(claimTemplate) : 0;
+    const baseEnduranceCost = claimTemplate ? getExpeditionEnduranceCost(claimTemplate) : 0;
+
+    // Graduated consequences based on combat outcome
+    let durabilityMult = 1.0;
+    let enduranceMult = 1.0;
+    if (combatOutcome === "draw") {
+      durabilityMult = 1.5;
+      enduranceMult = 1.5;
+    } else if (combatOutcome === "defeat") {
+      durabilityMult = 2.0;
+      enduranceMult = 2.0;
+    }
+
     dispatch({
       type: "CLAIM_REWARDS",
       expeditionId,
       rewards,
+      durabilityCost: Math.round(baseDurabilityCost * durabilityMult),
+      enduranceCost: Math.round(baseEnduranceCost * enduranceMult),
     });
 
     // Check if this is a boss expedition
@@ -114,7 +135,12 @@ export default function WorldMapScreen() {
 
   const handleCombatDone = () => {
     if (combatPending) {
-      finalizeClaim(combatPending.expeditionId, combatPending.rewards, combatPending.templateId);
+      const outcome = combatPending.combatResult.victory
+        ? "victory"
+        : combatPending.combatResult.isDraw
+        ? "draw"
+        : "defeat";
+      finalizeClaim(combatPending.expeditionId, combatPending.rewards, combatPending.templateId, outcome);
     }
   };
 
@@ -305,6 +331,18 @@ export default function WorldMapScreen() {
           combatResult={combatPending.combatResult}
           rewards={combatPending.rewards}
           onDone={handleCombatDone}
+        />
+      )}
+
+      {/* Reward Summary Modal (non-combat expeditions) */}
+      {rewardPending && (
+        <RewardSummaryModal
+          rewards={rewardPending.rewards}
+          expeditionName={rewardPending.expeditionName}
+          onCollect={() => {
+            finalizeClaim(rewardPending.expeditionId, rewardPending.rewards, rewardPending.templateId, "victory");
+            setRewardPending(null);
+          }}
         />
       )}
     </div>

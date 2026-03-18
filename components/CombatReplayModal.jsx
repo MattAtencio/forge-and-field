@@ -52,6 +52,11 @@ export default function CombatReplayModal({ combatResult, rewards, onDone }) {
   const resultLabel = victory ? "Victory!" : isDraw ? "Draw" : "Defeat";
   const resultColor = victory ? "#22c55e" : isDraw ? "#f59e0b" : "#ef4444";
   const multLabel = victory ? "1.5x" : isDraw ? "0.75x" : "0.5x";
+  const consequenceLabel = victory
+    ? null
+    : isDraw
+    ? "1.5x durability & endurance drain, no item drops"
+    : "2x durability & endurance drain, no item drops";
 
   return (
     <Modal title="Combat" onClose={onDone}>
@@ -98,6 +103,9 @@ export default function CombatReplayModal({ combatResult, rewards, onDone }) {
             <span className={styles.multiplier} style={{ color: resultColor }}>
               Rewards {multLabel}
             </span>
+            {consequenceLabel && (
+              <span className={styles.consequence}>{consequenceLabel}</span>
+            )}
             <button className={styles.doneBtn} onClick={onDone}>
               Claim Rewards
             </button>

@@ -2,11 +2,13 @@
 
 import { useState } from "react";
 import { useGameState, useGameDispatch } from "@/lib/gameContext";
-import { getEffectiveStats, getHeroPower, canLevelUp, getUnequippedItems } from "@/lib/hero";
+import { getEffectiveStats, getHeroPower, canLevelUp, getUnequippedItems, getRestDuration, getPotionCost } from "@/lib/hero";
 import { getHeroTemplate } from "@/lib/hero";
+import { getUnlockedTitles, getTitleById } from "@/data/titles";
 import { getHeroLevelCost } from "@/data/progression";
 import { HERO_TEMPLATES } from "@/data/heroes";
 import { getRarityColor } from "@/lib/rarity";
+import { RESOURCES } from "@/data/resources";
 import { getHeroSkills } from "@/lib/skills";
 import HeroCard from "./shared/HeroCard";
 import ItemCard from "./shared/ItemCard";
@@ -17,8 +19,11 @@ import styles from "./BarracksScreen.module.css";
 export default function BarracksScreen() {
   const state = useGameState();
   const dispatch = useGameDispatch();
-  const [selectedHeroId, setSelectedHeroId] = useState(state.heroes[0]?.id || null);
+  const [selectedHeroId, setSelectedHeroId] = useState(
+    state.screenPayload?.heroId || state.heroes[0]?.id || null
+  );
   const [equipSlot, setEquipSlot] = useState(null); // 'weapon' | 'armor' | 'accessory' | null
+  const [showTitlePicker, setShowTitlePicker] = useState(false);
 
   const selectedHero = state.heroes.find((h) => h.id === selectedHeroId);
   const effectiveStats = selectedHero ? getEffectiveStats(selectedHero, state.inventory) : null;
@@ -34,6 +39,7 @@ export default function BarracksScreen() {
       heroId: selectedHero.id,
       cost,
       statGrowth: template.statGrowth,
+      enduranceGrowth: template.enduranceGrowth || 5,
     });
   };
 
@@ -109,6 +115,93 @@ export default function BarracksScreen() {
             </div>
           </div>
 
+          {/* Endurance */}
+          {(() => {
+            const endurance = selectedHero.endurance || { current: 100, max: 100 };
+            const pct = (endurance.current / endurance.max) * 100;
+            const isResting = selectedHero.status === "resting";
+            const restRemaining = isResting && selectedHero.restUntil
+              ? Math.max(0, Math.ceil((selectedHero.restUntil - Date.now()) / 1000))
+              : 0;
+            const potCost = getPotionCost(selectedHero);
+            const canAffordPotion = Object.entries(potCost).every(
+              ([res, amt]) => (state.resources[res] || 0) >= amt
+            );
+            const needsRecovery = endurance.current < endurance.max;
+
+            return (
+              <div className={styles.enduranceSection}>
+                <div className={styles.enduranceHeader}>
+                  <span className={styles.enduranceLabel}>Endurance</span>
+                  <span className={styles.enduranceValue}>{endurance.current}/{endurance.max}</span>
+                </div>
+                <div className={styles.enduranceBar}>
+                  <div
+                    className={styles.enduranceFill}
+                    style={{
+                      width: `${pct}%`,
+                      background: pct <= 20 ? "#ef4444" : pct <= 50 ? "#f59e0b" : "#22c55e",
+                    }}
+                  />
+                </div>
+                {isResting && (
+                  <p className={styles.restingNote}>Resting... {restRemaining}s remaining</p>
+                )}
+                {needsRecovery && selectedHero.status === "idle" && (
+                  <div className={styles.enduranceActions}>
+                    <button
+                      className={styles.restBtn}
+                      onClick={() => dispatch({
+                        type: "REST_HERO",
+                        heroId: selectedHero.id,
+                        duration: getRestDuration(selectedHero),
+                      })}
+                    >
+                      Rest ({Math.ceil(getRestDuration(selectedHero) / 1000)}s)
+                    </button>
+                    <button
+                      className={styles.potionBtn}
+                      disabled={!canAffordPotion}
+                      onClick={() => dispatch({
+                        type: "USE_POTION",
+                        heroId: selectedHero.id,
+                        cost: potCost,
+                      })}
+                    >
+                      Potion ({Object.entries(potCost).filter(([,v]) => v > 0).map(([res, amt]) => `${RESOURCES[res]?.icon || res} ${amt}`).join(" ")})
+                    </button>
+                  </div>
+                )}
+              </div>
+            );
+          })()}
+
+          {/* Title */}
+          {(() => {
+            const unlockedTitles = getUnlockedTitles(state.stats, state.worldMap, state.prestige);
+            const currentTitle = selectedHero.activeTitle ? getTitleById(selectedHero.activeTitle) : null;
+            return (
+              <div className={styles.titleSection}>
+                <div className={styles.titleHeader}>
+                  <span className={styles.titleLabel}>Title</span>
+                  <button
+                    className={styles.titlePickerBtn}
+                    onClick={() => setShowTitlePicker(true)}
+                    disabled={unlockedTitles.length === 0}
+                  >
+                    {currentTitle ? currentTitle.name : "None"} {unlockedTitles.length > 0 ? "\u25BE" : ""}
+                  </button>
+                </div>
+                {currentTitle && (
+                  <span className={styles.titleBonus}>{currentTitle.bonus.label}</span>
+                )}
+                {unlockedTitles.length === 0 && (
+                  <span className={styles.titleHint}>Complete milestones to earn titles</span>
+                )}
+              </div>
+            );
+          })()}
+
           {/* Skills */}
           <h4 className={styles.subheading}>Skills</h4>
           <div className={styles.skillList}>
@@ -137,7 +230,7 @@ export default function BarracksScreen() {
                         className={styles.equippedName}
                         style={{ color: getRarityColor(item.rarity) }}
                       >
-                        {item.icon} {item.name}
+                        {item.icon} {item.name}{(item.level || 1) > 1 ? ` Lv.${item.level}` : ""}
                       </span>
                       <button
                         className={styles.unequipBtn}
@@ -165,7 +258,7 @@ export default function BarracksScreen() {
           <button
             className={styles.levelUpBtn}
             onClick={handleLevelUp}
-            disabled={!canLevel || selectedHero.status === "expedition"}
+            disabled={!canLevel || selectedHero.status !== "idle"}
           >
             Level Up ({"\u{1FA99}"} {levelCost})
           </button>
@@ -187,6 +280,38 @@ export default function BarracksScreen() {
                 />
               ))
             )}
+          </div>
+        </Modal>
+      )}
+
+      {/* Title Picker Modal */}
+      {showTitlePicker && selectedHero && (
+        <Modal title="Choose Title" onClose={() => setShowTitlePicker(false)}>
+          <div className={styles.titlePicker}>
+            <button
+              className={`${styles.titleOption} ${!selectedHero.activeTitle ? styles.titleActive : ""}`}
+              onClick={() => {
+                dispatch({ type: "SET_ACTIVE_TITLE", heroId: selectedHero.id, titleId: null });
+                setShowTitlePicker(false);
+              }}
+            >
+              <span className={styles.titleOptName}>None</span>
+              <span className={styles.titleOptDesc}>No title bonus</span>
+            </button>
+            {getUnlockedTitles(state.stats, state.worldMap, state.prestige).map((title) => (
+              <button
+                key={title.id}
+                className={`${styles.titleOption} ${selectedHero.activeTitle === title.id ? styles.titleActive : ""}`}
+                onClick={() => {
+                  dispatch({ type: "SET_ACTIVE_TITLE", heroId: selectedHero.id, titleId: title.id });
+                  setShowTitlePicker(false);
+                }}
+              >
+                <span className={styles.titleOptName}>{title.name}</span>
+                <span className={styles.titleOptDesc}>{title.description}</span>
+                <span className={styles.titleOptBonus}>{title.bonus.label}</span>
+              </button>
+            ))}
           </div>
         </Modal>
       )}

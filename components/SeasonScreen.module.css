@@ -120,6 +120,19 @@
   color: #c0c0d4;
 }
 
+.questLabel {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #e8e8f0;
+  display: block;
+}
+
+.questRewards {
+  display: flex;
+  gap: 6px;
+  margin-top: 2px;
+}
+
 .claimBtn {
   background: rgba(34, 197, 94, 0.15);
   color: #22c55e;

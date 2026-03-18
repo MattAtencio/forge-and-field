@@ -29,7 +29,7 @@ export default function ItemCard({ item, onClick, compact = false }) {
       </div>
       <div className={styles.info}>
         <span className={styles.name} style={{ color: rarityColor }}>
-          {item.name}
+          {item.name}{(item.level || 1) > 1 ? ` Lv.${item.level}` : ""}
         </span>
         <span className={styles.rarity}>{getRarityLabel(item.rarity)}</span>
         <div className={styles.stats}>
@@ -39,6 +39,21 @@ export default function ItemCard({ item, onClick, compact = false }) {
         </div>
       </div>
       {item.equippedBy && <span className={styles.equipped}>E</span>}
+      {item.durability && (
+        <div className={styles.durabilityBar}>
+          <div
+            className={styles.durabilityFill}
+            style={{
+              width: `${(item.durability.current / item.durability.max) * 100}%`,
+              background: item.durability.current <= 0
+                ? "#ef4444"
+                : item.durability.current < item.durability.max * 0.3
+                ? "#f59e0b"
+                : "#22c55e",
+            }}
+          />
+        </div>
+      )}
     </button>
   );
 }

@@ -34,6 +34,22 @@ export default function HeroCard({ hero, inventory, onClick, selected = false })
         <span className={styles.stat}>{"\u{1F4A8}"} {hero.stats.spd}</span>
       </div>
 
+      {hero.endurance && (
+        <div className={styles.enduranceBar}>
+          <div
+            className={styles.enduranceFill}
+            style={{
+              width: `${(hero.endurance.current / hero.endurance.max) * 100}%`,
+              background: hero.endurance.current <= hero.endurance.max * 0.2
+                ? "#ef4444"
+                : hero.endurance.current <= hero.endurance.max * 0.5
+                ? "#f59e0b"
+                : "#22c55e",
+            }}
+          />
+        </div>
+      )}
+
       <div className={styles.footer}>
         <span className={styles.power}>Power: {power}</span>
         <span className={styles.status} style={{ color: statusColors[hero.status] }}>
