@@ -76,6 +76,23 @@
   border-radius: 4px;
 }
 
+.durabilityBar {
+  position: absolute;
+  bottom: 2px;
+  left: 8px;
+  right: 8px;
+  height: 2px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 1px;
+  overflow: hidden;
+}
+
+.durabilityFill {
+  height: 100%;
+  border-radius: 1px;
+  transition: width 0.3s ease;
+}
+
 .compact {
   width: 42px;
   height: 42px;

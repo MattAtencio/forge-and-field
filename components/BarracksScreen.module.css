@@ -77,6 +77,194 @@
 .statLabel { font-size: 0.55rem; color: #6b6b80; text-transform: uppercase; }
 .statValue { font-size: 0.85rem; font-weight: 700; color: #e8e8f0; font-variant-numeric: tabular-nums; }
 
+/* Endurance */
+.enduranceSection {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 10px;
+  padding: 10px;
+}
+
+.enduranceHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.enduranceLabel {
+  font-size: 0.65rem;
+  color: #8888a0;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.enduranceValue {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #a0a0b8;
+  font-variant-numeric: tabular-nums;
+}
+
+.enduranceBar {
+  height: 6px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.enduranceFill {
+  height: 100%;
+  border-radius: 3px;
+  transition: width 0.3s ease;
+}
+
+.restingNote {
+  font-size: 0.65rem;
+  color: #f59e0b;
+  text-align: center;
+  margin: 0;
+}
+
+.enduranceActions {
+  display: flex;
+  gap: 6px;
+}
+
+.restBtn {
+  flex: 1;
+  padding: 8px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(107, 114, 128, 0.15);
+  color: #9ca3af;
+  font-size: 0.7rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.restBtn:active {
+  background: rgba(107, 114, 128, 0.25);
+}
+
+.potionBtn {
+  flex: 1;
+  padding: 8px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+  font-size: 0.7rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.potionBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.potionBtn:active:not(:disabled) {
+  background: rgba(34, 197, 94, 0.25);
+}
+
+/* Title */
+.titleSection {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.titleHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.titleLabel {
+  font-size: 0.65rem;
+  color: #8888a0;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+.titlePickerBtn {
+  background: rgba(168, 85, 247, 0.12);
+  border: 1px solid rgba(168, 85, 247, 0.2);
+  color: #a855f7;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.titlePickerBtn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.titleBonus {
+  font-size: 0.65rem;
+  color: #22c55e;
+  text-align: right;
+}
+
+.titleHint {
+  font-size: 0.6rem;
+  color: #6b6b80;
+  font-style: italic;
+}
+
+/* Title Picker */
+.titlePicker {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.titleOption {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  padding: 10px;
+  text-align: left;
+  color: #e8e8f0;
+  cursor: pointer;
+  transition: border-color 0.15s;
+}
+
+.titleOption:active {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.titleActive {
+  border-color: #a855f7;
+  box-shadow: 0 0 10px rgba(168, 85, 247, 0.15);
+}
+
+.titleOptName {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #a855f7;
+}
+
+.titleOptDesc {
+  font-size: 0.65rem;
+  color: #8888a0;
+}
+
+.titleOptBonus {
+  font-size: 0.65rem;
+  color: #22c55e;
+  font-weight: 600;
+}
+
 /* Skills */
 .skillList {
   display: flex;

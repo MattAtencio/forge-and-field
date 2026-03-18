@@ -2,6 +2,9 @@
 
 import { useGameState, useGameDispatch } from "@/lib/gameContext";
 import { XP_TABLE, LEVEL_UNLOCKS } from "@/data/progression";
+import { EXPEDITIONS } from "@/data/expeditions";
+import { rollRarity, applyRarityMultiplier, getMaxDurability } from "@/lib/rarity";
+import { RECIPES } from "@/data/recipes";
 import ProgressBar from "./shared/ProgressBar";
 import PrestigePanel from "./PrestigePanel";
 import styles from "./HubScreen.module.css";
@@ -37,6 +40,47 @@ function getNextUnlock(playerLevel) {
     }
   }
   return null;
+}
+
+const CHEST_CONFIG = {
+  common: { icon: "\u{1F4E6}", label: "Common Chest", color: "#9ca3af", resources: { gold: [10, 25], wood: [10, 20] } },
+  uncommon: { icon: "\u{1F381}", label: "Uncommon Chest", color: "#22c55e", resources: { gold: [25, 60], iron: [10, 20], herbs: [5, 15] } },
+  rare: { icon: "\u{1F3C6}", label: "Rare Chest", color: "#3b82f6", resources: { gold: [60, 120], gems: [2, 5], iron: [15, 30] } },
+};
+
+function generateChestRewards(chestType, playerLevel) {
+  const config = CHEST_CONFIG[chestType];
+  const resources = {};
+  for (const [res, [min, max]] of Object.entries(config.resources)) {
+    resources[res] = Math.round(min + Math.random() * (max - min));
+  }
+
+  const items = [];
+  // Rare chests have a 40% item drop, uncommon 15%, common 0%
+  const itemChance = chestType === "rare" ? 0.4 : chestType === "uncommon" ? 0.15 : 0;
+  if (Math.random() < itemChance) {
+    const eligible = RECIPES.filter((r) => r.unlockLevel <= playerLevel);
+    if (eligible.length > 0) {
+      const recipe = eligible[Math.floor(Math.random() * eligible.length)];
+      const rarity = rollRarity();
+      const maxDur = getMaxDurability(recipe.tier, rarity.id);
+      items.push({
+        id: `item_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
+        recipeId: recipe.id,
+        name: recipe.name,
+        icon: recipe.icon,
+        slot: recipe.slot,
+        tier: recipe.tier,
+        rarity: rarity.id,
+        level: 1,
+        durability: { current: maxDur, max: maxDur },
+        stats: applyRarityMultiplier(recipe.baseStats, rarity),
+        equippedBy: null,
+      });
+    }
+  }
+
+  return { resources, items };
 }
 
 export default function HubScreen({ onOpenSettings }) {
@@ -96,6 +140,49 @@ export default function HubScreen({ onOpenSettings }) {
         </div>
       )}
 
+      {/* Active Expeditions Banner */}
+      {expeditions.active.length > 0 && (
+        <div className={styles.expeditionBanner}>
+          <div className={styles.bannerHeader}>
+            <span className={styles.bannerIcon}>{"\u{1F5FA}\uFE0F"}</span>
+            <span className={styles.bannerTitle}>Active Expeditions</span>
+            {player.unlockedScreens.includes("expedition") && (
+              <button
+                className={styles.bannerViewBtn}
+                onClick={() => dispatch({ type: "SET_SCREEN", screen: "expedition" })}
+              >
+                View
+              </button>
+            )}
+          </div>
+          {expeditions.active.map((exp) => {
+            const template = EXPEDITIONS.find((e) => e.id === exp.templateId);
+            const now = Date.now();
+            const remaining = Math.max(0, (exp.startedAt + exp.duration) - now);
+            const pct = Math.min(((now - exp.startedAt) / exp.duration) * 100, 100);
+            const sec = Math.ceil(remaining / 1000);
+            const min = Math.floor(sec / 60);
+            const timeLabel = min > 0 ? `${min}m ${sec % 60}s` : `${sec}s`;
+
+            return (
+              <div key={exp.id} className={styles.expCard}>
+                <div className={styles.expInfo}>
+                  <span className={styles.expIcon}>{template?.icon || "?"}</span>
+                  <span className={styles.expName}>{template?.name || "Unknown"}</span>
+                  <span className={styles.expTime}>{remaining > 0 ? timeLabel : "Done!"}</span>
+                </div>
+                <div className={styles.expBar}>
+                  <div
+                    className={styles.expFill}
+                    style={{ width: `${pct}%`, background: remaining <= 0 ? "#22c55e" : "#f59e0b" }}
+                  />
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      )}
+
       {/* Next Goal */}
       {(() => {
         const goal = getNextGoal(player);
@@ -128,6 +215,46 @@ export default function HubScreen({ onOpenSettings }) {
           </div>
         );
       })()}
+
+      {/* Loot Chests */}
+      {state.chests && (
+        <div className={styles.chestsSection}>
+          <h3 className={styles.sectionTitle}>Loot Chests</h3>
+          <div className={styles.chestList}>
+            {Object.entries(state.chests).map(([type, chest]) => {
+              const config = CHEST_CONFIG[type];
+              const now = Date.now();
+              const remaining = Math.max(0, chest.cooldown - (now - chest.lastClaimed));
+              const ready = remaining <= 0;
+              const hrs = Math.floor(remaining / 3600000);
+              const mins = Math.floor((remaining % 3600000) / 60000);
+              const timeLabel = hrs > 0 ? `${hrs}h ${mins}m` : `${mins}m`;
+
+              return (
+                <button
+                  key={type}
+                  className={`${styles.chestCard} ${ready ? styles.chestReady : ""}`}
+                  style={{ "--chest-color": config.color }}
+                  disabled={!ready}
+                  onClick={() => {
+                    if (!ready) return;
+                    const rewards = generateChestRewards(type, player.level);
+                    dispatch({ type: "CLAIM_CHEST", chestType: type, rewards });
+                  }}
+                >
+                  <span className={styles.chestIcon}>{config.icon}</span>
+                  <div className={styles.chestInfo}>
+                    <span className={styles.chestLabel}>{config.label}</span>
+                    <span className={styles.chestTimer} style={{ color: ready ? "#22c55e" : "#8888a0" }}>
+                      {ready ? "Ready!" : timeLabel}
+                    </span>
+                  </div>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
 
       {/* Nav Tiles */}
       <div className={styles.grid}>
@@ -168,13 +295,17 @@ export default function HubScreen({ onOpenSettings }) {
         <h3 className={styles.sectionTitle}>Heroes</h3>
         <div className={styles.heroList}>
           {state.heroes.map((hero) => (
-            <div key={hero.id} className={styles.heroChip}>
+            <button
+              key={hero.id}
+              className={styles.heroChip}
+              onClick={() => dispatch({ type: "SET_SCREEN", screen: "barracks", payload: { heroId: hero.id } })}
+            >
               <span className={styles.heroStatus}>
-                {hero.status === "expedition" ? "\u{1F6B6}" : "\u{1F9D1}\u200D\u2694\uFE0F"}
+                {hero.status === "expedition" ? "\u{1F6B6}" : hero.status === "resting" ? "\u{1F4A4}" : "\u{1F9D1}\u200D\u2694\uFE0F"}
               </span>
               <span>{hero.name}</span>
               <span className={styles.heroLevel}>Lv.{hero.level}</span>
-            </div>
+            </button>
           ))}
         </div>
       </div>

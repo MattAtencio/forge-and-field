@@ -91,6 +91,94 @@
   flex-shrink: 0;
 }
 
+/* Expedition Banner */
+.expeditionBanner {
+  background: rgba(245, 158, 11, 0.06);
+  border: 1px solid rgba(245, 158, 11, 0.15);
+  border-radius: 12px;
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  animation: fadeIn 0.3s ease;
+}
+
+.bannerHeader {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.bannerIcon {
+  font-size: 1rem;
+}
+
+.bannerTitle {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #f59e0b;
+  flex: 1;
+}
+
+.bannerViewBtn {
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  color: #f59e0b;
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.bannerViewBtn:active {
+  background: rgba(245, 158, 11, 0.3);
+}
+
+.expCard {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.expInfo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.expIcon {
+  font-size: 0.9rem;
+}
+
+.expName {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #e8e8f0;
+  flex: 1;
+}
+
+.expTime {
+  font-size: 0.65rem;
+  font-weight: 600;
+  color: #f59e0b;
+  font-variant-numeric: tabular-nums;
+}
+
+.expBar {
+  height: 3px;
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.expFill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 1s linear;
+}
+
 /* Next Goal Card */
 .goalCard {
   background: rgba(249, 115, 22, 0.06);
@@ -169,6 +257,67 @@
   text-align: right;
 }
 
+/* Loot Chests */
+.chestsSection {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 14px;
+  padding: 14px;
+}
+
+.chestList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.chestCard {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 10px;
+  padding: 10px 12px;
+  color: #e8e8f0;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.chestCard:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.chestReady {
+  border-color: var(--chest-color);
+  animation: pulse 2s infinite;
+}
+
+.chestIcon {
+  font-size: 1.3rem;
+}
+
+.chestInfo {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.chestLabel {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--chest-color);
+}
+
+.chestTimer {
+  font-size: 0.65rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
 /* Nav Tiles */
 .grid {
   display: grid;
@@ -243,9 +392,18 @@
   align-items: center;
   gap: 6px;
   background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 8px;
   padding: 6px 10px;
   font-size: 0.75rem;
+  color: #e8e8f0;
+  cursor: pointer;
+  transition: background 0.15s;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.heroChip:active {
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .heroStatus {
