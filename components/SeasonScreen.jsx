@@ -4,6 +4,7 @@ import { useGameState, useGameDispatch } from "@/lib/gameContext";
 import { getCurrentSeason, getSeasonTimeRemaining, formatTimeRemaining } from "@/lib/season";
 import { RESOURCES } from "@/data/resources";
 import ProgressBar from "./shared/ProgressBar";
+import Sprite from "@/components/sprites/Sprite";
 import styles from "./SeasonScreen.module.css";
 
 export default function SeasonScreen() {
@@ -42,7 +43,7 @@ export default function SeasonScreen() {
     <div className={styles.screen}>
       {/* Season Banner */}
       <div className={styles.banner} style={{ "--season-color": RESOURCES[season.bonusResource]?.color || "#f97316" }}>
-        <span className={styles.bannerIcon}>{season.icon}</span>
+        <span className={styles.bannerIcon}><Sprite name="season" size={28} /></span>
         <div>
           <h2 className={styles.bannerName}>{season.name}</h2>
           <p className={styles.bannerDesc}>{season.description}</p>
@@ -58,7 +59,7 @@ export default function SeasonScreen() {
         <div className={styles.metaItem}>
           <span className={styles.metaLabel}>Bonus</span>
           <span className={styles.metaValue} style={{ color: RESOURCES[season.bonusResource]?.color }}>
-            {RESOURCES[season.bonusResource]?.icon} {season.bonusResource} +{Math.round((season.bonusMultiplier - 1) * 100)}%
+            <Sprite name={RESOURCES[season.bonusResource]?.icon || season.bonusResource} size={14} /> {season.bonusResource} +{Math.round((season.bonusMultiplier - 1) * 100)}%
           </span>
         </div>
       </div>
@@ -91,12 +92,12 @@ export default function SeasonScreen() {
                 <span className={styles.questLabel}>{quest.label}</span>
                 <div className={styles.questRewards}>
                   {quest.reward.resources && Object.entries(quest.reward.resources).map(([res, amt]) => (
-                    <span key={res} className={styles.rewardChip}>
-                      {RESOURCES[res]?.icon} {amt}
+                    <span key={res} className={styles.rewardChip} style={{ display: "inline-flex", alignItems: "center", gap: 2 }}>
+                      <Sprite name={RESOURCES[res]?.icon || res} size={12} /> {amt}
                     </span>
                   ))}
                   {quest.reward.xp > 0 && (
-                    <span className={styles.rewardChip}>{"\u2B50"} {quest.reward.xp} XP</span>
+                    <span className={styles.rewardChip}><Sprite name="season" size={12} /> {quest.reward.xp} XP</span>
                   )}
                 </div>
               </div>
@@ -129,13 +130,13 @@ export default function SeasonScreen() {
               <div className={styles.tierReward}>
                 {tier.reward.type === "resources" &&
                   Object.entries(tier.reward.value).map(([res, amt]) => (
-                    <span key={res} className={styles.rewardChip}>
-                      {RESOURCES[res]?.icon} {amt} {RESOURCES[res]?.name}
+                    <span key={res} className={styles.rewardChip} style={{ display: "inline-flex", alignItems: "center", gap: 2 }}>
+                      <Sprite name={RESOURCES[res]?.icon || res} size={12} /> {amt} {RESOURCES[res]?.name}
                     </span>
                   ))}
                 {tier.reward.type === "hero_xp" && (
                   <span className={styles.rewardChip}>
-                    {"\u2B50"} {tier.reward.value} Hero XP
+                    <Sprite name="season" size={12} /> {tier.reward.value} Hero XP
                   </span>
                 )}
               </div>

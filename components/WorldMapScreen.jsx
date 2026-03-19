@@ -14,6 +14,7 @@ import Modal from "./shared/Modal";
 import CombatReplayModal from "./CombatReplayModal";
 import RewardSummaryModal from "./RewardSummaryModal";
 import RegionDetailModal from "./RegionDetailModal";
+import Sprite from "@/components/sprites/Sprite";
 import styles from "./WorldMapScreen.module.css";
 
 export default function WorldMapScreen() {
@@ -22,8 +23,8 @@ export default function WorldMapScreen() {
   const [selectedRegion, setSelectedRegion] = useState(null);
   const [selectedExpedition, setSelectedExpedition] = useState(null);
   const [selectedHeroes, setSelectedHeroes] = useState([]);
-  const [combatPending, setCombatPending] = useState(null); // { combatResult, rewards, expeditionId }
-  const [rewardPending, setRewardPending] = useState(null); // { rewards, expeditionId, templateId, expeditionName }
+  const [combatPending, setCombatPending] = useState(null);
+  const [rewardPending, setRewardPending] = useState(null);
 
   const now = Date.now();
   const idleHeroes = state.heroes.filter((h) => h.status === "idle");
@@ -58,7 +59,6 @@ export default function WorldMapScreen() {
     let effectiveDuration = getEffectiveExpeditionDuration(
       selectedExpedition, selectedHeroes, state.heroes
     );
-    // Apply War Camp bonus
     const warCampLevel = state.village?.war_camp || 0;
     if (warCampLevel > 0) {
       const warEffect = getBuildingEffect("war_camp", warCampLevel);
@@ -93,7 +93,6 @@ export default function WorldMapScreen() {
     const baseDurabilityCost = claimTemplate ? getExpeditionDurabilityCost(claimTemplate) : 0;
     const baseEnduranceCost = claimTemplate ? getExpeditionEnduranceCost(claimTemplate) : 0;
 
-    // Graduated consequences based on combat outcome
     let durabilityMult = 1.0;
     let enduranceMult = 1.0;
     if (combatOutcome === "draw") {
@@ -112,13 +111,11 @@ export default function WorldMapScreen() {
       enduranceCost: Math.round(baseEnduranceCost * enduranceMult),
     });
 
-    // Check if this is a boss expedition
     const template = EXPEDITIONS.find((e) => e.id === templateId);
     if (template?.isBoss && rewards.combatResult?.victory) {
       const region = REGIONS.find((r) => r.bossExpedition === templateId);
       if (region && !isRegionCleared(region.id)) {
         dispatch({ type: "CLEAR_BOSS", regionId: region.id, bossExpeditionId: templateId });
-        // Unlock next region
         const nextRegion = REGIONS.find((r) => r.unlockCondition === region.id);
         if (nextRegion) {
           dispatch({ type: "UNLOCK_REGION", regionId: nextRegion.id });
@@ -126,14 +123,13 @@ export default function WorldMapScreen() {
       }
     }
 
-    // Discovery roll
     if (template?.regionId) {
       const region = REGIONS.find((r) => r.id === template.regionId);
       if (region) {
         for (const poi of region.pointsOfInterest) {
           if (!isDiscovered(poi.id) && Math.random() < poi.discoveryChance) {
             dispatch({ type: "DISCOVER_POI", poiId: poi.id, reward: poi.reward });
-            break; // Only discover one per expedition
+            break;
           }
         }
       }
@@ -166,7 +162,9 @@ export default function WorldMapScreen() {
 
   return (
     <div className={styles.screen}>
-      <h2 className={styles.heading}>{"\u{1F5FA}\uFE0F"} World Map</h2>
+      <h2 className={styles.heading}>
+        <Sprite name="map" size={22} /> World Map
+      </h2>
 
       {/* Active Expeditions */}
       {state.expeditions.active.length > 0 && (
@@ -180,7 +178,7 @@ export default function WorldMapScreen() {
             return (
               <div key={exp.id} className={styles.activeCard}>
                 <div className={styles.activeHeader}>
-                  <span>{template?.icon || "?"}</span>
+                  <span><Sprite name={template?.icon || "map"} size={18} /></span>
                   <span className={styles.activeName}>{template?.name || "Unknown"}</span>
                   <span className={styles.activeTime}>{formatDuration(remaining)}</span>
                 </div>
@@ -201,7 +199,9 @@ export default function WorldMapScreen() {
             const template = EXPEDITIONS.find((e) => e.id === exp.templateId);
             return (
               <div key={exp.id} className={styles.completedCard}>
-                <span>{template?.icon || "?"} {template?.name || "Unknown"}</span>
+                <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
+                  <Sprite name={template?.icon || "map"} size={18} /> {template?.name || "Unknown"}
+                </span>
                 <button className={styles.claimBtn} onClick={() => handleClaim(exp)}>
                   Claim Rewards
                 </button>
@@ -236,7 +236,11 @@ export default function WorldMapScreen() {
               >
                 <div className={styles.regionHeader}>
                   <span className={styles.regionIcon}>
-                    {unlocked ? region.icon : "\u{1F512}"}
+                    <Sprite
+                      name={unlocked ? region.icon : "lock"}
+                      size={28}
+                      muted={!unlocked}
+                    />
                   </span>
                   <div className={styles.regionInfo}>
                     <span className={styles.regionName}>
@@ -298,8 +302,8 @@ export default function WorldMapScreen() {
             </p>
             <div className={styles.rewardPreview}>
               {Object.entries(selectedExpedition.rewards.resources).map(([res, [min, max]]) => (
-                <span key={res} className={styles.rewardChip}>
-                  {RESOURCES[res]?.icon} {min}-{max}
+                <span key={res} className={styles.rewardChip} style={{ display: "inline-flex", alignItems: "center", gap: 2 }}>
+                  <Sprite name={RESOURCES[res]?.icon || res} size={14} /> {min}-{max}
                 </span>
               ))}
             </div>

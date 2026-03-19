@@ -3,6 +3,7 @@
 import { RESOURCES } from "@/data/resources";
 import { getRarityColor, getRarityLabel } from "@/lib/rarity";
 import Modal from "./shared/Modal";
+import Sprite from "@/components/sprites/Sprite";
 import styles from "./RewardSummaryModal.module.css";
 
 export default function RewardSummaryModal({ rewards, expeditionName, onCollect }) {
@@ -22,7 +23,7 @@ export default function RewardSummaryModal({ rewards, expeditionName, onCollect 
                 amount > 0 ? (
                   <div key={res} className={styles.resourceChip}>
                     <span className={styles.resourceIcon}>
-                      {RESOURCES[res]?.icon || res}
+                      <Sprite name={RESOURCES[res]?.icon || res} size={20} />
                     </span>
                     <span className={styles.resourceAmount}>+{amount}</span>
                     <span className={styles.resourceName}>
@@ -48,7 +49,9 @@ export default function RewardSummaryModal({ rewards, expeditionName, onCollect 
                     "--rarity-color": getRarityColor(item.rarity),
                   }}
                 >
-                  <span className={styles.itemIcon}>{item.icon}</span>
+                  <span className={styles.itemIcon}>
+                    <Sprite name={item.icon} size={24} />
+                  </span>
                   <div className={styles.itemInfo}>
                     <span
                       className={styles.itemName}

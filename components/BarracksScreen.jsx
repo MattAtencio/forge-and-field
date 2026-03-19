@@ -15,6 +15,8 @@ import HeroCard from "./shared/HeroCard";
 import ItemCard from "./shared/ItemCard";
 import SkillBadge from "./shared/SkillBadge";
 import Modal from "./shared/Modal";
+import Sprite from "@/components/sprites/Sprite";
+import ResourceCost from "@/components/sprites/ResourceCost";
 import styles from "./BarracksScreen.module.css";
 
 export default function BarracksScreen() {
@@ -23,7 +25,7 @@ export default function BarracksScreen() {
   const [selectedHeroId, setSelectedHeroId] = useState(
     state.screenPayload?.heroId || state.heroes[0]?.id || null
   );
-  const [equipSlot, setEquipSlot] = useState(null); // 'weapon' | 'armor' | 'accessory' | null
+  const [equipSlot, setEquipSlot] = useState(null);
   const [showTitlePicker, setShowTitlePicker] = useState(false);
 
   const selectedHero = state.heroes.find((h) => h.id === selectedHeroId);
@@ -69,7 +71,9 @@ export default function BarracksScreen() {
 
   return (
     <div className={styles.barracks}>
-      <h2 className={styles.heading}>{"\u2694\uFE0F"} Barracks</h2>
+      <h2 className={styles.heading}>
+        <Sprite name="barracks" size={22} /> Barracks
+      </h2>
 
       {/* Hero Roster */}
       <div className={styles.roster}>
@@ -88,6 +92,7 @@ export default function BarracksScreen() {
       {selectedHero && (
         <div className={styles.detail}>
           <div className={styles.detailHeader}>
+            <Sprite name={selectedHero.templateId} size={36} animate="float" />
             <h3 className={styles.heroName}>{selectedHero.name}</h3>
             <span className={styles.powerBadge}>Power: {power}</span>
           </div>
@@ -95,22 +100,22 @@ export default function BarracksScreen() {
           {/* Effective Stats */}
           <div className={styles.statsGrid}>
             <div className={styles.statCell}>
-              <span className={styles.statIcon}>{"\u2764\uFE0F"}</span>
+              <span className={styles.statIcon}><Sprite name="heart" size={16} /></span>
               <span className={styles.statLabel}>HP</span>
               <span className={styles.statValue}>{effectiveStats.hp}</span>
             </div>
             <div className={styles.statCell}>
-              <span className={styles.statIcon}>{"\u2694\uFE0F"}</span>
+              <span className={styles.statIcon}><Sprite name="attack" size={16} /></span>
               <span className={styles.statLabel}>ATK</span>
               <span className={styles.statValue}>{effectiveStats.atk}</span>
             </div>
             <div className={styles.statCell}>
-              <span className={styles.statIcon}>{"\u{1F6E1}\uFE0F"}</span>
+              <span className={styles.statIcon}><Sprite name="defense" size={16} /></span>
               <span className={styles.statLabel}>DEF</span>
               <span className={styles.statValue}>{effectiveStats.def}</span>
             </div>
             <div className={styles.statCell}>
-              <span className={styles.statIcon}>{"\u{1F4A8}"}</span>
+              <span className={styles.statIcon}><Sprite name="speed" size={16} /></span>
               <span className={styles.statLabel}>SPD</span>
               <span className={styles.statValue}>{effectiveStats.spd}</span>
             </div>
@@ -172,7 +177,7 @@ export default function BarracksScreen() {
                         cost: potCost,
                       })}
                     >
-                      Potion ({Object.entries(potCost).filter(([,v]) => v > 0).map(([res, amt]) => `${RESOURCES[res]?.icon || res} ${amt}`).join(" ")})
+                      Potion (<ResourceCost costs={potCost} available={state.resources} />)
                     </button>
                   </div>
                 )}
@@ -233,9 +238,9 @@ export default function BarracksScreen() {
                     <div className={styles.equippedItem}>
                       <span
                         className={styles.equippedName}
-                        style={{ color: getRarityColor(item.rarity) }}
+                        style={{ color: getRarityColor(item.rarity), display: "inline-flex", alignItems: "center", gap: 4 }}
                       >
-                        {item.icon} {item.name}{(item.level || 1) > 1 ? ` Lv.${item.level}` : ""}
+                        <Sprite name={item.icon} size={16} /> {item.name}{(item.level || 1) > 1 ? ` Lv.${item.level}` : ""}
                       </span>
                       <button
                         className={styles.unequipBtn}
@@ -265,7 +270,7 @@ export default function BarracksScreen() {
             onClick={handleLevelUp}
             disabled={!canLevel || selectedHero.status !== "idle"}
           >
-            Level Up ({"\u{1FA99}"} {levelCost})
+            Level Up (<Sprite name="gold" size={14} /> {levelCost})
           </button>
         </div>
       )}

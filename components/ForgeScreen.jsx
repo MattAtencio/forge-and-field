@@ -7,6 +7,8 @@ import { getSellValue, getRarityColor, getRarityLabel, getUpgradeCost, getRepair
 import { RESOURCES } from "@/data/resources";
 import ItemCard from "./shared/ItemCard";
 import Modal from "./shared/Modal";
+import Sprite from "@/components/sprites/Sprite";
+import ResourceCost from "@/components/sprites/ResourceCost";
 import styles from "./ForgeScreen.module.css";
 
 export default function ForgeScreen() {
@@ -108,7 +110,9 @@ export default function ForgeScreen() {
 
   return (
     <div className={styles.forge}>
-      <h2 className={styles.heading}>{"\u{1F525}"} The Forge</h2>
+      <h2 className={styles.heading}>
+        <Sprite name="forge" size={22} /> The Forge
+      </h2>
 
       {/* Crafting Queue */}
       {state.craftingQueue.length > 0 && (
@@ -123,7 +127,9 @@ export default function ForgeScreen() {
 
             return (
               <div key={craft.id} className={styles.queueItem}>
-                <span className={styles.queueIcon}>{recipe?.icon || "?"}</span>
+                <span className={styles.queueIcon}>
+                  <Sprite name={recipe?.icon || "forge"} size={22} animate={done ? "glow" : "spin"} />
+                </span>
                 <div className={styles.queueInfo}>
                   <span className={styles.queueName}>{recipe?.name || "Unknown"}</span>
                   <div className={styles.queueBar}>
@@ -178,7 +184,9 @@ export default function ForgeScreen() {
             return (
               <div key={recipe.id} className={styles.recipeCard}>
                 <div className={styles.recipeHeader}>
-                  <span className={styles.recipeIcon}>{recipe.icon}</span>
+                  <span className={styles.recipeIcon}>
+                    <Sprite name={recipe.icon} size={28} />
+                  </span>
                   <div>
                     <span className={styles.recipeName}>{recipe.name}</span>
                     <span className={styles.recipeTier}>Tier {recipe.tier} &middot; {recipe.slot}</span>
@@ -189,13 +197,13 @@ export default function ForgeScreen() {
                     <span
                       key={res}
                       className={styles.ingredient}
-                      style={{ color: (state.resources[res] || 0) >= cost ? RESOURCES[res]?.color : "#ef4444" }}
+                      style={{ color: (state.resources[res] || 0) >= cost ? RESOURCES[res]?.color : "#ef4444", display: "inline-flex", alignItems: "center", gap: 2 }}
                     >
-                      {RESOURCES[res]?.icon} {cost}
+                      <Sprite name={RESOURCES[res]?.icon || res} size={12} /> {cost}
                     </span>
                   ))}
                   <span className={styles.craftTime}>
-                    {"\u23F1\uFE0F"} {Math.round(recipe.duration / 1000)}s
+                    {Math.round(recipe.duration / 1000)}s
                   </span>
                 </div>
                 <div className={styles.recipeStats}>
@@ -265,7 +273,7 @@ export default function ForgeScreen() {
               disabled={selectedIds.size === 0}
               onClick={handleBatchSell}
             >
-              Sell All ({"\u{1FA99}"}{" "}
+              Sell All (<Sprite name="gold" size={12} />{" "}
               {state.inventory
                 .filter((i) => selectedIds.has(i.id) && !i.equippedBy)
                 .reduce((sum, item) => {
@@ -282,7 +290,9 @@ export default function ForgeScreen() {
         <Modal title={selectedItem.name} onClose={() => setSelectedItem(null)}>
           <div className={styles.itemDetail}>
             <div className={styles.itemDetailHeader}>
-              <span className={styles.itemDetailIcon}>{selectedItem.icon}</span>
+              <span className={styles.itemDetailIcon}>
+                <Sprite name={selectedItem.icon} size={36} />
+              </span>
               <div>
                 <span
                   className={styles.itemDetailRarity}
@@ -344,7 +354,7 @@ export default function ForgeScreen() {
                       disabled={!canAffordRepair}
                       onClick={() => handleRepair(selectedItem)}
                     >
-                      Repair ({Object.entries(repCost).filter(([,v]) => v > 0).map(([res, amt]) => `${RESOURCES[res]?.icon || res} ${amt}`).join(" ")})
+                      Repair (<ResourceCost costs={repCost} available={state.resources} />)
                     </button>
                   );
                 })()}
@@ -357,7 +367,7 @@ export default function ForgeScreen() {
                 className={styles.dismantleBtn}
                 onClick={() => handleDismantle(selectedItem)}
               >
-                Dismantle ({Object.entries(getDismantleReturns(selectedItem)).filter(([,v]) => v > 0).map(([res, amt]) => `${RESOURCES[res]?.icon || res} ${amt}`).join(" ")})
+                Dismantle (<ResourceCost costs={getDismantleReturns(selectedItem)} />)
               </button>
             )}
 
@@ -375,7 +385,9 @@ export default function ForgeScreen() {
                   onClick={() => handleUpgrade(selectedItem)}
                 >
                   Upgrade to Lv.{(selectedItem.level || 1) + 1}
-                  {" ("}{Object.entries(upgradeCost).filter(([,v]) => v > 0).map(([res, amt]) => `${RESOURCES[res]?.icon || res} ${amt}`).join(" ")}{")"}
+                  {" ("}
+                  <ResourceCost costs={upgradeCost} available={state.resources} />
+                  {")"}
                 </button>
               );
             })()}
@@ -387,7 +399,7 @@ export default function ForgeScreen() {
                 className={styles.sellBtn}
                 onClick={() => handleSell(selectedItem)}
               >
-                Sell for {getSellValue(getRecipeById(selectedItem.recipeId) || { ingredients: {}, tier: 1 }, selectedItem.rarity, selectedItem.level)} {"\u{1FA99}"}
+                Sell for {getSellValue(getRecipeById(selectedItem.recipeId) || { ingredients: {}, tier: 1 }, selectedItem.rarity, selectedItem.level)} <Sprite name="gold" size={14} />
               </button>
             )}
           </div>

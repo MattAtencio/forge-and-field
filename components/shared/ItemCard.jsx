@@ -1,6 +1,7 @@
 "use client";
 
 import { getRarityColor, getRarityLabel } from "@/lib/rarity";
+import Sprite from "@/components/sprites/Sprite";
 import styles from "./ItemCard.module.css";
 
 export default function ItemCard({ item, onClick, compact = false }) {
@@ -13,7 +14,9 @@ export default function ItemCard({ item, onClick, compact = false }) {
         style={{ borderColor: rarityColor }}
         onClick={onClick}
       >
-        <span className={styles.compactIcon}>{item.icon}</span>
+        <span className={styles.compactIcon}>
+          <Sprite name={item.icon} size={24} />
+        </span>
       </button>
     );
   }
@@ -25,7 +28,7 @@ export default function ItemCard({ item, onClick, compact = false }) {
       onClick={onClick}
     >
       <div className={styles.iconWrap}>
-        <span className={styles.icon}>{item.icon}</span>
+        <Sprite name={item.icon} size={28} />
       </div>
       <div className={styles.info}>
         <span className={styles.name} style={{ color: rarityColor }}>

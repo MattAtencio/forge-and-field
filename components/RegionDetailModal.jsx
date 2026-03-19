@@ -3,6 +3,7 @@
 import { EXPEDITIONS } from "@/data/expeditions";
 import { RESOURCES } from "@/data/resources";
 import Modal from "./shared/Modal";
+import Sprite from "@/components/sprites/Sprite";
 import styles from "./RegionDetailModal.module.css";
 
 export default function RegionDetailModal({ region, playerLevel, worldMap, onSelectExpedition, onClose }) {
@@ -24,7 +25,7 @@ export default function RegionDetailModal({ region, playerLevel, worldMap, onSel
   };
 
   return (
-    <Modal title={`${region.icon} ${region.name}`} onClose={onClose}>
+    <Modal title={region.name} onClose={onClose}>
       <div className={styles.detail}>
         <p className={styles.desc}>{region.description}</p>
 
@@ -38,7 +39,9 @@ export default function RegionDetailModal({ region, playerLevel, worldMap, onSel
               onClick={() => onSelectExpedition(exp)}
             >
               <div className={styles.missionHeader}>
-                <span className={styles.missionIcon}>{exp.icon}</span>
+                <span className={styles.missionIcon}>
+                  <Sprite name={exp.icon} size={24} />
+                </span>
                 <div>
                   <span className={styles.missionName}>{exp.name}</span>
                   <span className={styles.missionDesc}>{exp.description}</span>
@@ -51,8 +54,8 @@ export default function RegionDetailModal({ region, playerLevel, worldMap, onSel
               </div>
               <div className={styles.missionRewards}>
                 {Object.entries(exp.rewards.resources).map(([res, [min, max]]) => (
-                  <span key={res} className={styles.rewardChip}>
-                    {RESOURCES[res]?.icon} {min}-{max}
+                  <span key={res} className={styles.rewardChip} style={{ display: "inline-flex", alignItems: "center", gap: 2 }}>
+                    <Sprite name={RESOURCES[res]?.icon || res} size={14} /> {min}-{max}
                   </span>
                 ))}
               </div>
@@ -69,7 +72,9 @@ export default function RegionDetailModal({ region, playerLevel, worldMap, onSel
               onClick={() => onSelectExpedition(bossExpedition)}
             >
               <div className={styles.missionHeader}>
-                <span className={styles.missionIcon}>{bossExpedition.icon}</span>
+                <span className={styles.missionIcon}>
+                  <Sprite name={bossExpedition.icon} size={28} />
+                </span>
                 <div>
                   <span className={styles.missionName}>
                     {bossExpedition.name}
@@ -99,7 +104,9 @@ export default function RegionDetailModal({ region, playerLevel, worldMap, onSel
                 key={poi.id}
                 className={`${styles.poiCard} ${discovered ? styles.poiDiscovered : styles.poiHidden}`}
               >
-                <span className={styles.poiIcon}>{discovered ? poi.icon : "?"}</span>
+                <span className={styles.poiIcon}>
+                  {discovered ? <Sprite name={poi.icon} size={20} /> : "?"}
+                </span>
                 <div className={styles.poiInfo}>
                   <span className={styles.poiName}>{discovered ? poi.name : "Undiscovered"}</span>
                   <span className={styles.poiDesc}>

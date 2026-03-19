@@ -1,31 +1,32 @@
 "use client";
 
 import { useState } from "react";
+import Sprite from "@/components/sprites/Sprite";
 import styles from "./OnboardingModal.module.css";
 
 const SLIDES = [
   {
-    icon: "\u{1F525}",
+    icon: "forge",
     title: "Welcome to Forge & Field",
     text: "Collect resources, craft powerful gear, and send heroes on epic expeditions.",
   },
   {
-    icon: "\u{1FAB5}",
+    icon: "wood",
     title: "Gather Resources",
     text: "Resources generate passively over time — even while you're away. Check back to collect your stockpile.",
   },
   {
-    icon: "\u2694\uFE0F",
+    icon: "barracks",
     title: "Craft & Equip",
     text: "Use resources to craft weapons, armor, and accessories. Each item rolls a rarity — Common, Uncommon, Rare, or Epic.",
   },
   {
-    icon: "\u{1F5FA}\uFE0F",
+    icon: "map",
     title: "Send Expeditions",
     text: "Assign heroes to missions for bonus resources and rare loot. Stronger heroes earn better rewards.",
   },
   {
-    icon: "\u{1F31F}",
+    icon: "season",
     title: "Seasonal Events",
     text: "Every week brings a new season with bonus resources and an XP reward track. Level up to unlock new features!",
   },
@@ -40,7 +41,9 @@ export default function OnboardingModal({ onComplete }) {
     <div className={styles.overlay}>
       <div className={styles.modal}>
         <div className={styles.slideContent}>
-          <span className={styles.icon}>{current.icon}</span>
+          <span className={styles.icon}>
+            <Sprite name={current.icon} size={48} />
+          </span>
           <h2 className={styles.title}>{current.title}</h2>
           <p className={styles.text}>{current.text}</p>
         </div>

@@ -2,7 +2,7 @@ export const REGIONS = [
   {
     id: "greenwood",
     name: "Greenwood Forest",
-    icon: "\u{1F332}",
+    icon: "treant",
     description: "A lush forest teeming with life and lumber.",
     unlockCondition: null, // available from start
     expeditions: ["forest_trail", "herb_garden", "dark_forest"],
@@ -11,7 +11,7 @@ export const REGIONS = [
       {
         id: "poi_lumber_camp",
         name: "Abandoned Lumber Camp",
-        icon: "\u{1F3DA}\uFE0F",
+        icon: "storehouse",
         discoveryChance: 0.15,
         reward: { type: "generator_boost", resource: "wood", bonus: 0.1 },
         description: "+10% wood generation",
@@ -19,7 +19,7 @@ export const REGIONS = [
       {
         id: "poi_herb_hollow",
         name: "Hidden Herb Hollow",
-        icon: "\u{1F33F}",
+        icon: "herbs",
         discoveryChance: 0.12,
         reward: { type: "generator_boost", resource: "herbs", bonus: 0.1 },
         description: "+10% herbs generation",
@@ -30,7 +30,7 @@ export const REGIONS = [
   {
     id: "stormridge",
     name: "Stormridge Mountains",
-    icon: "\u26F0\uFE0F",
+    icon: "rock_golem",
     description: "Towering peaks rich with stone and iron ore.",
     unlockCondition: "greenwood",
     expeditions: ["stone_quarry", "iron_mines"],
@@ -39,7 +39,7 @@ export const REGIONS = [
       {
         id: "poi_ore_vein",
         name: "Rich Ore Vein",
-        icon: "\u26CF\uFE0F",
+        icon: "iron",
         discoveryChance: 0.12,
         reward: { type: "generator_boost", resource: "iron", bonus: 0.15 },
         description: "+15% iron generation",
@@ -47,7 +47,7 @@ export const REGIONS = [
       {
         id: "poi_eagle_nest",
         name: "Eagle's Nest Lookout",
-        icon: "\u{1F985}",
+        icon: "harpy",
         discoveryChance: 0.1,
         reward: { type: "generator_boost", resource: "stone", bonus: 0.1 },
         description: "+10% stone generation",
@@ -58,7 +58,7 @@ export const REGIONS = [
   {
     id: "dusthaven",
     name: "Dusthaven Wastes",
-    icon: "\u{1F3DC}\uFE0F",
+    icon: "bandit_leader",
     description: "Sun-scorched desert hiding buried treasures.",
     unlockCondition: "stormridge",
     expeditions: ["bandit_camp", "scorched_trail", "oasis_ruins"],
@@ -67,7 +67,7 @@ export const REGIONS = [
       {
         id: "poi_traders_cache",
         name: "Trader's Hidden Cache",
-        icon: "\u{1F4B0}",
+        icon: "gold",
         discoveryChance: 0.12,
         reward: { type: "generator_boost", resource: "gold", bonus: 0.15 },
         description: "+15% gold generation",
@@ -75,7 +75,7 @@ export const REGIONS = [
       {
         id: "poi_desert_spring",
         name: "Desert Spring",
-        icon: "\u{1F4A7}",
+        icon: "herbs",
         discoveryChance: 0.1,
         reward: { type: "generator_boost", resource: "herbs", bonus: 0.15 },
         description: "+15% herbs generation",
@@ -83,7 +83,7 @@ export const REGIONS = [
       {
         id: "poi_buried_workshop",
         name: "Buried Workshop",
-        icon: "\u{1F3ED}",
+        icon: "forge",
         discoveryChance: 0.08,
         reward: { type: "crafting_slot", bonus: 1 },
         description: "+1 crafting slot",
@@ -94,7 +94,7 @@ export const REGIONS = [
   {
     id: "frostpeak",
     name: "Frostpeak Tundra",
-    icon: "\u2744\uFE0F",
+    icon: "frost_bear",
     description: "Frozen tundra where precious gems lie beneath the ice.",
     unlockCondition: "dusthaven",
     expeditions: ["frozen_pass", "glacier_cave", "crystal_spire"],
@@ -103,7 +103,7 @@ export const REGIONS = [
       {
         id: "poi_frozen_shrine",
         name: "Frozen Shrine",
-        icon: "\u{1F9CA}",
+        icon: "gems",
         discoveryChance: 0.1,
         reward: { type: "generator_boost", resource: "gems", bonus: 0.2 },
         description: "+20% gems generation",
@@ -111,7 +111,7 @@ export const REGIONS = [
       {
         id: "poi_ice_forge",
         name: "Ancient Ice Forge",
-        icon: "\u2728",
+        icon: "iron",
         discoveryChance: 0.08,
         reward: { type: "generator_boost", resource: "iron", bonus: 0.1 },
         description: "+10% iron generation",
@@ -122,7 +122,7 @@ export const REGIONS = [
   {
     id: "dragons_reach",
     name: "Dragon's Reach",
-    icon: "\u{1F409}",
+    icon: "elder_dragon",
     description: "Volcanic lands ruled by dragonkind. Ultimate riches await.",
     unlockCondition: "frostpeak",
     expeditions: ["dragons_peak", "ancient_ruins", "volcanic_forge"],
@@ -131,7 +131,7 @@ export const REGIONS = [
       {
         id: "poi_dragon_hoard",
         name: "Dragon's Hoard",
-        icon: "\u{1F4B0}",
+        icon: "gold",
         discoveryChance: 0.08,
         reward: { type: "generator_boost", resource: "gold", bonus: 0.2 },
         description: "+20% gold generation",
@@ -139,7 +139,7 @@ export const REGIONS = [
       {
         id: "poi_elemental_rift",
         name: "Elemental Rift",
-        icon: "\u{1F30B}",
+        icon: "fire_imp",
         discoveryChance: 0.06,
         reward: { type: "generator_boost", resource: "gems", bonus: 0.2 },
         description: "+20% gems generation",
@@ -147,7 +147,7 @@ export const REGIONS = [
       {
         id: "poi_ancient_library",
         name: "Ancient Library",
-        icon: "\u{1F4DA}",
+        icon: "item_tome",
         discoveryChance: 0.05,
         reward: { type: "xp_boost", bonus: 0.1 },
         description: "+10% XP gain from all sources",

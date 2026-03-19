@@ -3,6 +3,7 @@
 import { useGameState, useGameDispatch } from "@/lib/gameContext";
 import { BUILDINGS, getNextUpgrade } from "@/data/village";
 import { RESOURCES } from "@/data/resources";
+import Sprite from "@/components/sprites/Sprite";
 import styles from "./VillageScreen.module.css";
 
 export default function VillageScreen() {
@@ -27,7 +28,9 @@ export default function VillageScreen() {
 
   return (
     <div className={styles.screen}>
-      <h2 className={styles.heading}>{"\u{1F3D8}\uFE0F"} Village</h2>
+      <h2 className={styles.heading}>
+        <Sprite name="village" size={22} /> Village
+      </h2>
       <p className={styles.subtitle}>Upgrade buildings to strengthen your settlement</p>
 
       <div className={styles.buildingList}>
@@ -48,7 +51,9 @@ export default function VillageScreen() {
               className={`${styles.buildingCard} ${maxed ? styles.maxed : ""}`}
             >
               <div className={styles.buildingHeader}>
-                <span className={styles.buildingIcon}>{building.icon}</span>
+                <span className={styles.buildingIcon}>
+                  <Sprite name={building.icon} size={28} />
+                </span>
                 <div className={styles.buildingInfo}>
                   <span className={styles.buildingName}>{building.name}</span>
                   <span className={styles.buildingDesc}>{building.description}</span>
@@ -75,9 +80,12 @@ export default function VillageScreen() {
                           color: (state.resources[res] || 0) >= amt
                             ? RESOURCES[res]?.color
                             : "#ef4444",
+                          display: "inline-flex",
+                          alignItems: "center",
+                          gap: 2,
                         }}
                       >
-                        {RESOURCES[res]?.icon} {amt}
+                        <Sprite name={RESOURCES[res]?.icon || res} size={14} /> {amt}
                       </span>
                     ))}
                   </div>

@@ -1,15 +1,16 @@
 "use client";
 
 import { useGameState, useGameDispatch } from "@/lib/gameContext";
+import Sprite from "@/components/sprites/Sprite";
 import styles from "./NavBar.module.css";
 
 const TABS = [
-  { key: "hub", label: "Hub", icon: "\u{1F3E0}", unlockLevel: 1 },
-  { key: "forge", label: "Forge", icon: "\u{1F525}", unlockLevel: 1 },
-  { key: "barracks", label: "Barracks", icon: "\u2694\uFE0F", unlockLevel: 3 },
-  { key: "expedition", label: "Explore", icon: "\u{1F5FA}\uFE0F", unlockLevel: 5 },
-  { key: "season", label: "Season", icon: "\u{1F31F}", unlockLevel: 7 },
-  { key: "village", label: "Village", icon: "\u{1F3D8}\uFE0F", unlockLevel: 8 },
+  { key: "hub", label: "Hub", icon: "hub", unlockLevel: 1 },
+  { key: "forge", label: "Forge", icon: "forge", unlockLevel: 1 },
+  { key: "barracks", label: "Barracks", icon: "barracks", unlockLevel: 3 },
+  { key: "expedition", label: "Explore", icon: "map", unlockLevel: 5 },
+  { key: "season", label: "Season", icon: "season", unlockLevel: 7 },
+  { key: "village", label: "Village", icon: "village", unlockLevel: 8 },
 ];
 
 export default function NavBar() {
@@ -49,7 +50,11 @@ export default function NavBar() {
             disabled={locked}
           >
             <span className={styles.tabIcon}>
-              {locked ? "\u{1F512}" : tab.icon}
+              <Sprite
+                name={locked ? "lock" : tab.icon}
+                size={20}
+                muted={locked}
+              />
             </span>
             <span className={styles.tabLabel}>
               {locked ? `Lv.${tab.unlockLevel}` : tab.label}
