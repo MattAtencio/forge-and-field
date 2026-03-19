@@ -12,9 +12,9 @@ export const XP_TABLE = [
   4200, // Level 10
   5500, // Level 11
   7000, // Level 12
-  9000, // Level 13
-  11500, // Level 14
-  14500, // Level 15
+  7500, // Level 13
+  9500, // Level 14
+  12000, // Level 15
   18000, // Level 16
   22000, // Level 17
   27000, // Level 18
@@ -29,11 +29,12 @@ export const LEVEL_UNLOCKS = {
   7: { screens: ["season"], features: ["season_rewards"] },
   8: { screens: ["village"], features: ["village_buildings"] },
   10: { features: ["hero_3", "tier3_recipes"] },
-  15: { features: ["hero_4", "gem_generation"] },
+  12: { features: ["hero_4"] },
+  15: { features: ["gem_generation"] },
 };
 
 export function getHeroLevelCost(level) {
-  return level * 50;
+  return 40 + level * 30;
 }
 
 export function getPlayerLevel(xp) {

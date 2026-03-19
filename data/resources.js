@@ -1,8 +1,8 @@
 export const RESOURCES = {
-  wood: { name: "Wood", icon: "\u{1FAB5}", color: "#8B4513" },
-  stone: { name: "Stone", icon: "\u{1FAA8}", color: "#808080" },
-  iron: { name: "Iron", icon: "\u26CF\uFE0F", color: "#B0C4DE" },
-  herbs: { name: "Herbs", icon: "\u{1F33F}", color: "#228B22" },
-  gems: { name: "Gems", icon: "\u{1F48E}", color: "#9B59B6" },
-  gold: { name: "Gold", icon: "\u{1FA99}", color: "#FFD700" },
+  wood: { name: "Wood", icon: "wood", color: "#a16207" },
+  stone: { name: "Stone", icon: "stone", color: "#9ca3af" },
+  iron: { name: "Iron", icon: "iron", color: "#94a3b8" },
+  herbs: { name: "Herbs", icon: "herbs", color: "#22c55e" },
+  gems: { name: "Gems", icon: "gems", color: "#a855f7" },
+  gold: { name: "Gold", icon: "gold", color: "#fbbf24" },
 };

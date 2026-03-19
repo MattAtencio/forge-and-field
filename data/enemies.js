@@ -1,27 +1,27 @@
 export const ENEMY_TEMPLATES = [
   // Greenwood
-  { id: "goblin", name: "Goblin", icon: "\u{1F47A}", baseStats: { hp: 20, atk: 6, def: 3, spd: 7 } },
-  { id: "wolf", name: "Dire Wolf", icon: "\u{1F43A}", baseStats: { hp: 30, atk: 8, def: 4, spd: 9 } },
-  { id: "treant", name: "Treant", icon: "\u{1F333}", baseStats: { hp: 50, atk: 6, def: 12, spd: 2 } },
+  { id: "goblin", name: "Goblin", icon: "goblin", baseStats: { hp: 20, atk: 6, def: 3, spd: 7 } },
+  { id: "wolf", name: "Dire Wolf", icon: "wolf", baseStats: { hp: 30, atk: 8, def: 4, spd: 9 } },
+  { id: "treant", name: "Treant", icon: "treant", baseStats: { hp: 50, atk: 6, def: 12, spd: 2 } },
   // Stormridge
-  { id: "rock_golem", name: "Rock Golem", icon: "\u{1FAA8}", baseStats: { hp: 60, atk: 10, def: 15, spd: 2 } },
-  { id: "harpy", name: "Harpy", icon: "\u{1F985}", baseStats: { hp: 25, atk: 12, def: 4, spd: 11 } },
+  { id: "rock_golem", name: "Rock Golem", icon: "rock_golem", baseStats: { hp: 60, atk: 10, def: 15, spd: 2 } },
+  { id: "harpy", name: "Harpy", icon: "harpy", baseStats: { hp: 25, atk: 12, def: 4, spd: 11 } },
   // Dusthaven
-  { id: "bandit", name: "Bandit", icon: "\u{1F977}", baseStats: { hp: 35, atk: 10, def: 6, spd: 8 } },
-  { id: "bandit_leader", name: "Bandit Leader", icon: "\u{1F3F4}\u200D\u2620\uFE0F", baseStats: { hp: 55, atk: 14, def: 8, spd: 6 } },
-  { id: "sandworm", name: "Sandworm", icon: "\u{1FAB1}", baseStats: { hp: 70, atk: 16, def: 10, spd: 3 } },
+  { id: "bandit", name: "Bandit", icon: "bandit", baseStats: { hp: 35, atk: 10, def: 6, spd: 8 } },
+  { id: "bandit_leader", name: "Bandit Leader", icon: "bandit_leader", baseStats: { hp: 55, atk: 14, def: 8, spd: 6 } },
+  { id: "sandworm", name: "Sandworm", icon: "sandworm", baseStats: { hp: 70, atk: 16, def: 10, spd: 3 } },
   // Frostpeak
-  { id: "ice_wraith", name: "Ice Wraith", icon: "\u{1F47B}", baseStats: { hp: 30, atk: 14, def: 5, spd: 10 } },
-  { id: "frost_bear", name: "Frost Bear", icon: "\u{1F43B}\u200D\u2744\uFE0F", baseStats: { hp: 60, atk: 16, def: 12, spd: 4 } },
+  { id: "ice_wraith", name: "Ice Wraith", icon: "ice_wraith", baseStats: { hp: 30, atk: 14, def: 5, spd: 10 } },
+  { id: "frost_bear", name: "Frost Bear", icon: "frost_bear", baseStats: { hp: 60, atk: 16, def: 12, spd: 4 } },
   // Dragon's Reach
-  { id: "fire_imp", name: "Fire Imp", icon: "\u{1F525}", baseStats: { hp: 25, atk: 18, def: 4, spd: 12 } },
-  { id: "drake", name: "Drake", icon: "\u{1F432}", baseStats: { hp: 80, atk: 20, def: 14, spd: 5 } },
-  // Bosses
-  { id: "treant_elder", name: "Treant Elder", icon: "\u{1F332}", baseStats: { hp: 80, atk: 10, def: 16, spd: 3 }, isBoss: true },
-  { id: "stone_golem", name: "Stone Golem", icon: "\u{1F5FF}", baseStats: { hp: 100, atk: 14, def: 20, spd: 2 }, isBoss: true },
-  { id: "sandworm_queen", name: "Sandworm Queen", icon: "\u{1F40D}", baseStats: { hp: 120, atk: 18, def: 12, spd: 4 }, isBoss: true },
-  { id: "frost_dragon", name: "Frost Dragon", icon: "\u2744\uFE0F", baseStats: { hp: 140, atk: 22, def: 16, spd: 6 }, isBoss: true },
-  { id: "elder_dragon", name: "Elder Dragon", icon: "\u{1F409}", baseStats: { hp: 200, atk: 28, def: 20, spd: 5 }, isBoss: true },
+  { id: "fire_imp", name: "Fire Imp", icon: "fire_imp", baseStats: { hp: 25, atk: 18, def: 4, spd: 12 } },
+  { id: "drake", name: "Drake", icon: "drake", baseStats: { hp: 80, atk: 20, def: 14, spd: 5 } },
+  // Bosses (2x HP, +30% ATK for meaningful challenge)
+  { id: "treant_elder", name: "Treant Elder", icon: "treant_elder", baseStats: { hp: 160, atk: 13, def: 16, spd: 3 }, isBoss: true },
+  { id: "stone_golem", name: "Stone Golem", icon: "stone_golem", baseStats: { hp: 200, atk: 18, def: 20, spd: 2 }, isBoss: true },
+  { id: "sandworm_queen", name: "Sandworm Queen", icon: "sandworm_queen", baseStats: { hp: 240, atk: 23, def: 12, spd: 4 }, isBoss: true },
+  { id: "frost_dragon", name: "Frost Dragon", icon: "frost_dragon", baseStats: { hp: 300, atk: 28, def: 16, spd: 6 }, isBoss: true },
+  { id: "elder_dragon", name: "Elder Dragon", icon: "elder_dragon", baseStats: { hp: 500, atk: 36, def: 20, spd: 5 }, isBoss: true },
 ];
 
 export const ENCOUNTER_TABLE = {

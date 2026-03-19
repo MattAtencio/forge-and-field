@@ -5,6 +5,7 @@ import { useGameState, useGameDispatch } from "@/lib/gameContext";
 import { canPrestige, calculatePrestigeStars, canBuyBonus } from "@/lib/prestige";
 import { PRESTIGE_BONUSES } from "@/data/prestige";
 import Modal from "./shared/Modal";
+import Sprite from "@/components/sprites/Sprite";
 import styles from "./PrestigePanel.module.css";
 
 export default function PrestigePanel() {
@@ -34,14 +35,14 @@ export default function PrestigePanel() {
   return (
     <div className={styles.panel}>
       <div className={styles.header}>
-        <h3 className={styles.title}>{"\u2B50"} Prestige</h3>
+        <h3 className={styles.title}><Sprite name="season" size={14} /> Prestige</h3>
         {prestige.tier > 0 && (
           <span className={styles.tierBadge}>Tier {prestige.tier}</span>
         )}
       </div>
 
       <div className={styles.starInfo}>
-        <span className={styles.starCount}>{"\u2B50"} {prestige.availableStars} stars</span>
+        <span className={styles.starCount}><Sprite name="season" size={14} /> {prestige.availableStars} stars</span>
         {prestige.totalStars > prestige.availableStars && (
           <span className={styles.totalStars}>({prestige.totalStars} lifetime)</span>
         )}
@@ -60,7 +61,7 @@ export default function PrestigePanel() {
             className={styles.rebirthBtn}
             onClick={() => setConfirmRebirth(true)}
           >
-            Rebirth (+{starsPreview} {"\u2B50"})
+            Rebirth (+{starsPreview} <Sprite name="season" size={14} />)
           </button>
         )}
       </div>
@@ -70,7 +71,7 @@ export default function PrestigePanel() {
         <Modal title="Confirm Rebirth" onClose={() => setConfirmRebirth(false)}>
           <div className={styles.confirmModal}>
             <p className={styles.confirmText}>
-              You will gain <strong>{starsPreview} {"\u2B50"}</strong> Prestige Stars.
+              You will gain <strong>{starsPreview} <Sprite name="season" size={14} /></strong> Prestige Stars.
             </p>
             <p className={styles.confirmWarn}>
               Your level, resources, inventory, heroes, and world map progress will be reset.

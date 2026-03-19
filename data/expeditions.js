@@ -3,13 +3,13 @@ export const EXPEDITIONS = [
   {
     id: "forest_trail",
     name: "Forest Trail",
-    icon: "\u{1F332}",
+    icon: "treant",
     description: "A short walk through the woods. Good for gathering timber.",
     requiredPower: 10,
     heroSlots: 1,
     duration: 60000,
     rewards: {
-      resources: { wood: [15, 30], herbs: [3, 8] },
+      resources: { wood: [10, 20], herbs: [2, 5] },
       itemChance: 0.05,
     },
     unlockLevel: 1,
@@ -20,7 +20,7 @@ export const EXPEDITIONS = [
   {
     id: "herb_garden",
     name: "Enchanted Garden",
-    icon: "\u{1F33A}",
+    icon: "herbs",
     description: "Forage rare herbs from a hidden garden.",
     requiredPower: 20,
     heroSlots: 1,
@@ -37,7 +37,7 @@ export const EXPEDITIONS = [
   {
     id: "dark_forest",
     name: "Dark Forest",
-    icon: "\u{1F332}",
+    icon: "wolf",
     description: "Venture deep into dangerous woods for rare materials.",
     requiredPower: 45,
     heroSlots: 1,
@@ -54,7 +54,7 @@ export const EXPEDITIONS = [
   {
     id: "greenwood_boss",
     name: "Treant Elder's Grove",
-    icon: "\u{1F333}",
+    icon: "treant_elder",
     description: "Face the ancient guardian of the Greenwood.",
     requiredPower: 35,
     heroSlots: 1,
@@ -74,7 +74,7 @@ export const EXPEDITIONS = [
   {
     id: "stone_quarry",
     name: "Stone Quarry",
-    icon: "\u26F0\uFE0F",
+    icon: "stone",
     description: "Mine stone and ore from the nearby quarry.",
     requiredPower: 15,
     heroSlots: 1,
@@ -91,7 +91,7 @@ export const EXPEDITIONS = [
   {
     id: "iron_mines",
     name: "Iron Mines",
-    icon: "\u26CF\uFE0F",
+    icon: "iron",
     description: "Delve into the deep mines for iron and precious gems.",
     requiredPower: 55,
     heroSlots: 1,
@@ -108,7 +108,7 @@ export const EXPEDITIONS = [
   {
     id: "stormridge_boss",
     name: "Stone Golem's Chamber",
-    icon: "\u{1F5FF}",
+    icon: "stone_golem",
     description: "Defeat the massive Stone Golem deep in the mountains.",
     requiredPower: 55,
     heroSlots: 2,
@@ -128,7 +128,7 @@ export const EXPEDITIONS = [
   {
     id: "bandit_camp",
     name: "Bandit Camp",
-    icon: "\u{1F3DA}\uFE0F",
+    icon: "bandit",
     description: "Raid the bandit camp for gold and supplies.",
     requiredPower: 30,
     heroSlots: 1,
@@ -145,7 +145,7 @@ export const EXPEDITIONS = [
   {
     id: "scorched_trail",
     name: "Scorched Trail",
-    icon: "\u{1F3DC}\uFE0F",
+    icon: "sandworm",
     description: "Navigate the blistering desert trail for hidden loot.",
     requiredPower: 50,
     heroSlots: 1,
@@ -162,7 +162,7 @@ export const EXPEDITIONS = [
   {
     id: "oasis_ruins",
     name: "Oasis Ruins",
-    icon: "\u{1F3DB}\uFE0F",
+    icon: "gems",
     description: "Ancient ruins hidden near a desert oasis.",
     requiredPower: 60,
     heroSlots: 1,
@@ -179,9 +179,9 @@ export const EXPEDITIONS = [
   {
     id: "dusthaven_boss",
     name: "Sandworm Pit",
-    icon: "\u{1F40D}",
+    icon: "sandworm_queen",
     description: "Confront the Sandworm Queen in her underground lair.",
-    requiredPower: 75,
+    requiredPower: 110,
     heroSlots: 2,
     duration: 900000,
     rewards: {
@@ -199,7 +199,7 @@ export const EXPEDITIONS = [
   {
     id: "frozen_pass",
     name: "Frozen Pass",
-    icon: "\u2744\uFE0F",
+    icon: "ice_wraith",
     description: "Brave the icy mountain pass for rare materials.",
     requiredPower: 60,
     heroSlots: 1,
@@ -216,7 +216,7 @@ export const EXPEDITIONS = [
   {
     id: "glacier_cave",
     name: "Glacier Cave",
-    icon: "\u{1F9CA}",
+    icon: "frost_bear",
     description: "Explore frozen caverns glittering with precious gems.",
     requiredPower: 70,
     heroSlots: 1,
@@ -233,7 +233,7 @@ export const EXPEDITIONS = [
   {
     id: "crystal_spire",
     name: "Crystal Spire",
-    icon: "\u{1F48E}",
+    icon: "gems",
     description: "Scale the frozen spire to its gem-encrusted peak.",
     requiredPower: 80,
     heroSlots: 2,
@@ -250,9 +250,9 @@ export const EXPEDITIONS = [
   {
     id: "frostpeak_boss",
     name: "Frost Dragon's Lair",
-    icon: "\u{1F976}",
+    icon: "frost_dragon",
     description: "Face the fearsome Frost Dragon in its frozen domain.",
-    requiredPower: 90,
+    requiredPower: 140,
     heroSlots: 2,
     duration: 1500000,
     rewards: {
@@ -270,14 +270,14 @@ export const EXPEDITIONS = [
   {
     id: "dragons_peak",
     name: "Dragon's Peak",
-    icon: "\u{1F409}",
+    icon: "drake",
     description: "Scale the mountain to face the dragon's hoard.",
     requiredPower: 80,
     heroSlots: 2,
     duration: 1800000,
     rewards: {
-      resources: { gold: [100, 200], gems: [5, 10] },
-      itemChance: 0.35,
+      resources: { gold: [150, 300], gems: [8, 15] },
+      itemChance: 0.45,
     },
     unlockLevel: 10,
     regionId: "dragons_reach",
@@ -287,14 +287,14 @@ export const EXPEDITIONS = [
   {
     id: "ancient_ruins",
     name: "Ancient Ruins",
-    icon: "\u{1F3DB}\uFE0F",
+    icon: "elder_dragon",
     description: "Explore crumbling ruins for legendary artifacts.",
     requiredPower: 100,
     heroSlots: 2,
     duration: 3600000,
     rewards: {
-      resources: { gems: [8, 15], gold: [150, 300] },
-      itemChance: 0.5,
+      resources: { gems: [15, 25], gold: [250, 500] },
+      itemChance: 0.75,
     },
     unlockLevel: 12,
     regionId: "dragons_reach",
@@ -304,14 +304,14 @@ export const EXPEDITIONS = [
   {
     id: "volcanic_forge",
     name: "Volcanic Forge",
-    icon: "\u{1F30B}",
+    icon: "forge",
     description: "Discover an ancient forge within the volcanic heart.",
     requiredPower: 110,
     heroSlots: 2,
     duration: 2400000,
     rewards: {
-      resources: { iron: [50, 80], gems: [10, 18], gold: [100, 180] },
-      itemChance: 0.4,
+      resources: { iron: [70, 120], gems: [15, 25], gold: [150, 280] },
+      itemChance: 0.55,
     },
     unlockLevel: 13,
     regionId: "dragons_reach",
@@ -321,14 +321,14 @@ export const EXPEDITIONS = [
   {
     id: "dragons_reach_boss",
     name: "Elder Dragon's Throne",
-    icon: "\u{1F432}",
+    icon: "elder_dragon",
     description: "Challenge the Elder Dragon, master of all dragonkind.",
-    requiredPower: 130,
+    requiredPower: 200,
     heroSlots: 2,
     duration: 3600000,
     rewards: {
-      resources: { gold: [250, 400], gems: [15, 25] },
-      itemChance: 0.8,
+      resources: { gold: [500, 800], gems: [25, 40] },
+      itemChance: 1.0,
     },
     unlockLevel: 14,
     regionId: "dragons_reach",

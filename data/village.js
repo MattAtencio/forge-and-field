@@ -2,7 +2,7 @@ export const BUILDINGS = [
   {
     id: "storehouse",
     name: "Storehouse",
-    icon: "\u{1F3E0}",
+    icon: "storehouse",
     description: "Expand your inventory capacity",
     effectLabel: (level) => `+${level * 10} inventory slots`,
     upgrades: [
@@ -16,7 +16,7 @@ export const BUILDINGS = [
   {
     id: "war_camp",
     name: "War Camp",
-    icon: "\u26FA",
+    icon: "war_camp",
     description: "Reduce expedition duration",
     effectLabel: (level) => `-${level * 8}% expedition time`,
     upgrades: [
@@ -30,7 +30,7 @@ export const BUILDINGS = [
   {
     id: "apothecary",
     name: "Apothecary",
-    icon: "\u{1F9EA}",
+    icon: "apothecary",
     description: "Reduce hero rest time",
     effectLabel: (level) => `-${level * 12}% rest time`,
     upgrades: [
@@ -44,7 +44,7 @@ export const BUILDINGS = [
   {
     id: "smithy",
     name: "Smithy",
-    icon: "\u2692\uFE0F",
+    icon: "smithy",
     description: "Reduce repair costs",
     effectLabel: (level) => `-${level * 8}% repair cost`,
     upgrades: [

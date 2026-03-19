@@ -65,7 +65,7 @@ export default function ExpeditionScreen() {
 
   return (
     <div className={styles.screen}>
-      <h2 className={styles.heading}>{"\u{1F5FA}\uFE0F"} Expeditions</h2>
+      <h2 className={styles.heading}>Expeditions</h2>
 
       {/* Active Expeditions */}
       {state.expeditions.active.length > 0 && (
