@@ -6,7 +6,6 @@
   overflow: hidden;
   max-width: 430px;
   margin: 0 auto;
-  padding-bottom: env(safe-area-inset-bottom);
 }
 
 .screenArea {
