@@ -2,7 +2,7 @@
   display: flex;
   justify-content: space-around;
   align-items: center;
-  padding: 6px 0 max(6px, env(safe-area-inset-bottom));
+  padding: 8px 0 max(8px, env(safe-area-inset-bottom));
   background: rgba(255, 255, 255, 0.03);
   border-top: 1px solid rgba(255, 255, 255, 0.06);
   flex-shrink: 0;
@@ -17,7 +17,7 @@
   border: none;
   color: #6b6b80;
   cursor: pointer;
-  padding: 4px 8px;
+  padding: 6px 10px;
   border-radius: 8px;
   transition: color 0.2s, background 0.2s;
   position: relative;
@@ -38,8 +38,8 @@
 }
 
 .tabIcon {
-  font-size: 1.2rem;
-  line-height: 1;
+  font-size: 1.4rem;
+  line-height: 1.2;
 }
 
 .tabLabel {
