@@ -4,6 +4,8 @@ import { useEffect, useRef, useState, useCallback } from "react";
 import { GameProvider, useGameState, useGameDispatch } from "@/lib/gameContext";
 import { calculateOfflineProgress } from "@/lib/tick";
 import { getPlayerLevel, getUnlocksForLevel } from "@/data/progression";
+import { HERO_TEMPLATES } from "@/data/heroes";
+import { createHeroFromTemplate } from "@/lib/hero";
 import ResourceBar from "./shared/ResourceBar";
 import NavBar from "./shared/NavBar";
 import HubScreen from "./HubScreen";
@@ -14,6 +16,7 @@ import SeasonScreen from "./SeasonScreen";
 import VillageScreen from "./VillageScreen";
 import OnboardingModal from "./onboarding/OnboardingModal";
 import WelcomeBackModal from "./WelcomeBackModal";
+import HeroUnlockModal from "./HeroUnlockModal";
 import SettingsModal from "./SettingsModal";
 import styles from "./ForgeAndField.module.css";
 
@@ -23,6 +26,7 @@ function GameShell() {
   const tickRef = useRef(null);
   const [offlineData, setOfflineData] = useState(null);
   const [showSettings, setShowSettings] = useState(false);
+  const [unlockedHeroes, setUnlockedHeroes] = useState([]);
   const initializedRef = useRef(false);
 
   // Calculate offline progress on first load
@@ -58,6 +62,27 @@ function GameShell() {
       });
     }
   }, [state.player.xp, state.player.level, dispatch]);
+
+  // Retroactive hero recruitment — fix for existing saves missing heroes
+  useEffect(() => {
+    const missing = HERO_TEMPLATES.filter(
+      (t) => t.unlockLevel <= state.player.level && !state.heroes.find((h) => h.templateId === t.id)
+    );
+    if (missing.length > 0) {
+      const recruited = missing.map((t) => createHeroFromTemplate(t));
+      for (const hero of recruited) {
+        dispatch({ type: "RECRUIT_HERO", hero });
+      }
+      setUnlockedHeroes(recruited);
+    }
+  }, []); // Run once on load
+
+  // Show unlock modal when reducer signals new heroes
+  useEffect(() => {
+    if (state._newlyRecruitedHeroes?.length > 0) {
+      setUnlockedHeroes((prev) => [...prev, ...state._newlyRecruitedHeroes]);
+    }
+  }, [state._newlyRecruitedHeroes]);
 
   const handleTutorialComplete = useCallback(() => {
     dispatch({ type: "SET_TUTORIAL_DONE" });
@@ -97,6 +122,14 @@ function GameShell() {
         <WelcomeBackModal
           offlineData={offlineData}
           onDismiss={() => setOfflineData(null)}
+        />
+      )}
+
+      {/* Hero Unlock Celebration */}
+      {unlockedHeroes.length > 0 && (
+        <HeroUnlockModal
+          heroes={unlockedHeroes}
+          onDismiss={() => setUnlockedHeroes([])}
         />
       )}
 
