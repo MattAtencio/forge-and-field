@@ -22,8 +22,10 @@ export default function ForgeScreen() {
 
   const recipes = getAvailableRecipes(state.player.level);
 
+  const maxSlots = state.maxCraftSlots || 2;
+
   const handleCraft = (recipe) => {
-    if (state.craftingQueue.length >= 2) return;
+    if (state.craftingQueue.length >= maxSlots) return;
     if (!canCraft(recipe, state.resources)) return;
     dispatch({ type: "START_CRAFT", recipe });
   };
@@ -178,7 +180,7 @@ export default function ForgeScreen() {
         <div className={styles.recipeList}>
           {recipes.map((recipe) => {
             const affordable = canCraft(recipe, state.resources);
-            const queueFull = state.craftingQueue.length >= 2;
+            const queueFull = state.craftingQueue.length >= maxSlots;
             const invFull = state.inventory.length >= (state.inventoryCapacity || 20);
 
             return (
