@@ -39,6 +39,10 @@
   padding-top: 10px;
 }
 
+.queueEmpty {
+  opacity: 0.35;
+}
+
 .queueIcon { font-size: 1.2rem; }
 
 .queueInfo { flex: 1; }
