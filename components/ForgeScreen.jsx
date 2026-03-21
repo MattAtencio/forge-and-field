@@ -119,7 +119,7 @@ export default function ForgeScreen() {
       {/* Crafting Queue — always show all slots for stable layout */}
       <div className={styles.queue}>
         <h3 className={styles.subheading}>Crafting Queue</h3>
-        {Array.from({ length: 2 }, (_, i) => {
+        {Array.from({ length: maxSlots }, (_, i) => {
           const craft = state.craftingQueue[i];
           if (craft) {
             const recipe = getRecipeById(craft.recipeId);
