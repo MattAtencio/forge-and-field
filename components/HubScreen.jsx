@@ -1,12 +1,15 @@
 "use client";
 
+import { useState } from "react";
 import { useGameState, useGameDispatch } from "@/lib/gameContext";
 import { XP_TABLE, LEVEL_UNLOCKS } from "@/data/progression";
 import { EXPEDITIONS } from "@/data/expeditions";
-import { rollRarity, applyRarityMultiplier, getMaxDurability } from "@/lib/rarity";
+import { rollRarity, applyRarityMultiplier, getMaxDurability, getRarityColor, getRarityLabel } from "@/lib/rarity";
 import { RECIPES } from "@/data/recipes";
+import { RESOURCES } from "@/data/resources";
 import ProgressBar from "./shared/ProgressBar";
 import PrestigePanel from "./PrestigePanel";
+import Modal from "./shared/Modal";
 import Sprite from "@/components/sprites/Sprite";
 import styles from "./HubScreen.module.css";
 
@@ -97,6 +100,7 @@ export default function HubScreen({ onOpenSettings }) {
   const state = useGameState();
   const dispatch = useGameDispatch();
   const { player, expeditions, craftingQueue } = state;
+  const [chestReveal, setChestReveal] = useState(null); // { type, config, rewards, phase: 'opening' | 'reveal' }
 
   const xpForCurrent = XP_TABLE[player.level - 1] || 0;
   const xpForNext = XP_TABLE[player.level] || XP_TABLE[XP_TABLE.length - 1];
@@ -257,6 +261,10 @@ export default function HubScreen({ onOpenSettings }) {
                   onClick={() => {
                     if (!ready) return;
                     const rewards = generateChestRewards(type, player.level);
+                    setChestReveal({ type, config, rewards, phase: "opening" });
+                    setTimeout(() => {
+                      setChestReveal((prev) => prev ? { ...prev, phase: "reveal" } : null);
+                    }, 800);
                     dispatch({ type: "CLAIM_CHEST", chestType: type, rewards });
                   }}
                 >
@@ -333,6 +341,45 @@ export default function HubScreen({ onOpenSettings }) {
           ))}
         </div>
       </div>
+      {/* Chest Reveal Modal */}
+      {chestReveal && (
+        <Modal title={chestReveal.config.label} onClose={() => setChestReveal(null)}>
+          <div className={styles.chestReveal}>
+            <div className={`${styles.chestRevealIcon} ${chestReveal.phase === "opening" ? styles.chestOpening : styles.chestOpened}`}>
+              <Sprite name={chestReveal.config.icon} size={64} />
+            </div>
+            {chestReveal.phase === "reveal" && (
+              <div className={styles.chestContents}>
+                {Object.entries(chestReveal.rewards.resources).map(([res, amount]) =>
+                  amount > 0 ? (
+                    <div key={res} className={styles.chestRewardChip}>
+                      <Sprite name={RESOURCES[res]?.icon || res} size={20} />
+                      <span className={styles.chestRewardAmount}>+{amount}</span>
+                      <span className={styles.chestRewardName}>{RESOURCES[res]?.name || res}</span>
+                    </div>
+                  ) : null
+                )}
+                {chestReveal.rewards.items.map((item) => (
+                  <div
+                    key={item.id}
+                    className={styles.chestItemReveal}
+                    style={{ borderColor: getRarityColor(item.rarity) }}
+                  >
+                    <Sprite name={item.icon} size={24} />
+                    <div className={styles.chestItemInfo}>
+                      <span style={{ color: getRarityColor(item.rarity) }}>{item.name}</span>
+                      <span className={styles.chestItemRarity}>{getRarityLabel(item.rarity)}</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+            <button className={styles.chestCollectBtn} onClick={() => setChestReveal(null)}>
+              {chestReveal.phase === "opening" ? "Opening..." : "Collect"}
+            </button>
+          </div>
+        </Modal>
+      )}
     </div>
   );
 }

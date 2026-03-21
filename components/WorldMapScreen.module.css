@@ -52,6 +52,46 @@
   font-variant-numeric: tabular-nums;
 }
 
+.cancelBtn {
+  background: rgba(239, 68, 68, 0.1);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: 6px;
+  padding: 3px 10px;
+  font-size: 0.6rem;
+  font-weight: 600;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.cancelConfirm {
+  display: flex;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.cancelYes {
+  background: rgba(239, 68, 68, 0.2);
+  color: #ef4444;
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: 6px;
+  padding: 3px 8px;
+  font-size: 0.6rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.cancelNo {
+  background: rgba(255, 255, 255, 0.05);
+  color: #8888a0;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 6px;
+  padding: 3px 8px;
+  font-size: 0.6rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+
 .progressBar {
   height: 4px;
   background: rgba(255, 255, 255, 0.06);
@@ -242,4 +282,86 @@
 
 .sendBtn:active:not(:disabled) {
   background: rgba(34, 197, 94, 0.25);
+}
+
+/* Lock Toast */
+.lockToast {
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(15, 15, 25, 0.95);
+  border: 1px solid rgba(249, 115, 22, 0.3);
+  color: #f59e0b;
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 8px 16px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  z-index: 100;
+  animation: toastIn 0.2s ease;
+  white-space: nowrap;
+}
+
+@keyframes toastIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(8px); }
+  to { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+
+/* Discovery Callout */
+.discoveryCallout {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  text-align: center;
+}
+
+.discoveryIcon {
+  width: 72px;
+  height: 72px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(168, 85, 247, 0.1);
+  border: 1px solid rgba(168, 85, 247, 0.25);
+  border-radius: 50%;
+  animation: discoveryPulse 1.5s ease-in-out infinite;
+}
+
+.discoveryName {
+  font-family: var(--font-dm-serif), serif;
+  font-size: 1rem;
+  color: #a855f7;
+  margin: 0;
+}
+
+.discoveryDesc {
+  font-size: 0.75rem;
+  color: #a0a0b8;
+  margin: 0;
+}
+
+.discoveryBtn {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(168, 85, 247, 0.15);
+  color: #a855f7;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 4px;
+}
+
+.discoveryBtn:active {
+  background: rgba(168, 85, 247, 0.25);
+}
+
+@keyframes discoveryPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(168, 85, 247, 0.3); }
+  50% { box-shadow: 0 0 16px 4px rgba(168, 85, 247, 0.15); }
 }

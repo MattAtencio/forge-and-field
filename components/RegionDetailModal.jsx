@@ -7,9 +7,11 @@ import Sprite from "@/components/sprites/Sprite";
 import styles from "./RegionDetailModal.module.css";
 
 export default function RegionDetailModal({ region, playerLevel, worldMap, onSelectExpedition, onClose }) {
-  const regionExpeditions = EXPEDITIONS.filter(
-    (e) => e.regionId === region.id && e.unlockLevel <= playerLevel && !e.isBoss
+  const allRegionExpeditions = EXPEDITIONS.filter(
+    (e) => e.regionId === region.id && !e.isBoss
   );
+  const regionExpeditions = allRegionExpeditions.filter((e) => e.unlockLevel <= playerLevel);
+  const lockedExpeditions = allRegionExpeditions.filter((e) => e.unlockLevel > playerLevel);
   const bossExpedition = EXPEDITIONS.find((e) => e.id === region.bossExpedition);
   const bossAvailable = bossExpedition && bossExpedition.unlockLevel <= playerLevel;
   const bossDefeated = worldMap?.bossesDefeated?.[region.bossExpedition] || false;
@@ -61,34 +63,65 @@ export default function RegionDetailModal({ region, playerLevel, worldMap, onSel
               </div>
             </button>
           ))}
+          {lockedExpeditions.map((exp) => (
+            <div key={exp.id} className={`${styles.missionCard} ${styles.missionLocked}`}>
+              <div className={styles.missionHeader}>
+                <span className={styles.missionIcon}>
+                  <Sprite name="lock" size={24} muted />
+                </span>
+                <div>
+                  <span className={styles.missionName}>{exp.name}</span>
+                  <span className={styles.lockRequirement}>
+                    Requires Commander Lvl {exp.unlockLevel}
+                  </span>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
 
         {/* Boss */}
-        {bossAvailable && (
+        {bossExpedition && (
           <>
             <h4 className={styles.subheading}>Boss</h4>
-            <button
-              className={`${styles.missionCard} ${styles.bossCard}`}
-              onClick={() => onSelectExpedition(bossExpedition)}
-            >
-              <div className={styles.missionHeader}>
-                <span className={styles.missionIcon}>
-                  <Sprite name={bossExpedition.icon} size={28} />
-                </span>
-                <div>
-                  <span className={styles.missionName}>
-                    {bossExpedition.name}
-                    {bossDefeated && <span className={styles.defeatedTag}> Defeated</span>}
+            {bossAvailable ? (
+              <button
+                className={`${styles.missionCard} ${styles.bossCard}`}
+                onClick={() => onSelectExpedition(bossExpedition)}
+              >
+                <div className={styles.missionHeader}>
+                  <span className={styles.missionIcon}>
+                    <Sprite name={bossExpedition.icon} size={28} />
                   </span>
-                  <span className={styles.missionDesc}>{bossExpedition.description}</span>
+                  <div>
+                    <span className={styles.missionName}>
+                      {bossExpedition.name}
+                      {bossDefeated && <span className={styles.defeatedTag}> Defeated</span>}
+                    </span>
+                    <span className={styles.missionDesc}>{bossExpedition.description}</span>
+                  </div>
+                </div>
+                <div className={styles.missionMeta}>
+                  <span>Power: {bossExpedition.requiredPower}</span>
+                  <span>Heroes: {bossExpedition.heroSlots}</span>
+                  <span>{formatDuration(bossExpedition.duration)}</span>
+                </div>
+              </button>
+            ) : (
+              <div className={`${styles.missionCard} ${styles.bossCard} ${styles.missionLocked}`}>
+                <div className={styles.missionHeader}>
+                  <span className={styles.missionIcon}>
+                    <Sprite name="lock" size={28} muted />
+                  </span>
+                  <div>
+                    <span className={styles.missionName}>{bossExpedition.name}</span>
+                    <span className={styles.lockRequirement}>
+                      Requires Commander Lvl {bossExpedition.unlockLevel}
+                    </span>
+                  </div>
                 </div>
               </div>
-              <div className={styles.missionMeta}>
-                <span>Power: {bossExpedition.requiredPower}</span>
-                <span>Heroes: {bossExpedition.heroSlots}</span>
-                <span>{formatDuration(bossExpedition.duration)}</span>
-              </div>
-            </button>
+            )}
           </>
         )}
 

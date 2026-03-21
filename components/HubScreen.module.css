@@ -420,3 +420,130 @@
   from { opacity: 0; transform: translateY(6px); }
   to { opacity: 1; transform: translateY(0); }
 }
+
+/* Chest Reveal Modal */
+.chestReveal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.chestRevealIcon {
+  width: 80px;
+  height: 80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.chestOpening {
+  animation: chestShake 0.6s ease-in-out;
+}
+
+.chestOpened {
+  animation: chestBurst 0.4s ease-out;
+}
+
+.chestContents {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  animation: contentsReveal 0.4s ease-out;
+}
+
+.chestRewardChip {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  padding: 8px 12px;
+  animation: rewardPop 0.3s ease both;
+}
+
+.chestRewardChip:nth-child(2) { animation-delay: 0.08s; }
+.chestRewardChip:nth-child(3) { animation-delay: 0.16s; }
+
+.chestRewardAmount {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #22c55e;
+  font-variant-numeric: tabular-nums;
+}
+
+.chestRewardName {
+  font-size: 0.65rem;
+  color: #8888a0;
+}
+
+.chestItemReveal {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid;
+  border-radius: 10px;
+  padding: 10px;
+  animation: rewardPop 0.3s ease both;
+  animation-delay: 0.25s;
+}
+
+.chestItemInfo {
+  display: flex;
+  flex-direction: column;
+}
+
+.chestItemInfo span:first-child {
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.chestItemRarity {
+  font-size: 0.6rem;
+  color: #6b6b80;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.chestCollectBtn {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(34, 197, 94, 0.15);
+  color: #22c55e;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.chestCollectBtn:active {
+  background: rgba(34, 197, 94, 0.25);
+}
+
+@keyframes chestShake {
+  0%, 100% { transform: rotate(0) scale(1); }
+  20% { transform: rotate(-8deg) scale(1.05); }
+  40% { transform: rotate(8deg) scale(1.08); }
+  60% { transform: rotate(-5deg) scale(1.1); }
+  80% { transform: rotate(3deg) scale(1.12); }
+}
+
+@keyframes chestBurst {
+  from { transform: scale(1.12); }
+  50% { transform: scale(1.2); }
+  to { transform: scale(1); }
+}
+
+@keyframes contentsReveal {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes rewardPop {
+  from { opacity: 0; transform: scale(0.8); }
+  to { opacity: 1; transform: scale(1); }
+}

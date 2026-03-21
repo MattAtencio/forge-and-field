@@ -18,6 +18,8 @@ export default function ForgeScreen() {
   const [tab, setTab] = useState("recipes"); // 'recipes' | 'inventory'
   const [selectionMode, setSelectionMode] = useState(false);
   const [selectedIds, setSelectedIds] = useState(new Set());
+  const [sortBy, setSortBy] = useState("rarity"); // 'rarity' | 'level' | 'type'
+  const [filterSlot, setFilterSlot] = useState("all"); // 'all' | 'weapon' | 'armor' | 'accessory'
   const longPressRef = useRef(null);
 
   const recipes = getAvailableRecipes(state.player.level);
@@ -106,6 +108,23 @@ export default function ForgeScreen() {
     if (item.equippedBy) return;
     setSelectionMode(true);
     setSelectedIds(new Set([item.id]));
+  };
+
+  const RARITY_ORDER = { common: 0, uncommon: 1, rare: 2, epic: 3 };
+  const SLOT_ORDER = { weapon: 0, armor: 1, accessory: 2 };
+
+  const getFilteredAndSorted = () => {
+    let items = [...state.inventory];
+    if (filterSlot !== "all") {
+      items = items.filter((i) => i.slot === filterSlot);
+    }
+    items.sort((a, b) => {
+      if (sortBy === "rarity") return (RARITY_ORDER[b.rarity] || 0) - (RARITY_ORDER[a.rarity] || 0);
+      if (sortBy === "level") return (b.level || 1) - (a.level || 1);
+      if (sortBy === "type") return (SLOT_ORDER[a.slot] || 0) - (SLOT_ORDER[b.slot] || 0);
+      return 0;
+    });
+    return items;
   };
 
   const now = Date.now();
@@ -240,11 +259,37 @@ export default function ForgeScreen() {
 
       {/* Inventory */}
       {tab === "inventory" && (
+        <>
+        <div className={styles.inventoryControls}>
+          <div className={styles.filterRow}>
+            {["all", "weapon", "armor", "accessory"].map((slot) => (
+              <button
+                key={slot}
+                className={`${styles.filterBtn} ${filterSlot === slot ? styles.filterActive : ""}`}
+                onClick={() => setFilterSlot(slot)}
+              >
+                {slot === "all" ? "All" : slot.charAt(0).toUpperCase() + slot.slice(1)}
+              </button>
+            ))}
+          </div>
+          <div className={styles.sortRow}>
+            <span className={styles.sortLabel}>Sort:</span>
+            {["rarity", "level", "type"].map((s) => (
+              <button
+                key={s}
+                className={`${styles.sortBtn} ${sortBy === s ? styles.sortActive : ""}`}
+                onClick={() => setSortBy(s)}
+              >
+                {s.charAt(0).toUpperCase() + s.slice(1)}
+              </button>
+            ))}
+          </div>
+        </div>
         <div className={styles.inventoryGrid}>
           {state.inventory.length === 0 ? (
             <p className={styles.empty}>No items yet. Start crafting!</p>
           ) : (
-            state.inventory.map((item) => (
+            getFilteredAndSorted().map((item) => (
               <div
                 key={item.id}
                 className={`${styles.selectableItem} ${selectionMode && selectedIds.has(item.id) ? styles.itemSelected : ""}`}
@@ -254,10 +299,8 @@ export default function ForgeScreen() {
                 onPointerUp={() => clearTimeout(longPressRef.current)}
                 onPointerLeave={() => clearTimeout(longPressRef.current)}
               >
-                {selectionMode && !item.equippedBy && (
-                  <span className={styles.selectCheck}>
-                    {selectedIds.has(item.id) ? "\u2611" : "\u2610"}
-                  </span>
+                {selectionMode && !item.equippedBy && selectedIds.has(item.id) && (
+                  <span className={styles.selectMark} />
                 )}
                 <ItemCard
                   item={item}
@@ -267,6 +310,7 @@ export default function ForgeScreen() {
             ))
           )}
         </div>
+        </>
       )}
 
       {/* Batch Sell Bar */}

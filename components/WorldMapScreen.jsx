@@ -25,6 +25,9 @@ export default function WorldMapScreen() {
   const [selectedHeroes, setSelectedHeroes] = useState([]);
   const [combatPending, setCombatPending] = useState(null);
   const [rewardPending, setRewardPending] = useState(null);
+  const [cancelConfirm, setCancelConfirm] = useState(null);
+  const [lockToast, setLockToast] = useState(null);
+  const [discoveryPending, setDiscoveryPending] = useState(null);
 
   const now = Date.now();
   const idleHeroes = state.heroes.filter((h) => h.status === "idle");
@@ -123,16 +126,22 @@ export default function WorldMapScreen() {
       }
     }
 
+    let discovery = null;
     if (template?.regionId) {
       const region = REGIONS.find((r) => r.id === template.regionId);
       if (region) {
         for (const poi of region.pointsOfInterest) {
           if (!isDiscovered(poi.id) && Math.random() < poi.discoveryChance) {
             dispatch({ type: "DISCOVER_POI", poiId: poi.id, reward: poi.reward });
+            discovery = poi;
             break;
           }
         }
       }
+    }
+
+    if (discovery) {
+      setDiscoveryPending(discovery);
     }
 
     setCombatPending(null);
@@ -181,6 +190,32 @@ export default function WorldMapScreen() {
                   <span><Sprite name={template?.icon || "map"} size={18} /></span>
                   <span className={styles.activeName}>{template?.name || "Unknown"}</span>
                   <span className={styles.activeTime}>{formatDuration(remaining)}</span>
+                  {cancelConfirm === exp.id ? (
+                    <div className={styles.cancelConfirm}>
+                      <button
+                        className={styles.cancelYes}
+                        onClick={() => {
+                          dispatch({ type: "CANCEL_EXPEDITION", expeditionId: exp.id });
+                          setCancelConfirm(null);
+                        }}
+                      >
+                        Yes
+                      </button>
+                      <button
+                        className={styles.cancelNo}
+                        onClick={() => setCancelConfirm(null)}
+                      >
+                        No
+                      </button>
+                    </div>
+                  ) : (
+                    <button
+                      className={styles.cancelBtn}
+                      onClick={() => setCancelConfirm(exp.id)}
+                    >
+                      Cancel
+                    </button>
+                  )}
                 </div>
                 <div className={styles.progressBar}>
                   <div className={styles.progressFill} style={{ width: `${pct}%` }} />
@@ -231,8 +266,14 @@ export default function WorldMapScreen() {
                   "--region-bg": region.theme.bg,
                   "--region-border": region.theme.border,
                 }}
-                onClick={() => unlocked && setSelectedRegion(region)}
-                disabled={!unlocked}
+                onClick={() => {
+                  if (unlocked) {
+                    setSelectedRegion(region);
+                  } else {
+                    setLockToast(`Region locked \u00b7 Clear ${region.unlockCondition} boss to unlock`);
+                    setTimeout(() => setLockToast(null), 2500);
+                  }
+                }}
               >
                 <div className={styles.regionHeader}>
                   <span className={styles.regionIcon}>
@@ -270,6 +311,13 @@ export default function WorldMapScreen() {
           })}
         </div>
       </div>
+
+      {/* Lock Toast */}
+      {lockToast && (
+        <div className={styles.lockToast}>
+          <Sprite name="lock" size={16} /> {lockToast}
+        </div>
+      )}
 
       {/* Region Detail Modal */}
       {selectedRegion && !selectedExpedition && (
@@ -357,6 +405,25 @@ export default function WorldMapScreen() {
             setRewardPending(null);
           }}
         />
+      )}
+
+      {/* Discovery Callout */}
+      {discoveryPending && !combatPending && !rewardPending && (
+        <Modal title="Discovery!" onClose={() => setDiscoveryPending(null)}>
+          <div className={styles.discoveryCallout}>
+            <div className={styles.discoveryIcon}>
+              <Sprite name={discoveryPending.icon} size={48} />
+            </div>
+            <h3 className={styles.discoveryName}>{discoveryPending.name}</h3>
+            <p className={styles.discoveryDesc}>{discoveryPending.description}</p>
+            <button
+              className={styles.discoveryBtn}
+              onClick={() => setDiscoveryPending(null)}
+            >
+              Continue
+            </button>
+          </div>
+        </Modal>
       )}
     </div>
   );
