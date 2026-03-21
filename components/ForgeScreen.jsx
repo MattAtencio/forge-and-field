@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useMemo } from "react";
 import { useGameState, useGameDispatch } from "@/lib/gameContext";
 import { canCraft, getAvailableRecipes, generateItem, getCraftRefund, getRecipeById } from "@/lib/crafting";
 import { getSellValue, getRarityColor, getRarityLabel, getUpgradeCost, getRepairCost, getDismantleReturns } from "@/lib/rarity";
@@ -10,6 +10,9 @@ import Modal from "./shared/Modal";
 import Sprite from "@/components/sprites/Sprite";
 import ResourceCost from "@/components/sprites/ResourceCost";
 import styles from "./ForgeScreen.module.css";
+
+const RARITY_ORDER = { common: 0, uncommon: 1, rare: 2, epic: 3 };
+const SLOT_ORDER = { weapon: 0, armor: 1, accessory: 2 };
 
 export default function ForgeScreen() {
   const state = useGameState();
@@ -110,10 +113,7 @@ export default function ForgeScreen() {
     setSelectedIds(new Set([item.id]));
   };
 
-  const RARITY_ORDER = { common: 0, uncommon: 1, rare: 2, epic: 3 };
-  const SLOT_ORDER = { weapon: 0, armor: 1, accessory: 2 };
-
-  const getFilteredAndSorted = () => {
+  const filteredAndSorted = useMemo(() => {
     let items = [...state.inventory];
     if (filterSlot !== "all") {
       items = items.filter((i) => i.slot === filterSlot);
@@ -125,7 +125,7 @@ export default function ForgeScreen() {
       return 0;
     });
     return items;
-  };
+  }, [state.inventory, filterSlot, sortBy]);
 
   const now = Date.now();
 
@@ -289,7 +289,7 @@ export default function ForgeScreen() {
           {state.inventory.length === 0 ? (
             <p className={styles.empty}>No items yet. Start crafting!</p>
           ) : (
-            getFilteredAndSorted().map((item) => (
+            filteredAndSorted.map((item) => (
               <div
                 key={item.id}
                 className={`${styles.selectableItem} ${selectionMode && selectedIds.has(item.id) ? styles.itemSelected : ""}`}

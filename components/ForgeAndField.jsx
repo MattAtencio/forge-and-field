@@ -81,8 +81,9 @@ function GameShell() {
   useEffect(() => {
     if (state._newlyRecruitedHeroes?.length > 0) {
       setUnlockedHeroes((prev) => [...prev, ...state._newlyRecruitedHeroes]);
+      dispatch({ type: "CLEAR_NEW_HEROES" });
     }
-  }, [state._newlyRecruitedHeroes]);
+  }, [state._newlyRecruitedHeroes, dispatch]);
 
   const handleTutorialComplete = useCallback(() => {
     dispatch({ type: "SET_TUTORIAL_DONE" });

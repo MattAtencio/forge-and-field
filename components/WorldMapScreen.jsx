@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useGameState, useGameDispatch } from "@/lib/gameContext";
 import { REGIONS } from "@/data/regions";
 import { EXPEDITIONS } from "@/data/expeditions";
@@ -27,6 +27,7 @@ export default function WorldMapScreen() {
   const [rewardPending, setRewardPending] = useState(null);
   const [cancelConfirm, setCancelConfirm] = useState(null);
   const [lockToast, setLockToast] = useState(null);
+  const lockToastRef = useRef(null);
   const [discoveryPending, setDiscoveryPending] = useState(null);
 
   const now = Date.now();
@@ -266,12 +267,14 @@ export default function WorldMapScreen() {
                   "--region-bg": region.theme.bg,
                   "--region-border": region.theme.border,
                 }}
+                aria-disabled={!unlocked}
                 onClick={() => {
                   if (unlocked) {
                     setSelectedRegion(region);
                   } else {
+                    clearTimeout(lockToastRef.current);
                     setLockToast(`Region locked \u00b7 Clear ${region.unlockCondition} boss to unlock`);
-                    setTimeout(() => setLockToast(null), 2500);
+                    lockToastRef.current = setTimeout(() => setLockToast(null), 2500);
                   }
                 }}
               >
