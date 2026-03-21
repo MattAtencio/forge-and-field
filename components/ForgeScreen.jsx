@@ -116,11 +116,12 @@ export default function ForgeScreen() {
         <Sprite name="forge" size={22} /> The Forge
       </h2>
 
-      {/* Crafting Queue */}
-      {state.craftingQueue.length > 0 && (
-        <div className={styles.queue}>
-          <h3 className={styles.subheading}>Crafting Queue</h3>
-          {state.craftingQueue.map((craft) => {
+      {/* Crafting Queue — always show all slots for stable layout */}
+      <div className={styles.queue}>
+        <h3 className={styles.subheading}>Crafting Queue</h3>
+        {Array.from({ length: maxSlots }, (_, i) => {
+          const craft = state.craftingQueue[i];
+          if (craft) {
             const recipe = getRecipeById(craft.recipeId);
             const elapsed = now - craft.startedAt;
             const remaining = Math.max(0, craft.duration - elapsed);
@@ -155,9 +156,20 @@ export default function ForgeScreen() {
                 )}
               </div>
             );
-          })}
-        </div>
-      )}
+          }
+          return (
+            <div key={`empty-${i}`} className={`${styles.queueItem} ${styles.queueEmpty}`}>
+              <span className={styles.queueIcon}>
+                <Sprite name="forge" size={22} />
+              </span>
+              <div className={styles.queueInfo}>
+                <span className={styles.queueName}>Empty Slot</span>
+                <div className={styles.queueBar} />
+              </div>
+            </div>
+          );
+        })}
+      </div>
 
       {/* Tab Switch */}
       <div className={styles.tabs}>
