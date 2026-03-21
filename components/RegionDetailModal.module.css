@@ -98,6 +98,18 @@
   border-radius: 4px;
 }
 
+.missionLocked {
+  opacity: 0.45;
+  cursor: default;
+  pointer-events: none;
+}
+
+.lockRequirement {
+  font-size: 0.6rem;
+  color: #f59e0b;
+  font-weight: 600;
+}
+
 /* POI */
 .poiList {
   display: flex;

@@ -19,6 +19,10 @@ export const metadata = {
   description:
     "Collect resources, craft gear, and send heroes on expeditions. Weekly seasonal events keep the adventure fresh.",
   manifest: "/manifest.json",
+  icons: {
+    icon: "/favicon.png",
+    apple: "/apple-touch-icon.png",
+  },
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
