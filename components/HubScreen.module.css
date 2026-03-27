@@ -292,7 +292,8 @@
 
 .chestReady {
   border-color: var(--chest-color);
-  animation: pulse 2s infinite;
+  box-shadow: 0 0 8px color-mix(in srgb, var(--chest-color) 25%, transparent);
+  animation: chestPulse var(--pulse-duration, 2s) infinite;
 }
 
 .chestIcon {
@@ -508,6 +509,26 @@
   letter-spacing: 0.05em;
 }
 
+.chestItemLevel {
+  font-size: 0.55rem;
+  font-weight: 700;
+  color: #fff;
+  padding: 2px 6px;
+  border-radius: 6px;
+  margin-left: auto;
+  flex-shrink: 0;
+}
+
+.chestItemFlash {
+  animation: rewardPop 0.3s ease both, borderFlash 0.6s ease-out 0.3s;
+  animation-delay: 0.25s;
+}
+
+@keyframes borderFlash {
+  0% { box-shadow: 0 0 12px var(--item-rarity-color, #fff); }
+  100% { box-shadow: 0 0 0 transparent; }
+}
+
 .chestCollectBtn {
   width: 100%;
   padding: 12px;
@@ -546,4 +567,9 @@
 @keyframes rewardPop {
   from { opacity: 0; transform: scale(0.8); }
   to { opacity: 1; transform: scale(1); }
+}
+
+@keyframes chestPulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 8px color-mix(in srgb, var(--chest-color) 25%, transparent); }
+  50% { opacity: 0.85; box-shadow: 0 0 16px color-mix(in srgb, var(--chest-color) 40%, transparent); }
 }

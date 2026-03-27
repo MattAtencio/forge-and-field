@@ -4,7 +4,7 @@ import { useState } from "react";
 import { useGameState, useGameDispatch } from "@/lib/gameContext";
 import { XP_TABLE, LEVEL_UNLOCKS } from "@/data/progression";
 import { EXPEDITIONS } from "@/data/expeditions";
-import { rollRarity, applyRarityMultiplier, getMaxDurability, getRarityColor, getRarityLabel } from "@/lib/rarity";
+import { rollRarityBoosted, applyRarityMultiplier, applyLevelMultiplier, getMaxDurability, getRarityColor, getRarityLabel, rollItemLevelForChest } from "@/lib/rarity";
 import { RECIPES } from "@/data/recipes";
 import { RESOURCES } from "@/data/resources";
 import ProgressBar from "./shared/ProgressBar";
@@ -57,10 +57,12 @@ function getNextUnlock(playerLevel) {
 }
 
 const CHEST_CONFIG = {
-  common: { icon: "chest_common", label: "Common Chest", color: "#9ca3af", resources: { gold: [10, 25], wood: [10, 20] } },
-  uncommon: { icon: "chest_uncommon", label: "Uncommon Chest", color: "#22c55e", resources: { gold: [25, 60], iron: [10, 20], herbs: [5, 15] } },
-  rare: { icon: "chest_rare", label: "Rare Chest", color: "#3b82f6", resources: { gold: [60, 120], gems: [2, 5], iron: [15, 30] } },
+  uncommon: { icon: "chest_uncommon", label: "Green Chest", color: "#22c55e", minRarity: "uncommon", resources: { gold: [25, 60], iron: [10, 20], herbs: [5, 15] } },
+  rare: { icon: "chest_rare", label: "Blue Chest", color: "#3b82f6", minRarity: "rare", resources: { gold: [60, 120], gems: [2, 5], iron: [15, 30] } },
+  epic: { icon: "chest_epic", label: "Purple Chest", color: "#a855f7", minRarity: "epic", resources: { gold: [100, 200], gems: [5, 10], iron: [20, 40] } },
 };
+
+const RARITY_ORDER = ["common", "uncommon", "rare", "epic"];
 
 function generateChestRewards(chestType, playerLevel) {
   const config = CHEST_CONFIG[chestType];
@@ -70,26 +72,44 @@ function generateChestRewards(chestType, playerLevel) {
   }
 
   const items = [];
-  const itemChance = chestType === "rare" ? 0.4 : chestType === "uncommon" ? 0.15 : 0;
-  if (Math.random() < itemChance) {
-    const eligible = RECIPES.filter((r) => r.unlockLevel <= playerLevel);
-    if (eligible.length > 0) {
-      const recipe = eligible[Math.floor(Math.random() * eligible.length)];
-      const rarity = rollRarity();
-      const maxDur = getMaxDurability(recipe.tier, rarity.id);
-      items.push({
-        id: `item_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
-        recipeId: recipe.id,
-        name: recipe.name,
-        icon: recipe.icon,
-        slot: recipe.slot,
-        tier: recipe.tier,
-        rarity: rarity.id,
-        level: 1,
-        durability: { current: maxDur, max: maxDur },
-        stats: applyRarityMultiplier(recipe.baseStats, rarity),
-        equippedBy: null,
-      });
+  const eligible = RECIPES.filter((r) => r.unlockLevel <= playerLevel);
+  if (eligible.length > 0) {
+    const recipe = eligible[Math.floor(Math.random() * eligible.length)];
+    const minRarityIdx = RARITY_ORDER.indexOf(config.minRarity);
+
+    // Roll rarity with a floor — re-roll if below minimum
+    let rarity;
+    for (let attempt = 0; attempt < 20; attempt++) {
+      rarity = rollRarityBoosted(3);
+      if (RARITY_ORDER.indexOf(rarity.id) >= minRarityIdx) break;
+    }
+    // Safety: if still below floor after retries, force the minimum
+    if (RARITY_ORDER.indexOf(rarity.id) < minRarityIdx) {
+      rarity = { id: config.minRarity, label: config.minRarity, color: config.color, multiplier: { uncommon: 1.3, rare: 1.7, epic: 2.5 }[config.minRarity] };
+    }
+
+    const level = rollItemLevelForChest(chestType);
+    const maxDur = getMaxDurability(recipe.tier, rarity.id);
+    const rarityStats = applyRarityMultiplier(recipe.baseStats, rarity);
+    const finalStats = applyLevelMultiplier(rarityStats, level);
+
+    items.push({
+      id: `item_${Date.now()}_${Math.random().toString(36).slice(2, 6)}`,
+      recipeId: recipe.id,
+      name: recipe.name,
+      icon: recipe.icon,
+      slot: recipe.slot,
+      tier: recipe.tier,
+      rarity: rarity.id,
+      level,
+      durability: { current: maxDur, max: maxDur },
+      stats: finalStats,
+      equippedBy: null,
+    });
+  } else {
+    // No eligible recipes — fall back to bonus resources
+    for (const [res, [min, max]] of Object.entries(config.resources)) {
+      resources[res] += Math.round((min + Math.random() * (max - min)) * 0.5);
     }
   }
 
@@ -256,7 +276,7 @@ export default function HubScreen({ onOpenSettings }) {
                 <button
                   key={type}
                   className={`${styles.chestCard} ${ready ? styles.chestReady : ""}`}
-                  style={{ "--chest-color": config.color }}
+                  style={{ "--chest-color": config.color, "--pulse-duration": type === "epic" ? "1.2s" : type === "rare" ? "1.6s" : "2s" }}
                   disabled={!ready}
                   onClick={() => {
                     if (!ready) return;
@@ -362,14 +382,19 @@ export default function HubScreen({ onOpenSettings }) {
                 {chestReveal.rewards.items.map((item) => (
                   <div
                     key={item.id}
-                    className={styles.chestItemReveal}
-                    style={{ borderColor: getRarityColor(item.rarity) }}
+                    className={`${styles.chestItemReveal} ${styles.chestItemFlash}`}
+                    style={{ borderColor: getRarityColor(item.rarity), "--item-rarity-color": getRarityColor(item.rarity) }}
                   >
                     <Sprite name={item.icon} size={24} />
                     <div className={styles.chestItemInfo}>
                       <span style={{ color: getRarityColor(item.rarity) }}>{item.name}</span>
                       <span className={styles.chestItemRarity}>{getRarityLabel(item.rarity)}</span>
                     </div>
+                    {item.level > 1 && (
+                      <span className={styles.chestItemLevel} style={{ background: getRarityColor(item.rarity) }}>
+                        Lv.{item.level}
+                      </span>
+                    )}
                   </div>
                 ))}
               </div>
