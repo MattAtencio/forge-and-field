@@ -1,0 +1,29 @@
+{
+  "$schema": "https://raw.githubusercontent.com/MattAtencio/portfolio/main/schemas/portfolio.schema.json",
+  "title": "Forge & Field",
+  "tagline": "Craft gear and send heroes on quests",
+  "description": "An idle/incremental game where players collect resources, craft weapons and armor, recruit heroes, and send them on expeditions with turn-based combat. Features offline progression, a prestige system, and rotating seasonal events.",
+  "category": "games",
+  "status": "active",
+  "techStack": [
+    "Next.js",
+    "React 19",
+    "PWA",
+    "CSS Modules"
+  ],
+  "liveUrl": "https://forge.mattatencio.com",
+  "roadmapUrl": "/projects/forge-and-field/roadmap",
+  "images": {
+    "thumbnail": "/images/projects/forge-thumb.png"
+  },
+  "highlights": [
+    "Turn-based combat with 4 hero archetypes and gear crafting",
+    "Tiered chest system with Green/Blue/Purple rarity and guaranteed drops",
+    "Offline progression and prestige/rebirth system",
+    "Rotating seasonal events with exclusive rewards"
+  ],
+  "isPublic": true,
+  "startDate": "2025-01",
+  "featured": false,
+  "hasCaseStudy": true
+}
