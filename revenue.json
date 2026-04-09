@@ -1,0 +1,26 @@
+{
+  "name": "forge-and-field",
+  "model": "one_time",
+  "status": "building",
+  "hypothesis": {
+    "target_mrr": 500,
+    "price_point": 14.99,
+    "customers_needed": 34,
+    "time_to_first_dollar_days": 60,
+    "confidence": "med",
+    "comparable": "Indie strategy games on Steam in the $10-20 range with niche audiences (e.g., Loop Hero, Slipways, Bad North) routinely sustain $500-5000/mo for years post-launch when wishlist > 5k pre-launch. Realistic floor for a polished indie strategy title with proper Steam page + demo.",
+    "notes": "Strongest signal in the games portfolio per ship-and-finish memory. Deserves individual scrutiny vs. game-a-palooza bucket."
+  },
+  "actuals": {
+    "mrr": 0,
+    "ltd_revenue": 0,
+    "paying_customers": 0,
+    "last_updated": "2026-04-08"
+  },
+  "costs_monthly": 0,
+  "hours_invested": 0,
+  "next_revenue_action": "Push current build to deploy and create Steam coming-soon page with capsule + 5 screenshots by 2026-04-22",
+  "first_dollar_path": "Steam page live → demo build → Next Fest entry → wishlist push → launch",
+  "kill_criteria": "If <500 wishlists 30 days after Steam page goes live, reassess scope/positioning. If <1000 by 2026-08-01, consider sunset or pivot to web/itch.io free release.",
+  "created": "2026-04-08"
+}
