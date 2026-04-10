@@ -1,5 +1,6 @@
 "use client";
 
+import { useState, useEffect } from "react";
 import { useGameState } from "@/lib/gameContext";
 import Sprite from "@/components/sprites/Sprite";
 import styles from "./ResourceBar.module.css";
@@ -15,14 +16,17 @@ const RESOURCE_CONFIG = [
 
 export default function ResourceBar() {
   const state = useGameState();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => setMounted(true), []);
 
   return (
     <div className={styles.bar}>
       {RESOURCE_CONFIG.map(({ key, color }) => (
         <div key={key} className={styles.resource}>
           <Sprite name={key} size={14} />
-          <span className={styles.amount} style={{ color }}>
-            {Math.floor(state.resources[key])}
+          <span className={styles.amount} style={{ color }} suppressHydrationWarning>
+            {mounted ? Math.floor(state.resources[key]) : 0}
           </span>
         </div>
       ))}

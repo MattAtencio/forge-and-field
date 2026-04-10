@@ -1,27 +1,46 @@
+// Balance multipliers (from March 2026 balance review)
+// Regular enemies: 2x HP, 1.3x ATK to make combat dangerous
+// Bosses: 2.5x HP, 1.3x ATK to survive 8-12 turns instead of 4-6
+const ENEMY_HP_MULT = 2.0;
+const ENEMY_ATK_MULT = 1.3;
+const BOSS_HP_MULT = 2.5;
+const BOSS_ATK_MULT = 1.3;
+
+function scaleEnemy(base, isBoss = false) {
+  const hpMult = isBoss ? BOSS_HP_MULT : ENEMY_HP_MULT;
+  const atkMult = isBoss ? BOSS_ATK_MULT : ENEMY_ATK_MULT;
+  return {
+    hp: Math.round(base.hp * hpMult),
+    atk: Math.round(base.atk * atkMult),
+    def: base.def,
+    spd: base.spd,
+  };
+}
+
 export const ENEMY_TEMPLATES = [
   // Greenwood
-  { id: "goblin", name: "Goblin", icon: "goblin", baseStats: { hp: 20, atk: 6, def: 3, spd: 7 } },
-  { id: "wolf", name: "Dire Wolf", icon: "wolf", baseStats: { hp: 30, atk: 8, def: 4, spd: 9 } },
-  { id: "treant", name: "Treant", icon: "treant", baseStats: { hp: 50, atk: 6, def: 12, spd: 2 } },
+  { id: "goblin", name: "Goblin", icon: "goblin", baseStats: scaleEnemy({ hp: 20, atk: 6, def: 3, spd: 7 }) },
+  { id: "wolf", name: "Dire Wolf", icon: "wolf", baseStats: scaleEnemy({ hp: 30, atk: 8, def: 4, spd: 9 }) },
+  { id: "treant", name: "Treant", icon: "treant", baseStats: scaleEnemy({ hp: 50, atk: 6, def: 12, spd: 2 }) },
   // Stormridge
-  { id: "rock_golem", name: "Rock Golem", icon: "rock_golem", baseStats: { hp: 60, atk: 10, def: 15, spd: 2 } },
-  { id: "harpy", name: "Harpy", icon: "harpy", baseStats: { hp: 25, atk: 12, def: 4, spd: 11 } },
+  { id: "rock_golem", name: "Rock Golem", icon: "rock_golem", baseStats: scaleEnemy({ hp: 60, atk: 10, def: 15, spd: 2 }) },
+  { id: "harpy", name: "Harpy", icon: "harpy", baseStats: scaleEnemy({ hp: 25, atk: 12, def: 4, spd: 11 }) },
   // Dusthaven
-  { id: "bandit", name: "Bandit", icon: "bandit", baseStats: { hp: 35, atk: 10, def: 6, spd: 8 } },
-  { id: "bandit_leader", name: "Bandit Leader", icon: "bandit_leader", baseStats: { hp: 55, atk: 14, def: 8, spd: 6 } },
-  { id: "sandworm", name: "Sandworm", icon: "sandworm", baseStats: { hp: 70, atk: 16, def: 10, spd: 3 } },
+  { id: "bandit", name: "Bandit", icon: "bandit", baseStats: scaleEnemy({ hp: 35, atk: 10, def: 6, spd: 8 }) },
+  { id: "bandit_leader", name: "Bandit Leader", icon: "bandit_leader", baseStats: scaleEnemy({ hp: 55, atk: 14, def: 8, spd: 6 }) },
+  { id: "sandworm", name: "Sandworm", icon: "sandworm", baseStats: scaleEnemy({ hp: 70, atk: 16, def: 10, spd: 3 }) },
   // Frostpeak
-  { id: "ice_wraith", name: "Ice Wraith", icon: "ice_wraith", baseStats: { hp: 30, atk: 14, def: 5, spd: 10 } },
-  { id: "frost_bear", name: "Frost Bear", icon: "frost_bear", baseStats: { hp: 60, atk: 16, def: 12, spd: 4 } },
+  { id: "ice_wraith", name: "Ice Wraith", icon: "ice_wraith", baseStats: scaleEnemy({ hp: 30, atk: 14, def: 5, spd: 10 }) },
+  { id: "frost_bear", name: "Frost Bear", icon: "frost_bear", baseStats: scaleEnemy({ hp: 60, atk: 16, def: 12, spd: 4 }) },
   // Dragon's Reach
-  { id: "fire_imp", name: "Fire Imp", icon: "fire_imp", baseStats: { hp: 25, atk: 18, def: 4, spd: 12 } },
-  { id: "drake", name: "Drake", icon: "drake", baseStats: { hp: 80, atk: 20, def: 14, spd: 5 } },
-  // Bosses (2x HP, +30% ATK for meaningful challenge)
-  { id: "treant_elder", name: "Treant Elder", icon: "treant_elder", baseStats: { hp: 160, atk: 13, def: 16, spd: 3 }, isBoss: true },
-  { id: "stone_golem", name: "Stone Golem", icon: "stone_golem", baseStats: { hp: 200, atk: 18, def: 20, spd: 2 }, isBoss: true },
-  { id: "sandworm_queen", name: "Sandworm Queen", icon: "sandworm_queen", baseStats: { hp: 240, atk: 23, def: 12, spd: 4 }, isBoss: true },
-  { id: "frost_dragon", name: "Frost Dragon", icon: "frost_dragon", baseStats: { hp: 300, atk: 28, def: 16, spd: 6 }, isBoss: true },
-  { id: "elder_dragon", name: "Elder Dragon", icon: "elder_dragon", baseStats: { hp: 500, atk: 36, def: 20, spd: 5 }, isBoss: true },
+  { id: "fire_imp", name: "Fire Imp", icon: "fire_imp", baseStats: scaleEnemy({ hp: 25, atk: 18, def: 4, spd: 12 }) },
+  { id: "drake", name: "Drake", icon: "drake", baseStats: scaleEnemy({ hp: 80, atk: 20, def: 14, spd: 5 }) },
+  // Bosses — 2.5x HP, 1.3x ATK for meaningful multi-turn fights
+  { id: "treant_elder", name: "Treant Elder", icon: "treant_elder", baseStats: scaleEnemy({ hp: 160, atk: 13, def: 16, spd: 3 }, true), isBoss: true },
+  { id: "stone_golem", name: "Stone Golem", icon: "stone_golem", baseStats: scaleEnemy({ hp: 200, atk: 18, def: 20, spd: 2 }, true), isBoss: true },
+  { id: "sandworm_queen", name: "Sandworm Queen", icon: "sandworm_queen", baseStats: scaleEnemy({ hp: 240, atk: 23, def: 12, spd: 4 }, true), isBoss: true },
+  { id: "frost_dragon", name: "Frost Dragon", icon: "frost_dragon", baseStats: scaleEnemy({ hp: 300, atk: 28, def: 16, spd: 6 }, true), isBoss: true },
+  { id: "elder_dragon", name: "Elder Dragon", icon: "elder_dragon", baseStats: scaleEnemy({ hp: 500, atk: 36, def: 20, spd: 5 }, true), isBoss: true },
 ];
 
 export const ENCOUNTER_TABLE = {

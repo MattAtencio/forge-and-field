@@ -1,6 +1,8 @@
 "use client";
 
-import { getSprite } from "./spriteRegistry";
+import { getSpriteData } from "./spriteRegistry";
+import SpriteSheet from "./SpriteSheet";
+import AnimatedPixelSprite from "./AnimatedPixelSprite";
 import styles from "./Sprite.module.css";
 
 function renderShape(shape, i) {
@@ -30,11 +32,11 @@ function renderShape(shape, i) {
   }
 }
 
-export default function Sprite({ name, size = 24, className = "", muted = false, animate = "" }) {
-  const shapes = getSprite(name);
+export default function Sprite({ name, size = 24, className = "", muted = false, animate = "", animated = true }) {
+  const data = getSpriteData(name);
 
   // Fallback: render as text if sprite not found (handles emoji or unknown names)
-  if (!shapes) {
+  if (!data) {
     return (
       <span
         className={`${styles.fallback} ${className}`}
@@ -45,6 +47,42 @@ export default function Sprite({ name, size = 24, className = "", muted = false,
     );
   }
 
+  // SVG-based animated pixel art
+  if (data.type === "animated_pixel") {
+    return (
+      <AnimatedPixelSprite
+        frames={data.frames}
+        fps={data.fps || 3}
+        size={size}
+        animated={animated}
+        muted={muted}
+        animate={animate}
+        className={className}
+      />
+    );
+  }
+
+  // Pixel art sprite sheet
+  if (data.type === "sprite") {
+    return (
+      <SpriteSheet
+        sheet={data.sheet}
+        x={data.x}
+        y={data.y}
+        width={data.width}
+        height={data.height}
+        frames={data.frames || 1}
+        fps={data.fps || 4}
+        size={size}
+        animated={animated}
+        muted={muted}
+        animate={animate}
+        className={className}
+      />
+    );
+  }
+
+  // SVG sprite (default)
   const animClass = animate ? styles[animate] || "" : "";
 
   return (
@@ -56,7 +94,7 @@ export default function Sprite({ name, size = 24, className = "", muted = false,
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden="true"
     >
-      {shapes.map(renderShape)}
+      {data.shapes.map(renderShape)}
     </svg>
   );
 }

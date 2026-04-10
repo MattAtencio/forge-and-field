@@ -1208,6 +1208,26 @@ const SPRITES = {
     // Glow
     c(16, 14, 3, "rgba(59, 130, 246, 0.3)"),
   ],
+  chest_epic: [
+    // Chest body
+    r(4, 14, 24, 14, S.purpleD, 2),
+    r(5, 15, 22, 12, S.purple),
+    // Lid
+    p("M4 14 Q4 8 16 8 Q28 8 28 14 Z", S.purpleD),
+    p("M5 14 Q5 9 16 9 Q27 9 27 14 Z", S.purple),
+    // Lock (ornate gold)
+    r(13, 11, 6, 5, S.gold, 2),
+    c(16, 14, 1.5, S.goldD),
+    // Bands (gold)
+    r(4, 16, 24, 2, S.gold),
+    r(4, 22, 24, 2, S.gold),
+    // Gems
+    c(9, 19, 1.5, S.orange),
+    c(16, 19, 2, S.gold),
+    c(23, 19, 1.5, S.orange),
+    // Glow
+    c(16, 14, 3, "rgba(168, 85, 247, 0.3)"),
+  ],
 
   // ============ STATUS ============
   idle: [
@@ -1271,11 +1291,47 @@ const RECIPE_SPRITE_MAP = {
   guardian_plate: "item_plate",
 };
 
+// Pixel art sprite imports (SVG-based animated pixel sprites)
+import { warrior_pixel } from "./pixelSprites";
+
+// Register pixel art sprites (these override the flat SVG versions)
+const PIXEL_SPRITES = {
+  warrior_pixel: { type: "animated_pixel", frames: warrior_pixel, fps: 3 },
+};
+
+/**
+ * Get sprite data by name.
+ * Returns a structured object with a `type` field:
+ *   - { type: 'svg', shapes: [...] } for SVG sprites (current default)
+ *   - { type: 'sprite', sheet, x, y, width, height, frames, fps } for sprite sheet entries
+ *   - { type: 'animated_pixel', frames: [...], fps } for SVG-based pixel art with animation
+ * Returns null if not found.
+ */
+export function getSpriteData(name) {
+  // Check pixel art overrides first
+  if (PIXEL_SPRITES[name]) return PIXEL_SPRITES[name];
+
+  const entry = SPRITES[name] || (RECIPE_SPRITE_MAP[name] && SPRITES[RECIPE_SPRITE_MAP[name]]);
+  if (!entry) return null;
+
+  // New format: entry is an object with an explicit type
+  if (entry && !Array.isArray(entry) && entry.type) {
+    return entry;
+  }
+
+  // Legacy format: entry is an array of SVG shape descriptors
+  return { type: "svg", shapes: entry };
+}
+
+/**
+ * Get SVG shape array by name (legacy API, backwards compatible).
+ * Returns the raw shape array for SVG sprites, or null for sprite-sheet entries.
+ */
 export function getSprite(name) {
-  // Direct sprite lookup
-  if (SPRITES[name]) return SPRITES[name];
-  // Recipe ID lookup
-  if (RECIPE_SPRITE_MAP[name]) return SPRITES[RECIPE_SPRITE_MAP[name]];
+  const data = getSpriteData(name);
+  if (!data) return null;
+  if (data.type === "svg") return data.shapes;
+  // Non-SVG sprites don't return shape arrays
   return null;
 }
 

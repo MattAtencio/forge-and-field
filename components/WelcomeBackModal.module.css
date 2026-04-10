@@ -1,96 +1,265 @@
 .overlay {
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 0.85);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 150;
   padding: 16px;
-  animation: fadeIn 0.25s ease;
+  animation: fadeIn 0.3s ease;
 }
 
 .modal {
   background: #12121f;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 18px;
+  border: 1px solid rgba(249, 115, 22, 0.15);
+  border-radius: 20px;
   width: 100%;
-  max-width: 340px;
-  padding: 28px 24px;
+  max-width: 380px;
+  max-height: 85vh;
+  padding: 28px 24px 24px;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 12px;
-  animation: slideUp 0.3s ease;
+  gap: 14px;
+  animation: slideUp 0.35s ease;
 }
 
-.icon {
-  font-size: 2.2rem;
+/* Header */
+.header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  animation: popIn 0.4s ease;
+}
+
+.headerIcon {
+  filter: drop-shadow(0 0 12px rgba(249, 115, 22, 0.4));
 }
 
 .title {
   font-family: var(--font-dm-serif), serif;
-  font-size: 1.15rem;
+  font-size: 1.25rem;
   color: #f97316;
+  margin: 0;
 }
 
-.time {
-  font-size: 0.75rem;
-  color: #8888a0;
-}
-
-.rewards {
+/* Time Away */
+.timeCard {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   width: 100%;
   background: rgba(255, 255, 255, 0.03);
   border-radius: 10px;
-  padding: 12px;
+  padding: 10px 14px;
 }
 
-.rewardsLabel {
+.timeLabel {
+  font-size: 0.7rem;
+  color: #6b6b80;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.timeValue {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #e0e0f0;
+  font-variant-numeric: tabular-nums;
+}
+
+.timeCap {
+  font-size: 0.65rem;
+  font-weight: 400;
+  color: #8888a0;
+}
+
+/* Sections container — scrollable if content overflows */
+.sections {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  overflow-y: auto;
+  max-height: 40vh;
+  padding-right: 4px;
+}
+
+.sections::-webkit-scrollbar {
+  width: 3px;
+}
+
+.sections::-webkit-scrollbar-thumb {
+  background: rgba(249, 115, 22, 0.2);
+  border-radius: 3px;
+}
+
+/* Section block */
+.section {
+  width: 100%;
+}
+
+.sectionLabel {
   font-size: 0.65rem;
   color: #6b6b80;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  margin-bottom: 8px;
+  margin-bottom: 6px;
 }
 
-.rewardRow {
+/* Resource grid */
+.resourceGrid {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 0.8rem;
-  color: #c0c0d4;
-  padding: 4px 0;
+  flex-direction: column;
+  gap: 2px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 10px;
+  padding: 8px 12px;
 }
 
-.rewardAmt {
+.resourceItem {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+  transition: background 0.15s;
+}
+
+.resourceHighlight {
+  background: rgba(249, 115, 22, 0.06);
+  border-radius: 6px;
+  padding: 4px 6px;
+  margin: 0 -6px;
+}
+
+.resourceName {
+  flex: 1;
+  font-size: 0.78rem;
+  color: #c0c0d4;
+}
+
+.resourceAmt {
+  font-size: 0.8rem;
   font-weight: 700;
   font-variant-numeric: tabular-nums;
 }
 
+/* Info card (expeditions, crafts) */
+.infoCard {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.infoText {
+  font-size: 0.78rem;
+  color: #c0c0d4;
+  line-height: 1.4;
+}
+
+.craftList {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.craftName {
+  font-size: 0.78rem;
+  color: #c0c0d4;
+}
+
+/* Chest row */
+.chestRow {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.chestItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  animation: chestBounce 0.6s ease;
+}
+
+.chestLabel {
+  font-size: 0.65rem;
+  color: #8888a0;
+}
+
+/* Daily reset */
+.dailyReset {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(249, 115, 22, 0.06);
+  border: 1px solid rgba(249, 115, 22, 0.12);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+
+.dailyText {
+  font-size: 0.78rem;
+  color: #f97316;
+  font-weight: 600;
+}
+
+/* Recommendation */
+.recommendation {
+  font-size: 0.8rem;
+  font-style: italic;
+  color: #a0a0b8;
+  text-align: center;
+  margin: 0;
+}
+
+/* CTA button */
 .btn {
   width: 100%;
-  padding: 12px;
+  padding: 13px;
   border: none;
   border-radius: 10px;
   background: #f97316;
   color: #fff;
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   font-weight: 700;
   cursor: pointer;
-  margin-top: 4px;
+  transition: background 0.15s;
+  margin-top: 2px;
 }
 
 .btn:active {
   background: #ea580c;
 }
 
+/* Animations */
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
 }
 
 @keyframes slideUp {
-  from { opacity: 0; transform: translateY(16px); }
+  from { opacity: 0; transform: translateY(24px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes popIn {
+  0% { opacity: 0; transform: scale(0.5); }
+  70% { transform: scale(1.1); }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+@keyframes chestBounce {
+  0% { transform: translateY(8px); opacity: 0; }
+  50% { transform: translateY(-3px); }
+  100% { transform: translateY(0); opacity: 1; }
 }

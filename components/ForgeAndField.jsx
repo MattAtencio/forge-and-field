@@ -122,6 +122,7 @@ function GameShell() {
       {offlineData && state.player.tutorialDone && (
         <WelcomeBackModal
           offlineData={offlineData}
+          state={state}
           onDismiss={() => setOfflineData(null)}
         />
       )}

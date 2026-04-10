@@ -1,3 +1,7 @@
+// Balance multiplier (from March 2026 balance review)
+// Increase power gates by 25% so players need better gear before attempting
+const POWER_GATE_MULT = 1.25;
+
 export const EXPEDITIONS = [
   // ── Greenwood Forest ──
   {
@@ -5,7 +9,7 @@ export const EXPEDITIONS = [
     name: "Forest Trail",
     icon: "treant",
     description: "A short walk through the woods. Good for gathering timber.",
-    requiredPower: 10,
+    requiredPower: Math.round(10 * POWER_GATE_MULT),
     heroSlots: 1,
     duration: 60000,
     rewards: {
@@ -22,7 +26,7 @@ export const EXPEDITIONS = [
     name: "Enchanted Garden",
     icon: "herbs",
     description: "Forage rare herbs from a hidden garden.",
-    requiredPower: 20,
+    requiredPower: Math.round(20 * POWER_GATE_MULT),
     heroSlots: 1,
     duration: 180000,
     rewards: {
@@ -39,7 +43,7 @@ export const EXPEDITIONS = [
     name: "Dark Forest",
     icon: "wolf",
     description: "Venture deep into dangerous woods for rare materials.",
-    requiredPower: 45,
+    requiredPower: Math.round(45 * POWER_GATE_MULT),
     heroSlots: 1,
     duration: 600000,
     rewards: {
@@ -56,7 +60,7 @@ export const EXPEDITIONS = [
     name: "Treant Elder's Grove",
     icon: "treant_elder",
     description: "Face the ancient guardian of the Greenwood.",
-    requiredPower: 35,
+    requiredPower: Math.round(35 * POWER_GATE_MULT),
     heroSlots: 1,
     duration: 300000,
     rewards: {
@@ -76,7 +80,7 @@ export const EXPEDITIONS = [
     name: "Stone Quarry",
     icon: "stone",
     description: "Mine stone and ore from the nearby quarry.",
-    requiredPower: 15,
+    requiredPower: Math.round(15 * POWER_GATE_MULT),
     heroSlots: 1,
     duration: 120000,
     rewards: {
@@ -93,7 +97,7 @@ export const EXPEDITIONS = [
     name: "Iron Mines",
     icon: "iron",
     description: "Delve into the deep mines for iron and precious gems.",
-    requiredPower: 55,
+    requiredPower: Math.round(55 * POWER_GATE_MULT),
     heroSlots: 1,
     duration: 900000,
     rewards: {
@@ -110,7 +114,7 @@ export const EXPEDITIONS = [
     name: "Stone Golem's Chamber",
     icon: "stone_golem",
     description: "Defeat the massive Stone Golem deep in the mountains.",
-    requiredPower: 55,
+    requiredPower: Math.round(55 * POWER_GATE_MULT),
     heroSlots: 2,
     duration: 600000,
     rewards: {
@@ -130,7 +134,7 @@ export const EXPEDITIONS = [
     name: "Bandit Camp",
     icon: "bandit",
     description: "Raid the bandit camp for gold and supplies.",
-    requiredPower: 30,
+    requiredPower: Math.round(30 * POWER_GATE_MULT),
     heroSlots: 1,
     duration: 300000,
     rewards: {
@@ -147,7 +151,7 @@ export const EXPEDITIONS = [
     name: "Scorched Trail",
     icon: "sandworm",
     description: "Navigate the blistering desert trail for hidden loot.",
-    requiredPower: 50,
+    requiredPower: Math.round(50 * POWER_GATE_MULT),
     heroSlots: 1,
     duration: 480000,
     rewards: {
@@ -164,7 +168,7 @@ export const EXPEDITIONS = [
     name: "Oasis Ruins",
     icon: "gems",
     description: "Ancient ruins hidden near a desert oasis.",
-    requiredPower: 60,
+    requiredPower: Math.round(60 * POWER_GATE_MULT),
     heroSlots: 1,
     duration: 720000,
     rewards: {
@@ -181,7 +185,7 @@ export const EXPEDITIONS = [
     name: "Sandworm Pit",
     icon: "sandworm_queen",
     description: "Confront the Sandworm Queen in her underground lair.",
-    requiredPower: 110,
+    requiredPower: Math.round(110 * POWER_GATE_MULT),
     heroSlots: 2,
     duration: 900000,
     rewards: {
@@ -201,7 +205,7 @@ export const EXPEDITIONS = [
     name: "Frozen Pass",
     icon: "ice_wraith",
     description: "Brave the icy mountain pass for rare materials.",
-    requiredPower: 60,
+    requiredPower: Math.round(60 * POWER_GATE_MULT),
     heroSlots: 1,
     duration: 600000,
     rewards: {
@@ -218,7 +222,7 @@ export const EXPEDITIONS = [
     name: "Glacier Cave",
     icon: "frost_bear",
     description: "Explore frozen caverns glittering with precious gems.",
-    requiredPower: 70,
+    requiredPower: Math.round(70 * POWER_GATE_MULT),
     heroSlots: 1,
     duration: 900000,
     rewards: {
@@ -235,7 +239,7 @@ export const EXPEDITIONS = [
     name: "Crystal Spire",
     icon: "gems",
     description: "Scale the frozen spire to its gem-encrusted peak.",
-    requiredPower: 80,
+    requiredPower: Math.round(80 * POWER_GATE_MULT),
     heroSlots: 2,
     duration: 1200000,
     rewards: {
@@ -252,7 +256,7 @@ export const EXPEDITIONS = [
     name: "Frost Dragon's Lair",
     icon: "frost_dragon",
     description: "Face the fearsome Frost Dragon in its frozen domain.",
-    requiredPower: 140,
+    requiredPower: Math.round(140 * POWER_GATE_MULT),
     heroSlots: 2,
     duration: 1500000,
     rewards: {
@@ -272,7 +276,7 @@ export const EXPEDITIONS = [
     name: "Dragon's Peak",
     icon: "drake",
     description: "Scale the mountain to face the dragon's hoard.",
-    requiredPower: 80,
+    requiredPower: Math.round(80 * POWER_GATE_MULT),
     heroSlots: 2,
     duration: 1800000,
     rewards: {
@@ -289,7 +293,7 @@ export const EXPEDITIONS = [
     name: "Ancient Ruins",
     icon: "elder_dragon",
     description: "Explore crumbling ruins for legendary artifacts.",
-    requiredPower: 100,
+    requiredPower: Math.round(100 * POWER_GATE_MULT),
     heroSlots: 2,
     duration: 3600000,
     rewards: {
@@ -306,7 +310,7 @@ export const EXPEDITIONS = [
     name: "Volcanic Forge",
     icon: "forge",
     description: "Discover an ancient forge within the volcanic heart.",
-    requiredPower: 110,
+    requiredPower: Math.round(110 * POWER_GATE_MULT),
     heroSlots: 2,
     duration: 2400000,
     rewards: {
@@ -323,7 +327,7 @@ export const EXPEDITIONS = [
     name: "Elder Dragon's Throne",
     icon: "elder_dragon",
     description: "Challenge the Elder Dragon, master of all dragonkind.",
-    requiredPower: 200,
+    requiredPower: Math.round(200 * POWER_GATE_MULT),
     heroSlots: 2,
     duration: 3600000,
     rewards: {
