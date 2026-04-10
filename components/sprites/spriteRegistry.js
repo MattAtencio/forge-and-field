@@ -1208,6 +1208,26 @@ const SPRITES = {
     // Glow
     c(16, 14, 3, "rgba(59, 130, 246, 0.3)"),
   ],
+  chest_epic: [
+    // Chest body
+    r(4, 14, 24, 14, S.purpleD, 2),
+    r(5, 15, 22, 12, S.purple),
+    // Lid
+    p("M4 14 Q4 8 16 8 Q28 8 28 14 Z", S.purpleD),
+    p("M5 14 Q5 9 16 9 Q27 9 27 14 Z", S.purple),
+    // Lock (ornate gold)
+    r(13, 11, 6, 5, S.gold, 2),
+    c(16, 14, 1.5, S.goldD),
+    // Bands (gold)
+    r(4, 16, 24, 2, S.gold),
+    r(4, 22, 24, 2, S.gold),
+    // Gems
+    c(9, 19, 1.5, S.orange),
+    c(16, 19, 2, S.gold),
+    c(23, 19, 1.5, S.orange),
+    // Glow
+    c(16, 14, 3, "rgba(168, 85, 247, 0.3)"),
+  ],
 
   // ============ STATUS ============
   idle: [
