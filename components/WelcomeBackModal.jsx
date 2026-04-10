@@ -65,7 +65,7 @@ const CHEST_LABELS = {
 const CHEST_SPRITES = {
   uncommon: "chest_uncommon",
   rare: "chest_rare",
-  epic: "chest_rare",
+  epic: "chest_epic",
 };
 
 export default function WelcomeBackModal({ offlineData, state, onDismiss }) {
