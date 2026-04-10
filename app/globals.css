@@ -4,6 +4,10 @@
   padding: 0;
 }
 
+:root {
+  --font-heading: var(--font-dm-serif);
+}
+
 html,
 body {
   height: 100%;
@@ -13,7 +17,7 @@ body {
 body {
   background: #07070f;
   color: #e8e8f0;
-  font-family: var(--font-outfit), system-ui, sans-serif;
+  font-family: var(--font-body), system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }

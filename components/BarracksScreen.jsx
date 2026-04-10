@@ -17,6 +17,7 @@ import SkillBadge from "./shared/SkillBadge";
 import Modal from "./shared/Modal";
 import Sprite from "@/components/sprites/Sprite";
 import ResourceCost from "@/components/sprites/ResourceCost";
+import PixelFrame from "@/components/shared/PixelFrame";
 import styles from "./BarracksScreen.module.css";
 
 export default function BarracksScreen() {
@@ -90,7 +91,7 @@ export default function BarracksScreen() {
 
       {/* Selected Hero Detail */}
       {selectedHero && (
-        <div className={styles.detail}>
+        <PixelFrame variant="parchment" className={styles.detail}>
           <div className={styles.detailHeader}>
             <Sprite name={selectedHero.templateId} size={36} animate="float" />
             <h3 className={styles.heroName}>{selectedHero.name}</h3>
@@ -99,26 +100,26 @@ export default function BarracksScreen() {
 
           {/* Effective Stats */}
           <div className={styles.statsGrid}>
-            <div className={styles.statCell}>
+            <PixelFrame variant="parchment" className={styles.statCell}>
               <span className={styles.statIcon}><Sprite name="heart" size={16} /></span>
               <span className={styles.statLabel}>HP</span>
               <span className={styles.statValue}>{effectiveStats.hp}</span>
-            </div>
-            <div className={styles.statCell}>
+            </PixelFrame>
+            <PixelFrame variant="parchment" className={styles.statCell}>
               <span className={styles.statIcon}><Sprite name="attack" size={16} /></span>
               <span className={styles.statLabel}>ATK</span>
               <span className={styles.statValue}>{effectiveStats.atk}</span>
-            </div>
-            <div className={styles.statCell}>
+            </PixelFrame>
+            <PixelFrame variant="parchment" className={styles.statCell}>
               <span className={styles.statIcon}><Sprite name="defense" size={16} /></span>
               <span className={styles.statLabel}>DEF</span>
               <span className={styles.statValue}>{effectiveStats.def}</span>
-            </div>
-            <div className={styles.statCell}>
+            </PixelFrame>
+            <PixelFrame variant="parchment" className={styles.statCell}>
               <span className={styles.statIcon}><Sprite name="speed" size={16} /></span>
               <span className={styles.statLabel}>SPD</span>
               <span className={styles.statValue}>{effectiveStats.spd}</span>
-            </div>
+            </PixelFrame>
           </div>
 
           {/* Endurance */}
@@ -139,7 +140,7 @@ export default function BarracksScreen() {
             const needsRecovery = endurance.current < endurance.max;
 
             return (
-              <div className={styles.enduranceSection}>
+              <PixelFrame variant="parchment" className={styles.enduranceSection}>
                 <div className={styles.enduranceHeader}>
                   <span className={styles.enduranceLabel}>Endurance</span>
                   <span className={styles.enduranceValue}>{endurance.current}/{endurance.max}</span>
@@ -181,7 +182,7 @@ export default function BarracksScreen() {
                     </button>
                   </div>
                 )}
-              </div>
+              </PixelFrame>
             );
           })()}
 
@@ -232,7 +233,7 @@ export default function BarracksScreen() {
               const item = itemId ? state.inventory.find((i) => i.id === itemId) : null;
 
               return (
-                <div key={slot} className={styles.equipSlot}>
+                <PixelFrame key={slot} variant="iron" className={styles.equipSlot}>
                   <span className={styles.slotLabel}>{slot}</span>
                   {item ? (
                     <div className={styles.equippedItem}>
@@ -259,7 +260,7 @@ export default function BarracksScreen() {
                       + Equip
                     </button>
                   )}
-                </div>
+                </PixelFrame>
               );
             })}
           </div>
@@ -272,7 +273,7 @@ export default function BarracksScreen() {
           >
             Level Up (<Sprite name="gold" size={14} /> {levelCost})
           </button>
-        </div>
+        </PixelFrame>
       )}
 
       {/* Equipment Picker Modal */}
@@ -298,29 +299,41 @@ export default function BarracksScreen() {
       {showTitlePicker && selectedHero && (
         <Modal title="Choose Title" onClose={() => setShowTitlePicker(false)}>
           <div className={styles.titlePicker}>
-            <button
-              className={`${styles.titleOption} ${!selectedHero.activeTitle ? styles.titleActive : ""}`}
-              onClick={() => {
-                dispatch({ type: "SET_ACTIVE_TITLE", heroId: selectedHero.id, titleId: null });
-                setShowTitlePicker(false);
-              }}
+            <PixelFrame
+              variant="iron"
+              active={!selectedHero.activeTitle}
+              className={styles.titleOption}
             >
-              <span className={styles.titleOptName}>None</span>
-              <span className={styles.titleOptDesc}>No title bonus</span>
-            </button>
-            {getUnlockedTitles(state.stats, state.worldMap, state.prestige).map((title) => (
               <button
-                key={title.id}
-                className={`${styles.titleOption} ${selectedHero.activeTitle === title.id ? styles.titleActive : ""}`}
+                className={styles.titleOptionBtn}
                 onClick={() => {
-                  dispatch({ type: "SET_ACTIVE_TITLE", heroId: selectedHero.id, titleId: title.id });
+                  dispatch({ type: "SET_ACTIVE_TITLE", heroId: selectedHero.id, titleId: null });
                   setShowTitlePicker(false);
                 }}
               >
-                <span className={styles.titleOptName}>{title.name}</span>
-                <span className={styles.titleOptDesc}>{title.description}</span>
-                <span className={styles.titleOptBonus}>{title.bonus.label}</span>
+                <span className={styles.titleOptName}>None</span>
+                <span className={styles.titleOptDesc}>No title bonus</span>
               </button>
+            </PixelFrame>
+            {getUnlockedTitles(state.stats, state.worldMap, state.prestige).map((title) => (
+              <PixelFrame
+                key={title.id}
+                variant="iron"
+                active={selectedHero.activeTitle === title.id}
+                className={styles.titleOption}
+              >
+                <button
+                  className={styles.titleOptionBtn}
+                  onClick={() => {
+                    dispatch({ type: "SET_ACTIVE_TITLE", heroId: selectedHero.id, titleId: title.id });
+                    setShowTitlePicker(false);
+                  }}
+                >
+                  <span className={styles.titleOptName}>{title.name}</span>
+                  <span className={styles.titleOptDesc}>{title.description}</span>
+                  <span className={styles.titleOptBonus}>{title.bonus.label}</span>
+                </button>
+              </PixelFrame>
             ))}
           </div>
         </Modal>

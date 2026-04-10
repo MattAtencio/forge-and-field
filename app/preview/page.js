@@ -41,30 +41,27 @@ export default function PreviewPage() {
           </div>
         </div>
 
-        {/* New Pixel Art Warrior */}
-        <div style={{ textAlign: "center" }}>
-          <h2 style={{ fontSize: "14px", marginBottom: "16px", color: "#f97316" }}>
-            Pixel Art v1 (warrior_pixel) — Animated
-          </h2>
-          <div style={{ display: "flex", gap: "16px", alignItems: "end" }}>
-            <div>
-              <Sprite name="warrior_pixel" size={32} />
-              <p style={{ fontSize: "10px", color: "#64748b", marginTop: "4px" }}>32px</p>
-            </div>
-            <div>
-              <Sprite name="warrior_pixel" size={48} />
-              <p style={{ fontSize: "10px", color: "#64748b", marginTop: "4px" }}>48px</p>
-            </div>
-            <div>
-              <Sprite name="warrior_pixel" size={64} />
-              <p style={{ fontSize: "10px", color: "#64748b", marginTop: "4px" }}>64px</p>
-            </div>
-            <div>
-              <Sprite name="warrior_pixel" size={96} />
-              <p style={{ fontSize: "10px", color: "#64748b", marginTop: "4px" }}>96px</p>
+        {/* Pixel Art Heroes */}
+        {[
+          { name: "warrior_pixel", label: "Aldric (Warrior)" },
+          { name: "ranger_pixel", label: "Lyra (Ranger)" },
+          { name: "mage_pixel", label: "Theron (Mage)" },
+          { name: "paladin_pixel", label: "Sera (Paladin)" },
+        ].map((hero) => (
+          <div key={hero.name} style={{ textAlign: "center" }}>
+            <h2 style={{ fontSize: "14px", marginBottom: "16px", color: "#f97316" }}>
+              {hero.label} — Pixel Art
+            </h2>
+            <div style={{ display: "flex", gap: "16px", alignItems: "end" }}>
+              {[32, 48, 64, 96].map((size) => (
+                <div key={size}>
+                  <Sprite name={hero.name} size={size} />
+                  <p style={{ fontSize: "10px", color: "#64748b", marginTop: "4px" }}>{size}px</p>
+                </div>
+              ))}
             </div>
           </div>
-        </div>
+        ))}
       </div>
 
       {/* All heroes comparison */}
@@ -77,6 +74,26 @@ export default function PreviewPage() {
             <div key={name} style={{ textAlign: "center" }}>
               <Sprite name={name} size={64} />
               <p style={{ fontSize: "11px", color: "#64748b", marginTop: "4px" }}>{name}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* All pixel art heroes comparison */}
+      <div style={{ marginTop: "48px" }}>
+        <h2 style={{ fontSize: "14px", marginBottom: "16px", color: "#f97316" }}>
+          All Heroes (Pixel Art) at 64px
+        </h2>
+        <div style={{ display: "flex", gap: "24px" }}>
+          {[
+            { name: "warrior_pixel", label: "Aldric" },
+            { name: "ranger_pixel", label: "Lyra" },
+            { name: "mage_pixel", label: "Theron" },
+            { name: "paladin_pixel", label: "Sera" },
+          ].map((hero) => (
+            <div key={hero.name} style={{ textAlign: "center" }}>
+              <Sprite name={hero.name} size={64} />
+              <p style={{ fontSize: "11px", color: "#64748b", marginTop: "4px" }}>{hero.label}</p>
             </div>
           ))}
         </div>

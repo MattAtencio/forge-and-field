@@ -9,6 +9,7 @@ import ItemCard from "./shared/ItemCard";
 import Modal from "./shared/Modal";
 import Sprite from "@/components/sprites/Sprite";
 import ResourceCost from "@/components/sprites/ResourceCost";
+import PixelFrame from "@/components/shared/PixelFrame";
 import styles from "./ForgeScreen.module.css";
 
 const RARITY_ORDER = { common: 0, uncommon: 1, rare: 2, epic: 3 };
@@ -136,7 +137,7 @@ export default function ForgeScreen() {
       </h2>
 
       {/* Crafting Queue — always show all slots for stable layout */}
-      <div className={styles.queue}>
+      <PixelFrame variant="iron" className={styles.queue}>
         <h3 className={styles.subheading}>Crafting Queue</h3>
         {Array.from({ length: maxSlots }, (_, i) => {
           const craft = state.craftingQueue[i];
@@ -188,10 +189,10 @@ export default function ForgeScreen() {
             </div>
           );
         })}
-      </div>
+      </PixelFrame>
 
       {/* Tab Switch */}
-      <div className={styles.tabs}>
+      <PixelFrame variant="iron" className={styles.tabs}>
         <button
           className={`${styles.tab} ${tab === "recipes" ? styles.tabActive : ""}`}
           onClick={() => setTab("recipes")}
@@ -204,7 +205,7 @@ export default function ForgeScreen() {
         >
           Inventory ({state.inventory.length}/{state.inventoryCapacity || 20})
         </button>
-      </div>
+      </PixelFrame>
 
       {/* Recipes List */}
       {tab === "recipes" && (
@@ -215,7 +216,7 @@ export default function ForgeScreen() {
             const invFull = state.inventory.length >= (state.inventoryCapacity || 20);
 
             return (
-              <div key={recipe.id} className={styles.recipeCard}>
+              <PixelFrame key={recipe.id} variant="iron" className={styles.recipeCard}>
                 <div className={styles.recipeHeader}>
                   <span className={styles.recipeIcon}>
                     <Sprite name={recipe.icon} size={28} />
@@ -251,7 +252,7 @@ export default function ForgeScreen() {
                 >
                   {invFull ? "Inventory Full" : queueFull ? "Queue Full" : affordable ? "Craft" : "Need Resources"}
                 </button>
-              </div>
+              </PixelFrame>
             );
           })}
         </div>

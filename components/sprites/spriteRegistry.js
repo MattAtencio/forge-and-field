@@ -1292,11 +1292,14 @@ const RECIPE_SPRITE_MAP = {
 };
 
 // Pixel art sprite imports (SVG-based animated pixel sprites)
-import { warrior_pixel } from "./pixelSprites";
+import { warrior_pixel, ranger_pixel, mage_pixel, paladin_pixel } from "./pixelSprites";
 
 // Register pixel art sprites (these override the flat SVG versions)
 const PIXEL_SPRITES = {
   warrior_pixel: { type: "animated_pixel", frames: warrior_pixel, fps: 3 },
+  ranger_pixel: { type: "animated_pixel", frames: ranger_pixel, fps: 3 },
+  mage_pixel: { type: "animated_pixel", frames: mage_pixel, fps: 3 },
+  paladin_pixel: { type: "animated_pixel", frames: paladin_pixel, fps: 3 },
 };
 
 /**

@@ -11,6 +11,7 @@ import ProgressBar from "./shared/ProgressBar";
 import PrestigePanel from "./PrestigePanel";
 import Modal from "./shared/Modal";
 import Sprite from "@/components/sprites/Sprite";
+import PixelFrame from "@/components/shared/PixelFrame";
 import styles from "./HubScreen.module.css";
 
 const NAV_TILES = [
@@ -143,7 +144,7 @@ export default function HubScreen({ onOpenSettings }) {
   return (
     <div className={styles.hub}>
       {/* Player Info */}
-      <div className={styles.playerCard}>
+      <PixelFrame variant="parchment" className={styles.playerCard}>
         <div className={styles.playerHeader}>
           <span className={styles.playerIcon}>
             <Sprite name="hub" size={28} />
@@ -162,7 +163,7 @@ export default function HubScreen({ onOpenSettings }) {
           color="#f97316"
           label="XP"
         />
-      </div>
+      </PixelFrame>
 
       {/* Notifications */}
       {notifications.length > 0 && (
@@ -228,7 +229,7 @@ export default function HubScreen({ onOpenSettings }) {
         const goal = getNextGoal(player);
         const nextUnlock = getNextUnlock(player.level);
         return (
-          <div className={styles.goalCard}>
+          <PixelFrame variant="parchment" className={styles.goalCard}>
             <div className={styles.goalHeader}>
               <span className={styles.goalIcon}>
                 <Sprite name={goal.icon} size={24} />
@@ -254,13 +255,13 @@ export default function HubScreen({ onOpenSettings }) {
                 </span>
               </div>
             )}
-          </div>
+          </PixelFrame>
         );
       })()}
 
       {/* Loot Chests */}
       {state.chests && (
-        <div className={styles.chestsSection}>
+        <PixelFrame variant="iron" className={styles.chestsSection}>
           <h3 className={styles.sectionTitle}>Loot Chests</h3>
           <div className={styles.chestList}>
             {Object.entries(state.chests).map(([type, chest]) => {
@@ -301,7 +302,7 @@ export default function HubScreen({ onOpenSettings }) {
               );
             })}
           </div>
-        </div>
+        </PixelFrame>
       )}
 
       {/* Nav Tiles */}
@@ -343,7 +344,7 @@ export default function HubScreen({ onOpenSettings }) {
       <PrestigePanel />
 
       {/* Hero Summary */}
-      <div className={styles.heroSummary}>
+      <PixelFrame variant="parchment" className={styles.heroSummary}>
         <h3 className={styles.sectionTitle}>Heroes</h3>
         <div className={styles.heroList}>
           {state.heroes.map((hero) => (
@@ -360,7 +361,7 @@ export default function HubScreen({ onOpenSettings }) {
             </button>
           ))}
         </div>
-      </div>
+      </PixelFrame>
       {/* Chest Reveal Modal */}
       {chestReveal && (
         <Modal title={chestReveal.config.label} onClose={() => setChestReveal(null)}>

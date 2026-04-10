@@ -1,4 +1,4 @@
-import { DM_Serif_Display, Outfit } from "next/font/google";
+import { DM_Serif_Display, Crimson_Pro, JetBrains_Mono } from "next/font/google";
 import "./globals.css";
 
 const dmSerif = DM_Serif_Display({
@@ -8,9 +8,17 @@ const dmSerif = DM_Serif_Display({
   display: "swap",
 });
 
-const outfit = Outfit({
+const crimsonPro = Crimson_Pro({
+  weight: ["400", "600"],
   subsets: ["latin"],
-  variable: "--font-outfit",
+  variable: "--font-body",
+  display: "swap",
+});
+
+const jetbrainsMono = JetBrains_Mono({
+  weight: "400",
+  subsets: ["latin"],
+  variable: "--font-mono",
   display: "swap",
 });
 
@@ -54,7 +62,7 @@ export const viewport = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body className={`${dmSerif.variable} ${outfit.variable}`}>
+      <body className={`${dmSerif.variable} ${crimsonPro.variable} ${jetbrainsMono.variable}`}>
         {children}
       </body>
     </html>

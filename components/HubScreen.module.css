@@ -7,10 +7,6 @@
 
 /* Player Card */
 .playerCard {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 14px;
-  padding: 14px;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -181,10 +177,6 @@
 
 /* Next Goal Card */
 .goalCard {
-  background: rgba(249, 115, 22, 0.06);
-  border: 1px solid rgba(249, 115, 22, 0.2);
-  border-radius: 14px;
-  padding: 14px;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -259,10 +251,6 @@
 
 /* Loot Chests */
 .chestsSection {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 14px;
-  padding: 14px;
 }
 
 .chestList {
@@ -327,9 +315,8 @@
 }
 
 .tile {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 14px;
+  background: rgba(148, 163, 184, 0.03);
+  border: 2px solid #64748b;
   padding: 16px 12px;
   display: flex;
   flex-direction: column;
@@ -339,11 +326,12 @@
   color: #e8e8f0;
   transition: border-color 0.2s, box-shadow 0.2s;
   -webkit-tap-highlight-color: transparent;
+  position: relative;
 }
 
 .tile:active:not(.tileLocked) {
-  border-color: var(--tile-color);
-  box-shadow: 0 0 16px rgba(249, 115, 22, 0.15);
+  border-color: #f97316;
+  box-shadow: 0 0 12px rgba(249, 115, 22, 0.25);
 }
 
 .tileLocked {
@@ -369,10 +357,6 @@
 
 /* Hero Summary */
 .heroSummary {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 14px;
-  padding: 14px;
 }
 
 .sectionTitle {
