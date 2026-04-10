@@ -4,6 +4,7 @@ import { useGameState, useGameDispatch } from "@/lib/gameContext";
 import { BUILDINGS, getNextUpgrade } from "@/data/village";
 import { RESOURCES } from "@/data/resources";
 import Sprite from "@/components/sprites/Sprite";
+import PixelFrame from "@/components/shared/PixelFrame";
 import styles from "./VillageScreen.module.css";
 
 export default function VillageScreen() {
@@ -31,7 +32,7 @@ export default function VillageScreen() {
       <h2 className={styles.heading}>
         <Sprite name="village" size={22} /> Village
       </h2>
-      <p className={styles.subtitle}>Upgrade buildings to strengthen your settlement</p>
+      <p className={styles.subtitle}>Stone by stone, build what endures.</p>
 
       <div className={styles.buildingList}>
         {BUILDINGS.map((building) => {
@@ -46,8 +47,9 @@ export default function VillageScreen() {
             : false;
 
           return (
-            <div
+            <PixelFrame
               key={building.id}
+              variant="iron"
               className={`${styles.buildingCard} ${maxed ? styles.maxed : ""}`}
             >
               <div className={styles.buildingHeader}>
@@ -98,7 +100,7 @@ export default function VillageScreen() {
                   </button>
                 </div>
               )}
-            </div>
+            </PixelFrame>
           );
         })}
       </div>

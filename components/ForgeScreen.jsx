@@ -183,7 +183,7 @@ export default function ForgeScreen() {
                 <Sprite name="forge" size={22} />
               </span>
               <div className={styles.queueInfo}>
-                <span className={styles.queueName}>Empty Slot</span>
+                <span className={styles.queueName}>The anvil waits.</span>
                 <div className={styles.queueBar} />
               </div>
             </div>
@@ -250,7 +250,7 @@ export default function ForgeScreen() {
                   disabled={!affordable || queueFull || invFull}
                   onClick={() => handleCraft(recipe)}
                 >
-                  {invFull ? "Inventory Full" : queueFull ? "Queue Full" : affordable ? "Craft" : "Need Resources"}
+                  {invFull ? "Stores Full" : queueFull ? "Queue Full" : affordable ? "Craft" : "Gather More"}
                 </button>
               </PixelFrame>
             );
@@ -288,7 +288,7 @@ export default function ForgeScreen() {
         </div>
         <div className={styles.inventoryGrid}>
           {state.inventory.length === 0 ? (
-            <p className={styles.empty}>No items yet. Start crafting!</p>
+            <p className={styles.empty}>Your stores are bare. The forge awaits.</p>
           ) : (
             filteredAndSorted.map((item) => (
               <div

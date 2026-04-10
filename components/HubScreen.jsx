@@ -15,11 +15,11 @@ import PixelFrame from "@/components/shared/PixelFrame";
 import styles from "./HubScreen.module.css";
 
 const NAV_TILES = [
-  { screen: "forge", icon: "forge", label: "Forge", desc: "Craft weapons & gear", color: "#f97316" },
-  { screen: "barracks", icon: "barracks", label: "Barracks", desc: "Manage your heroes", color: "#3b82f6", unlockLevel: 3 },
-  { screen: "expedition", icon: "map", label: "Expeditions", desc: "Send heroes on quests", color: "#22c55e", unlockLevel: 5 },
-  { screen: "season", icon: "season", label: "Season", desc: "Weekly events & rewards", color: "#a855f7", unlockLevel: 7 },
-  { screen: "village", icon: "village", label: "Village", desc: "Upgrade your settlement", color: "#f59e0b", unlockLevel: 8 },
+  { screen: "forge", icon: "forge", label: "Forge", desc: "Shape iron into purpose", color: "#f97316" },
+  { screen: "barracks", icon: "barracks", label: "Barracks", desc: "Those who carry your work", color: "#3b82f6", unlockLevel: 3 },
+  { screen: "expedition", icon: "map", label: "Expeditions", desc: "The world beyond the walls", color: "#22c55e", unlockLevel: 5 },
+  { screen: "season", icon: "season", label: "Season", desc: "The turning of seasons", color: "#a855f7", unlockLevel: 7 },
+  { screen: "village", icon: "village", label: "Village", desc: "Build what endures", color: "#f59e0b", unlockLevel: 8 },
 ];
 
 const GOAL_ICONS = {
@@ -34,14 +34,14 @@ const GOAL_ICONS = {
 function getNextGoal(player) {
   const lv = player.level;
   const screens = player.unlockedScreens || [];
-  if (lv === 1) return { icon: "forge", title: "Start Crafting", hint: "Head to the Forge and craft your first item to earn XP.", action: "forge" };
-  if (lv < 3) return { icon: "season", title: "Reach Level 3", hint: "Keep crafting to unlock the Barracks and equip your heroes.", action: "forge" };
-  if (lv < 5 && screens.includes("barracks")) return { icon: "barracks", title: "Gear Up Your Hero", hint: "Visit the Barracks to equip crafted items and level up Aldric.", action: "barracks" };
-  if (lv < 5) return { icon: "warrior", title: "Reach Level 5", hint: "Craft & level heroes to unlock Expeditions — the real adventure begins.", action: "forge" };
-  if (lv < 7 && screens.includes("expedition")) return { icon: "map", title: "Send an Expedition", hint: "Your heroes are ready! Send them on quests for rare loot and big XP.", action: "expedition" };
-  if (lv < 7) return { icon: "season", title: "Unlock Seasons", hint: "Reach Level 7 to access weekly events and bonus rewards.", action: null };
-  if (lv < 15) return { icon: "elder_dragon", title: "Explore the World", hint: "Defeat region bosses to unlock new lands and powerful gear.", action: "expedition" };
-  return { icon: "settings", title: "Prestige Awaits", hint: "Reach Level 15 to Rebirth — reset with permanent bonuses.", action: null };
+  if (lv === 1) return { icon: "forge", title: "Light the Forge", hint: "The anvil is cold. Craft your first piece and begin.", action: "forge" };
+  if (lv < 3) return { icon: "season", title: "Reach Level 3", hint: "Keep working the iron. The Barracks will open when you are ready.", action: "forge" };
+  if (lv < 5 && screens.includes("barracks")) return { icon: "barracks", title: "Arm Your Champion", hint: "Aldric waits. Equip what you have forged and see him grow.", action: "barracks" };
+  if (lv < 5) return { icon: "warrior", title: "Reach Level 5", hint: "Steel and sweat. The road to Expeditions is earned at the anvil.", action: "forge" };
+  if (lv < 7 && screens.includes("expedition")) return { icon: "map", title: "Send an Expedition", hint: "Your champions are ready. Let them prove your craft beyond the walls.", action: "expedition" };
+  if (lv < 7) return { icon: "season", title: "Unlock Seasons", hint: "Reach Level 7. The turning of seasons brings its own rewards.", action: null };
+  if (lv < 15) return { icon: "elder_dragon", title: "Venture Beyond", hint: "Defeat the guardians of each land. Greater iron lies deeper.", action: "expedition" };
+  return { icon: "settings", title: "The Forge Remembers", hint: "Reach Level 15. Return to the flames and carry forward what matters.", action: null };
 }
 
 function getNextUnlock(playerLevel) {
@@ -132,13 +132,13 @@ export default function HubScreen({ onOpenSettings }) {
   const notifications = [];
   const completedExps = expeditions.completed.length;
   if (completedExps > 0) {
-    notifications.push(`${completedExps} expedition${completedExps > 1 ? "s" : ""} complete!`);
+    notifications.push(`${completedExps} expedition${completedExps > 1 ? "s" : ""} returned.`);
   }
   const readyCrafts = craftingQueue.filter(
     (c) => Date.now() >= c.startedAt + c.duration
   ).length;
   if (readyCrafts > 0) {
-    notifications.push(`${readyCrafts} item${readyCrafts > 1 ? "s" : ""} ready to collect!`);
+    notifications.push(`${readyCrafts} item${readyCrafts > 1 ? "s" : ""} cooling on the rack.`);
   }
 
   return (
@@ -150,7 +150,7 @@ export default function HubScreen({ onOpenSettings }) {
             <Sprite name="hub" size={28} />
           </span>
           <div className={styles.playerInfo}>
-            <h2 className={styles.playerTitle}>Commander</h2>
+            <h2 className={styles.playerTitle}>Forgemaster</h2>
             <span className={styles.levelBadge}>Lv. {player.level}</span>
           </div>
           <button className={styles.settingsBtn} onClick={onOpenSettings}>
@@ -210,7 +210,7 @@ export default function HubScreen({ onOpenSettings }) {
                     <Sprite name={template?.icon || "map"} size={18} />
                   </span>
                   <span className={styles.expName}>{template?.name || "Unknown"}</span>
-                  <span className={styles.expTime}>{remaining > 0 ? timeLabel : "Done!"}</span>
+                  <span className={styles.expTime}>{remaining > 0 ? timeLabel : "Returned"}</span>
                 </div>
                 <div className={styles.expBar}>
                   <div
@@ -295,7 +295,7 @@ export default function HubScreen({ onOpenSettings }) {
                   <div className={styles.chestInfo}>
                     <span className={styles.chestLabel}>{config.label}</span>
                     <span className={styles.chestTimer} style={{ color: ready ? "#22c55e" : "#8888a0" }}>
-                      {ready ? "Ready!" : timeLabel}
+                      {ready ? "Ready" : timeLabel}
                     </span>
                   </div>
                 </button>
@@ -340,7 +340,7 @@ export default function HubScreen({ onOpenSettings }) {
         })}
       </div>
 
-      {/* Prestige */}
+      {/* The Reforging */}
       <PrestigePanel />
 
       {/* Hero Summary */}

@@ -29,20 +29,20 @@ export default function PrestigePanel() {
     dispatch({ type: "BUY_PRESTIGE_BONUS", bonusId, cost: bonus.cost });
   };
 
-  // Don't show if player hasn't reached prestige level and has never prestiged
+  // Don't show if player hasn't reached reforging level and has never reforged
   if (!eligible && prestige.tier === 0) return null;
 
   return (
     <div className={styles.panel}>
       <div className={styles.header}>
-        <h3 className={styles.title}><Sprite name="season" size={14} /> Prestige</h3>
+        <h3 className={styles.title}><Sprite name="season" size={14} /> The Reforging</h3>
         {prestige.tier > 0 && (
           <span className={styles.tierBadge}>Tier {prestige.tier}</span>
         )}
       </div>
 
       <div className={styles.starInfo}>
-        <span className={styles.starCount}><Sprite name="season" size={14} /> {prestige.availableStars} stars</span>
+        <span className={styles.starCount}><Sprite name="season" size={14} /> {prestige.availableStars} Forge Marks</span>
         {prestige.totalStars > prestige.availableStars && (
           <span className={styles.totalStars}>({prestige.totalStars} lifetime)</span>
         )}
@@ -53,7 +53,7 @@ export default function PrestigePanel() {
           className={styles.shopBtn}
           onClick={() => setShowShop(true)}
         >
-          Prestige Shop
+          Marks of the Forge
         </button>
 
         {eligible && (
@@ -61,37 +61,37 @@ export default function PrestigePanel() {
             className={styles.rebirthBtn}
             onClick={() => setConfirmRebirth(true)}
           >
-            Rebirth (+{starsPreview} <Sprite name="season" size={14} />)
+            Reforge (+{starsPreview} <Sprite name="season" size={14} />)
           </button>
         )}
       </div>
 
-      {/* Confirm Rebirth */}
+      {/* Confirm Reforging */}
       {confirmRebirth && (
-        <Modal title="Confirm Rebirth" onClose={() => setConfirmRebirth(false)}>
+        <Modal title="Confirm Reforging" onClose={() => setConfirmRebirth(false)}>
           <div className={styles.confirmModal}>
             <p className={styles.confirmText}>
-              You will gain <strong>{starsPreview} <Sprite name="season" size={14} /></strong> Prestige Stars.
+              Return to the flames. Your level, resources, and inventory will be consumed. In return, the forge remembers — <strong>{starsPreview} <Sprite name="season" size={14} /></strong> Forge Marks to carry forward.
             </p>
             <p className={styles.confirmWarn}>
-              Your level, resources, inventory, heroes, and world map progress will be reset.
-              Prestige bonuses and discoveries are kept.
+              Heroes and world map progress will also be reset.
+              Marks of the Forge and discoveries are kept.
             </p>
             <div className={styles.confirmActions}>
               <button className={styles.cancelBtn} onClick={() => setConfirmRebirth(false)}>
                 Cancel
               </button>
               <button className={styles.confirmBtn} onClick={handleRebirth}>
-                Rebirth
+                Reforge
               </button>
             </div>
           </div>
         </Modal>
       )}
 
-      {/* Prestige Shop */}
+      {/* Marks of the Forge */}
       {showShop && (
-        <Modal title={`Prestige Shop (\u2B50 ${prestige.availableStars})`} onClose={() => setShowShop(false)}>
+        <Modal title={`Marks of the Forge (\u2B50 ${prestige.availableStars})`} onClose={() => setShowShop(false)}>
           <div className={styles.shopList}>
             {PRESTIGE_BONUSES.map((bonus) => {
               const stacks = prestige.bonuses[bonus.id] || 0;

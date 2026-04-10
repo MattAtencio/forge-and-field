@@ -11,7 +11,7 @@ export default function RewardSummaryModal({ rewards, expeditionName, onCollect 
   const hasResources = rewards.resources && Object.keys(rewards.resources).length > 0;
 
   return (
-    <Modal title="Expedition Complete" onClose={onCollect}>
+    <Modal title="Return from the Field" onClose={onCollect}>
       <div className={styles.summary}>
         <h3 className={styles.expName}>{expeditionName}</h3>
 
@@ -38,7 +38,7 @@ export default function RewardSummaryModal({ rewards, expeditionName, onCollect 
 
         {hasItems && (
           <div className={styles.section}>
-            <h4 className={styles.label}>Items Found</h4>
+            <h4 className={styles.label}>Salvage</h4>
             <div className={styles.itemList}>
               {rewards.items.map((item) => (
                 <div
@@ -70,7 +70,7 @@ export default function RewardSummaryModal({ rewards, expeditionName, onCollect 
         )}
 
         {!hasResources && !hasItems && (
-          <p className={styles.empty}>No rewards this time.</p>
+          <p className={styles.empty}>They returned empty-handed. The road was not kind.</p>
         )}
 
         <button className={styles.collectBtn} onClick={onCollect}>

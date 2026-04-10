@@ -79,11 +79,11 @@ export const TITLES = [
     condition: { stat: "totalDiscoveries", threshold: 5 },
   },
 
-  // Prestige milestones
+  // Reforging milestones
   {
     id: "reborn",
     name: "Reborn",
-    description: "Complete your first prestige rebirth",
+    description: "Complete your first Reforging",
     bonus: { type: "xp_bonus", value: 0.05, label: "+5% player XP" },
     condition: { stat: "prestigeTier", threshold: 1 },
   },

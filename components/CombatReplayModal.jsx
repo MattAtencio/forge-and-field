@@ -50,7 +50,7 @@ export default function CombatReplayModal({ combatResult, rewards, onDone }) {
     return <>{entry.actor} {"\u2192"} {entry.target} (-{entry.damage})</>;
   };
 
-  const resultLabel = victory ? "Victory!" : isDraw ? "Draw" : "Defeat";
+  const resultLabel = victory ? "Victory" : isDraw ? "Draw" : "Defeat";
   const resultColor = victory ? "#22c55e" : isDraw ? "#f59e0b" : "#ef4444";
   const multLabel = victory ? "1.5x" : isDraw ? "0.75x" : "0.5x";
   const consequenceLabel = victory

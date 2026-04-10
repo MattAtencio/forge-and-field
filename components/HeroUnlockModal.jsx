@@ -9,7 +9,7 @@ export default function HeroUnlockModal({ heroes, onDismiss }) {
 
   return (
     <Modal
-      title={multiple ? "Heroes Recruited!" : "New Hero Recruited!"}
+      title={multiple ? "New Arrivals" : "A New Champion"}
       onClose={onDismiss}
     >
       <div className={styles.content}>
@@ -43,8 +43,8 @@ export default function HeroUnlockModal({ heroes, onDismiss }) {
 
         <p className={styles.hint}>
           {multiple
-            ? "Visit the Barracks to equip and manage your new heroes!"
-            : "Visit the Barracks to equip your new hero!"}
+            ? "They await your craft in the Barracks."
+            : "They await your craft in the Barracks."}
         </p>
 
         <button className={styles.dismissBtn} onClick={onDismiss}>

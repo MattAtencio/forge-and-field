@@ -15,6 +15,7 @@ import CombatReplayModal from "./CombatReplayModal";
 import RewardSummaryModal from "./RewardSummaryModal";
 import RegionDetailModal from "./RegionDetailModal";
 import Sprite from "@/components/sprites/Sprite";
+import PixelFrame from "@/components/shared/PixelFrame";
 import styles from "./WorldMapScreen.module.css";
 
 export default function WorldMapScreen() {
@@ -186,7 +187,7 @@ export default function WorldMapScreen() {
             const template = EXPEDITIONS.find((e) => e.id === exp.templateId);
 
             return (
-              <div key={exp.id} className={styles.activeCard}>
+              <PixelFrame key={exp.id} variant="iron" className={styles.activeCard}>
                 <div className={styles.activeHeader}>
                   <span><Sprite name={template?.icon || "map"} size={18} /></span>
                   <span className={styles.activeName}>{template?.name || "Unknown"}</span>
@@ -221,7 +222,7 @@ export default function WorldMapScreen() {
                 <div className={styles.progressBar}>
                   <div className={styles.progressFill} style={{ width: `${pct}%` }} />
                 </div>
-              </div>
+              </PixelFrame>
             );
           })}
         </div>
@@ -234,14 +235,14 @@ export default function WorldMapScreen() {
           {state.expeditions.completed.map((exp) => {
             const template = EXPEDITIONS.find((e) => e.id === exp.templateId);
             return (
-              <div key={exp.id} className={styles.completedCard}>
+              <PixelFrame key={exp.id} variant="iron" glow className={styles.completedCard}>
                 <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
                   <Sprite name={template?.icon || "map"} size={18} /> {template?.name || "Unknown"}
                 </span>
                 <button className={styles.claimBtn} onClick={() => handleClaim(exp)}>
                   Claim Rewards
                 </button>
-              </div>
+              </PixelFrame>
             );
           })}
         </div>
@@ -264,8 +265,6 @@ export default function WorldMapScreen() {
                 className={`${styles.regionCard} ${!unlocked ? styles.regionLocked : ""} ${cleared ? styles.regionCleared : ""}`}
                 style={{
                   "--region-accent": region.theme.accent,
-                  "--region-bg": region.theme.bg,
-                  "--region-border": region.theme.border,
                 }}
                 aria-disabled={!unlocked}
                 onClick={() => {
@@ -278,37 +277,39 @@ export default function WorldMapScreen() {
                   }
                 }}
               >
-                <div className={styles.regionHeader}>
-                  <span className={styles.regionIcon}>
-                    <Sprite
-                      name={unlocked ? region.icon : "lock"}
-                      size={28}
-                      muted={!unlocked}
-                    />
-                  </span>
-                  <div className={styles.regionInfo}>
-                    <span className={styles.regionName}>
-                      {unlocked ? region.name : "Locked"}
+                <PixelFrame variant="iron" className={styles.regionCardInner}>
+                  <div className={styles.regionHeader}>
+                    <span className={styles.regionIcon}>
+                      <Sprite
+                        name={unlocked ? region.icon : "lock"}
+                        size={28}
+                        muted={!unlocked}
+                      />
                     </span>
-                    {unlocked && (
-                      <span className={styles.regionDesc}>{region.description}</span>
-                    )}
-                    {!unlocked && (
-                      <span className={styles.regionDesc}>
-                        Clear {region.unlockCondition} boss to unlock
+                    <div className={styles.regionInfo}>
+                      <span className={styles.regionName}>
+                        {unlocked ? region.name : "Locked"}
                       </span>
-                    )}
+                      {unlocked && (
+                        <span className={styles.regionDesc}>{region.description}</span>
+                      )}
+                      {!unlocked && (
+                        <span className={styles.regionDesc}>
+                          Clear {region.unlockCondition} boss to unlock
+                        </span>
+                      )}
+                    </div>
+                    {cleared && <span className={styles.clearedBadge}>{"\u2714"}</span>}
                   </div>
-                  {cleared && <span className={styles.clearedBadge}>{"\u2714"}</span>}
-                </div>
-                {unlocked && (
-                  <div className={styles.regionMeta}>
-                    <span>{region.expeditions.length + 1} missions</span>
-                    {discoveredCount > 0 && (
-                      <span>{discoveredCount}/{region.pointsOfInterest.length} discoveries</span>
-                    )}
-                  </div>
-                )}
+                  {unlocked && (
+                    <div className={styles.regionMeta}>
+                      <span>{region.expeditions.length + 1} missions</span>
+                      {discoveredCount > 0 && (
+                        <span>{discoveredCount}/{region.pointsOfInterest.length} discoveries</span>
+                      )}
+                    </div>
+                  )}
+                </PixelFrame>
               </button>
             );
           })}
@@ -362,7 +363,7 @@ export default function WorldMapScreen() {
             <h4 className={styles.subheading}>Select Heroes</h4>
             <div className={styles.heroPicker}>
               {idleHeroes.length === 0 ? (
-                <p className={styles.empty}>No idle heroes available</p>
+                <p className={styles.empty}>All hands are spoken for.</p>
               ) : (
                 idleHeroes.map((hero) => (
                   <HeroCard
@@ -412,7 +413,7 @@ export default function WorldMapScreen() {
 
       {/* Discovery Callout */}
       {discoveryPending && !combatPending && !rewardPending && (
-        <Modal title="Discovery!" onClose={() => setDiscoveryPending(null)}>
+        <Modal title="Something Found" onClose={() => setDiscoveryPending(null)}>
           <div className={styles.discoveryCallout}>
             <div className={styles.discoveryIcon}>
               <Sprite name={discoveryPending.icon} size={48} />

@@ -5,6 +5,7 @@ import { getCurrentSeason, getSeasonTimeRemaining, formatTimeRemaining } from "@
 import { RESOURCES } from "@/data/resources";
 import ProgressBar from "./shared/ProgressBar";
 import Sprite from "@/components/sprites/Sprite";
+import PixelFrame from "@/components/shared/PixelFrame";
 import styles from "./SeasonScreen.module.css";
 
 export default function SeasonScreen() {
@@ -42,26 +43,28 @@ export default function SeasonScreen() {
   return (
     <div className={styles.screen}>
       {/* Season Banner */}
-      <div className={styles.banner} style={{ "--season-color": RESOURCES[season.bonusResource]?.color || "#f97316" }}>
-        <span className={styles.bannerIcon}><Sprite name="season" size={28} /></span>
-        <div>
-          <h2 className={styles.bannerName}>{season.name}</h2>
-          <p className={styles.bannerDesc}>{season.description}</p>
-        </div>
+      <div style={{ "--season-color": RESOURCES[season.bonusResource]?.color || "#f97316" }}>
+        <PixelFrame variant="parchment" className={styles.banner}>
+          <span className={styles.bannerIcon}><Sprite name="season" size={28} /></span>
+          <div>
+            <h2 className={styles.bannerName}>{season.name}</h2>
+            <p className={styles.bannerDesc}>{season.description}</p>
+          </div>
+        </PixelFrame>
       </div>
 
       {/* Timer + Bonus */}
       <div className={styles.meta}>
-        <div className={styles.metaItem}>
+        <PixelFrame variant="parchment" className={styles.metaItem}>
           <span className={styles.metaLabel}>Ends in</span>
           <span className={styles.metaValue}>{formatTimeRemaining(timeRemaining)}</span>
-        </div>
-        <div className={styles.metaItem}>
+        </PixelFrame>
+        <PixelFrame variant="parchment" className={styles.metaItem}>
           <span className={styles.metaLabel}>Bonus</span>
           <span className={styles.metaValue} style={{ color: RESOURCES[season.bonusResource]?.color }}>
             <Sprite name={RESOURCES[season.bonusResource]?.icon || season.bonusResource} size={14} /> {season.bonusResource} +{Math.round((season.bonusMultiplier - 1) * 100)}%
           </span>
-        </div>
+        </PixelFrame>
       </div>
 
       {/* XP Progress */}
@@ -83,8 +86,9 @@ export default function SeasonScreen() {
           const claimed = dailyQuests.claimed.includes(quest.id);
 
           return (
-            <div
+            <PixelFrame
               key={quest.id}
+              variant="iron"
               className={`${styles.tier} ${claimed ? styles.tierClaimed : ""} ${complete && !claimed ? styles.tierReady : ""}`}
             >
               <div className={styles.tierXP}>{Math.min(progress, quest.target)}/{quest.target}</div>
@@ -108,7 +112,7 @@ export default function SeasonScreen() {
               >
                 {claimed ? "Done" : complete ? "Claim" : "..."}
               </button>
-            </div>
+            </PixelFrame>
           );
         })}
       </div>
@@ -122,8 +126,9 @@ export default function SeasonScreen() {
           const unlocked = weeklyXP >= tier.xp;
 
           return (
-            <div
+            <PixelFrame
               key={i}
+              variant="iron"
               className={`${styles.tier} ${claimed ? styles.tierClaimed : ""} ${unlocked && !claimed ? styles.tierReady : ""}`}
             >
               <div className={styles.tierXP}>{tier.xp} XP</div>
@@ -147,7 +152,7 @@ export default function SeasonScreen() {
               >
                 {claimed ? "Claimed" : unlocked ? "Claim" : "Locked"}
               </button>
-            </div>
+            </PixelFrame>
           );
         })}
       </div>

@@ -44,14 +44,14 @@ function isDailyQuestReset(dailyQuests) {
 }
 
 function getRecommendedAction(state, readyChests, completedCrafts) {
-  if (readyChests.length > 0) return "Open your chests!";
+  if (readyChests.length > 0) return "Chests await your hand.";
 
   const emptyCraftSlots =
     (state.maxCraftSlots || 2) - (state.craftingQueue?.length || 0);
-  if (emptyCraftSlots > 0 && completedCrafts.length === 0) return "Start crafting!";
+  if (emptyCraftSlots > 0 && completedCrafts.length === 0) return "The anvil is cold.";
 
   const idleHeroes = state.heroes?.filter((h) => h.status === "idle") || [];
-  if (idleHeroes.length > 0) return "Send heroes on an expedition!";
+  if (idleHeroes.length > 0) return "Idle hands in the Barracks.";
 
   return "Welcome back, Forgemaster.";
 }

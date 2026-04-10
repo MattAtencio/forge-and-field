@@ -206,7 +206,7 @@ export default function BarracksScreen() {
                   <span className={styles.titleBonus}>{currentTitle.bonus.label}</span>
                 )}
                 {unlockedTitles.length === 0 && (
-                  <span className={styles.titleHint}>Complete milestones to earn titles</span>
+                  <span className={styles.titleHint}>Titles are earned, not given.</span>
                 )}
               </div>
             );
@@ -281,7 +281,7 @@ export default function BarracksScreen() {
         <Modal title={`Equip ${equipSlot}`} onClose={() => setEquipSlot(null)}>
           <div className={styles.equipPicker}>
             {getUnequippedItems(state.inventory, equipSlot).length === 0 ? (
-              <p className={styles.empty}>No {equipSlot} items available</p>
+              <p className={styles.empty}>Nothing forged for this slot yet.</p>
             ) : (
               getUnequippedItems(state.inventory, equipSlot).map((item) => (
                 <ItemCard

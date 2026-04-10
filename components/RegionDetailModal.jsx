@@ -72,7 +72,7 @@ export default function RegionDetailModal({ region, playerLevel, worldMap, onSel
                 <div>
                   <span className={styles.missionName}>{exp.name}</span>
                   <span className={styles.lockRequirement}>
-                    Requires Commander Lvl {exp.unlockLevel}
+                    Requires Forgemaster Lvl {exp.unlockLevel}
                   </span>
                 </div>
               </div>
@@ -143,7 +143,7 @@ export default function RegionDetailModal({ region, playerLevel, worldMap, onSel
                 <div className={styles.poiInfo}>
                   <span className={styles.poiName}>{discovered ? poi.name : "Undiscovered"}</span>
                   <span className={styles.poiDesc}>
-                    {discovered ? poi.description : "Complete expeditions to discover"}
+                    {discovered ? poi.description : "Send your champions. The land reveals itself to those who walk it."}
                   </span>
                 </div>
               </div>
