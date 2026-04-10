@@ -53,6 +53,14 @@
   border-radius: 10px;
 }
 
+.heroDescription {
+  font-size: 0.7rem;
+  font-style: italic;
+  color: #8888a0;
+  line-height: 1.4;
+  margin: 0;
+}
+
 /* Stats Grid */
 .statsGrid {
   display: grid;
@@ -355,4 +363,14 @@
   color: #6b6b80;
   font-size: 0.8rem;
   padding: 16px 0;
+}
+
+.levelUpCelebrate {
+  animation: levelUpPop 0.5s ease-out;
+}
+
+@keyframes levelUpPop {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.5); }
+  40% { transform: scale(1.2); box-shadow: 0 0 12px 4px rgba(249, 115, 22, 0.4); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(249, 115, 22, 0); }
 }

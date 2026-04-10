@@ -101,7 +101,7 @@ export default function ExpeditionScreen() {
             return (
               <div key={exp.id} className={styles.completedCard}>
                 <span>{template?.icon || "?"} {template?.name || "Unknown"}</span>
-                <button className={styles.claimBtn} onClick={() => handleClaim(exp)}>
+                <button className={`${styles.claimBtn} juiceBtn`} onClick={() => handleClaim(exp)}>
                   Claim Rewards
                 </button>
               </div>
@@ -180,7 +180,7 @@ export default function ExpeditionScreen() {
             </div>
 
             <button
-              className={styles.sendBtn}
+              className={`${styles.sendBtn} juiceBtn`}
               disabled={!canSendExpedition(selectedExpedition, selectedHeroes, state.heroes, state.inventory)}
               onClick={handleSend}
             >

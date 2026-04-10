@@ -1292,14 +1292,67 @@ const RECIPE_SPRITE_MAP = {
 };
 
 // Pixel art sprite imports (SVG-based animated pixel sprites)
-import { warrior_pixel, ranger_pixel, mage_pixel, paladin_pixel } from "./pixelSprites";
+import {
+  warrior_pixel, ranger_pixel, mage_pixel, paladin_pixel,
+  // Greenwood enemies
+  goblin_pixel, wolf_pixel, forest_spider_pixel, treant_elder_pixel,
+  // Stormridge enemies
+  mountain_goat_pixel, rock_golem_pixel, harpy_pixel, stone_colossus_pixel,
+  // Dragon's Reach enemies
+  fire_imp_pixel, drake_pixel, lava_serpent_pixel, obsidian_guardian_pixel, elder_dragon_pixel,
+  // Dusthaven enemies
+  sand_scorpion_pixel, bandit_pixel, dust_wraith_pixel, bandit_king_pixel,
+  // Frostpeak enemies
+  ice_wolf_pixel, frost_elemental_pixel, snow_troll_pixel, frost_wyrm_pixel,
+} from "./pixelSprites";
 
 // Register pixel art sprites (these override the flat SVG versions)
+// Keys match the `icon` field in data/enemies.js and data/heroes.js
 const PIXEL_SPRITES = {
+  // Heroes
   warrior_pixel: { type: "animated_pixel", frames: warrior_pixel, fps: 3 },
   ranger_pixel: { type: "animated_pixel", frames: ranger_pixel, fps: 3 },
   mage_pixel: { type: "animated_pixel", frames: mage_pixel, fps: 3 },
   paladin_pixel: { type: "animated_pixel", frames: paladin_pixel, fps: 3 },
+
+  // Greenwood enemies
+  goblin_pixel: { type: "animated_pixel", frames: goblin_pixel, fps: 2 },
+  wolf_pixel: { type: "animated_pixel", frames: wolf_pixel, fps: 2 },
+  forest_spider_pixel: { type: "animated_pixel", frames: forest_spider_pixel, fps: 2 },
+  treant_pixel: { type: "animated_pixel", frames: forest_spider_pixel, fps: 2 }, // treant uses spider as placeholder
+  treant_elder_pixel: { type: "animated_pixel", frames: treant_elder_pixel, fps: 2 },
+
+  // Stormridge enemies
+  mountain_goat_pixel: { type: "animated_pixel", frames: mountain_goat_pixel, fps: 2 },
+  rock_golem_pixel: { type: "animated_pixel", frames: rock_golem_pixel, fps: 2 },
+  harpy_pixel: { type: "animated_pixel", frames: harpy_pixel, fps: 2 },
+  stone_colossus_pixel: { type: "animated_pixel", frames: stone_colossus_pixel, fps: 2 },
+  stone_golem_pixel: { type: "animated_pixel", frames: stone_colossus_pixel, fps: 2 }, // alias
+
+  // Dusthaven enemies
+  bandit_pixel: { type: "animated_pixel", frames: bandit_pixel, fps: 2 },
+  bandit_leader_pixel: { type: "animated_pixel", frames: bandit_king_pixel, fps: 2 }, // alias
+  sandworm_pixel: { type: "animated_pixel", frames: sand_scorpion_pixel, fps: 2 }, // alias
+  sandworm_queen_pixel: { type: "animated_pixel", frames: dust_wraith_pixel, fps: 2 }, // alias
+  sand_scorpion_pixel: { type: "animated_pixel", frames: sand_scorpion_pixel, fps: 2 },
+  dust_wraith_pixel: { type: "animated_pixel", frames: dust_wraith_pixel, fps: 2 },
+  bandit_king_pixel: { type: "animated_pixel", frames: bandit_king_pixel, fps: 2 },
+
+  // Frostpeak enemies
+  ice_wraith_pixel: { type: "animated_pixel", frames: frost_elemental_pixel, fps: 2 }, // alias
+  frost_bear_pixel: { type: "animated_pixel", frames: snow_troll_pixel, fps: 2 }, // alias
+  frost_dragon_pixel: { type: "animated_pixel", frames: frost_wyrm_pixel, fps: 2 }, // alias
+  ice_wolf_pixel: { type: "animated_pixel", frames: ice_wolf_pixel, fps: 2 },
+  frost_elemental_pixel: { type: "animated_pixel", frames: frost_elemental_pixel, fps: 2 },
+  snow_troll_pixel: { type: "animated_pixel", frames: snow_troll_pixel, fps: 2 },
+  frost_wyrm_pixel: { type: "animated_pixel", frames: frost_wyrm_pixel, fps: 2 },
+
+  // Dragon's Reach enemies
+  fire_imp_pixel: { type: "animated_pixel", frames: fire_imp_pixel, fps: 2 },
+  drake_pixel: { type: "animated_pixel", frames: drake_pixel, fps: 2 },
+  lava_serpent_pixel: { type: "animated_pixel", frames: lava_serpent_pixel, fps: 2 },
+  obsidian_guardian_pixel: { type: "animated_pixel", frames: obsidian_guardian_pixel, fps: 2 },
+  elder_dragon_pixel: { type: "animated_pixel", frames: elder_dragon_pixel, fps: 2 },
 };
 
 /**

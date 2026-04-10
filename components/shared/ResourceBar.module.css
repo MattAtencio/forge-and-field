@@ -25,3 +25,13 @@
   min-width: 24px;
   text-align: right;
 }
+
+.goldFlash {
+  animation: goldFlash 0.4s ease-out;
+}
+
+@keyframes goldFlash {
+  0% { transform: scale(1); filter: brightness(1); }
+  30% { transform: scale(1.25); filter: brightness(1.5); }
+  100% { transform: scale(1); filter: brightness(1); }
+}

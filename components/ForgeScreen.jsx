@@ -149,7 +149,7 @@ export default function ForgeScreen() {
             const pct = Math.min((elapsed / craft.duration) * 100, 100);
 
             return (
-              <div key={craft.id} className={styles.queueItem}>
+              <div key={craft.id} className={`${styles.queueItem} ${done ? styles.craftReady : ""}`}>
                 <span className={styles.queueIcon}>
                   <Sprite name={recipe?.icon || "forge"} size={22} animate={done ? "glow" : "spin"} />
                 </span>
@@ -163,7 +163,7 @@ export default function ForgeScreen() {
                   </div>
                 </div>
                 {done ? (
-                  <button className={styles.collectBtn} onClick={() => handleCollect(craft)}>
+                  <button className={`${styles.collectBtn} juiceBtn`} onClick={() => handleCollect(craft)}>
                     Collect
                   </button>
                 ) : (
@@ -246,7 +246,7 @@ export default function ForgeScreen() {
                   {recipe.baseStats.spd !== 0 && <span>SPD {recipe.baseStats.spd > 0 ? "+" : ""}{recipe.baseStats.spd}</span>}
                 </div>
                 <button
-                  className={styles.craftBtn}
+                  className={`${styles.craftBtn} juiceBtn`}
                   disabled={!affordable || queueFull || invFull}
                   onClick={() => handleCraft(recipe)}
                 >
@@ -328,7 +328,7 @@ export default function ForgeScreen() {
               Cancel
             </button>
             <button
-              className={styles.batchSellBtn}
+              className={`${styles.batchSellBtn} juiceBtn`}
               disabled={selectedIds.size === 0}
               onClick={handleBatchSell}
             >
@@ -409,7 +409,7 @@ export default function ForgeScreen() {
                   );
                   return (
                     <button
-                      className={styles.repairBtn}
+                      className={`${styles.repairBtn} juiceBtn`}
                       disabled={!canAffordRepair}
                       onClick={() => handleRepair(selectedItem)}
                     >
@@ -423,7 +423,7 @@ export default function ForgeScreen() {
             {/* Dismantle button */}
             {!selectedItem.equippedBy && (
               <button
-                className={styles.dismantleBtn}
+                className={`${styles.dismantleBtn} juiceBtn`}
                 onClick={() => handleDismantle(selectedItem)}
               >
                 Dismantle (<ResourceCost costs={getDismantleReturns(selectedItem)} />)
@@ -439,7 +439,7 @@ export default function ForgeScreen() {
               );
               return (
                 <button
-                  className={styles.upgradeBtn}
+                  className={`${styles.upgradeBtn} juiceBtn`}
                   disabled={!canAfford || !!selectedItem.equippedBy}
                   onClick={() => handleUpgrade(selectedItem)}
                 >
@@ -455,7 +455,7 @@ export default function ForgeScreen() {
               <p className={styles.equippedNote}>Currently equipped</p>
             ) : (
               <button
-                className={styles.sellBtn}
+                className={`${styles.sellBtn} juiceBtn`}
                 onClick={() => handleSell(selectedItem)}
               >
                 Sell for {getSellValue(getRecipeById(selectedItem.recipeId) || { ingredients: {}, tier: 1 }, selectedItem.rarity, selectedItem.level)} <Sprite name="gold" size={14} />

@@ -240,7 +240,7 @@ export default function HubScreen({ onOpenSettings }) {
               </div>
               {goal.action && player.unlockedScreens.includes(goal.action) && (
                 <button
-                  className={styles.goalAction}
+                  className={`${styles.goalAction} juiceBtn`}
                   onClick={() => dispatch({ type: "SET_SCREEN", screen: goal.action })}
                 >
                   Go
@@ -400,7 +400,7 @@ export default function HubScreen({ onOpenSettings }) {
                 ))}
               </div>
             )}
-            <button className={styles.chestCollectBtn} onClick={() => setChestReveal(null)}>
+            <button className={`${styles.chestCollectBtn} juiceBtn`} onClick={() => setChestReveal(null)}>
               {chestReveal.phase === "opening" ? "Opening..." : "Collect"}
             </button>
           </div>

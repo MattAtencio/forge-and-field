@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useCallback } from "react";
 import { useGameState, useGameDispatch } from "@/lib/gameContext";
 import { getEffectiveStats, getHeroPower, canLevelUp, getUnequippedItems, getRestDuration, getPotionCost } from "@/lib/hero";
 import { getHeroTemplate } from "@/lib/hero";
@@ -28,6 +28,8 @@ export default function BarracksScreen() {
   );
   const [equipSlot, setEquipSlot] = useState(null);
   const [showTitlePicker, setShowTitlePicker] = useState(false);
+  const [levelUpFlash, setLevelUpFlash] = useState(false);
+  const levelUpTimerRef = useRef(null);
 
   const selectedHero = state.heroes.find((h) => h.id === selectedHeroId);
   const effectiveStats = selectedHero ? getEffectiveStats(selectedHero, state.inventory) : null;
@@ -45,6 +47,9 @@ export default function BarracksScreen() {
       statGrowth: template.statGrowth,
       enduranceGrowth: template.enduranceGrowth || 5,
     });
+    setLevelUpFlash(true);
+    clearTimeout(levelUpTimerRef.current);
+    levelUpTimerRef.current = setTimeout(() => setLevelUpFlash(false), 600);
   };
 
   const handleEquip = (itemId) => {
@@ -95,8 +100,14 @@ export default function BarracksScreen() {
           <div className={styles.detailHeader}>
             <Sprite name={selectedHero.templateId} size={36} animate="float" />
             <h3 className={styles.heroName}>{selectedHero.name}</h3>
-            <span className={styles.powerBadge}>Power: {power}</span>
+            <span className={`${styles.powerBadge} ${levelUpFlash ? styles.levelUpCelebrate : ""}`}>Power: {power}</span>
           </div>
+          {(() => {
+            const template = HERO_TEMPLATES.find((t) => t.id === selectedHero.templateId);
+            return template?.description ? (
+              <p className={styles.heroDescription}>{template.description}</p>
+            ) : null;
+          })()}
 
           {/* Effective Stats */}
           <div className={styles.statsGrid}>
@@ -160,7 +171,7 @@ export default function BarracksScreen() {
                 {needsRecovery && selectedHero.status === "idle" && (
                   <div className={styles.enduranceActions}>
                     <button
-                      className={styles.restBtn}
+                      className={`${styles.restBtn} juiceBtn`}
                       onClick={() => dispatch({
                         type: "REST_HERO",
                         heroId: selectedHero.id,
@@ -170,7 +181,7 @@ export default function BarracksScreen() {
                       Rest ({Math.ceil(getRestDuration(selectedHero, restMult) / 1000)}s)
                     </button>
                     <button
-                      className={styles.potionBtn}
+                      className={`${styles.potionBtn} juiceBtn`}
                       disabled={!canAffordPotion}
                       onClick={() => dispatch({
                         type: "USE_POTION",
@@ -253,7 +264,7 @@ export default function BarracksScreen() {
                     </div>
                   ) : (
                     <button
-                      className={styles.equipBtn}
+                      className={`${styles.equipBtn} juiceBtn`}
                       onClick={() => setEquipSlot(slot)}
                       disabled={selectedHero.status === "expedition"}
                     >
@@ -267,7 +278,7 @@ export default function BarracksScreen() {
 
           {/* Level Up */}
           <button
-            className={styles.levelUpBtn}
+            className={`${styles.levelUpBtn} juiceBtn`}
             onClick={handleLevelUp}
             disabled={!canLevel || selectedHero.status !== "idle"}
           >

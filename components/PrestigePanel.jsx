@@ -58,7 +58,7 @@ export default function PrestigePanel() {
 
         {eligible && (
           <button
-            className={styles.rebirthBtn}
+            className={`${styles.rebirthBtn} juiceBtn`}
             onClick={() => setConfirmRebirth(true)}
           >
             Reforge (+{starsPreview} <Sprite name="season" size={14} />)
@@ -81,7 +81,7 @@ export default function PrestigePanel() {
               <button className={styles.cancelBtn} onClick={() => setConfirmRebirth(false)}>
                 Cancel
               </button>
-              <button className={styles.confirmBtn} onClick={handleRebirth}>
+              <button className={`${styles.confirmBtn} juiceBtn`} onClick={handleRebirth}>
                 Reforge
               </button>
             </div>

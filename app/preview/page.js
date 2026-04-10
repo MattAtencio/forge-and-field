@@ -99,6 +99,121 @@ export default function PreviewPage() {
         </div>
       </div>
 
+      {/* ============ ENEMIES ============ */}
+      <div style={{ marginTop: "48px" }}>
+        <h2 style={{ fontSize: "18px", marginBottom: "24px", color: "#ef4444" }}>
+          Enemy Pixel Sprites
+        </h2>
+
+        {/* Greenwood */}
+        <div style={{ marginBottom: "32px" }}>
+          <h3 style={{ fontSize: "14px", marginBottom: "12px", color: "#22c55e" }}>
+            Greenwood
+          </h3>
+          <div style={{ display: "flex", gap: "24px", flexWrap: "wrap" }}>
+            {[
+              { name: "goblin_pixel", label: "Goblin" },
+              { name: "wolf_pixel", label: "Dire Wolf" },
+              { name: "forest_spider_pixel", label: "Forest Spider" },
+              { name: "treant_elder_pixel", label: "Treant Elder (Boss)" },
+            ].map((enemy) => (
+              <div key={enemy.name} style={{ textAlign: "center" }}>
+                <div style={{ display: "flex", gap: "12px", alignItems: "end" }}>
+                  <div>
+                    <Sprite name={enemy.name} size={48} />
+                    <p style={{ fontSize: "9px", color: "#64748b", marginTop: "2px" }}>48px</p>
+                  </div>
+                  <div>
+                    <Sprite name={enemy.name} size={64} />
+                    <p style={{ fontSize: "9px", color: "#64748b", marginTop: "2px" }}>64px</p>
+                  </div>
+                </div>
+                <p style={{ fontSize: "11px", color: "#94a3b8", marginTop: "4px" }}>{enemy.label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Stormridge */}
+        <div style={{ marginBottom: "32px" }}>
+          <h3 style={{ fontSize: "14px", marginBottom: "12px", color: "#94a3b8" }}>
+            Stormridge
+          </h3>
+          <div style={{ display: "flex", gap: "24px", flexWrap: "wrap" }}>
+            {[
+              { name: "mountain_goat_pixel", label: "Mountain Goat" },
+              { name: "rock_golem_pixel", label: "Rock Golem" },
+              { name: "harpy_pixel", label: "Harpy" },
+              { name: "stone_colossus_pixel", label: "Stone Colossus (Boss)" },
+            ].map((enemy) => (
+              <div key={enemy.name} style={{ textAlign: "center" }}>
+                <div style={{ display: "flex", gap: "12px", alignItems: "end" }}>
+                  <div>
+                    <Sprite name={enemy.name} size={48} />
+                    <p style={{ fontSize: "9px", color: "#64748b", marginTop: "2px" }}>48px</p>
+                  </div>
+                  <div>
+                    <Sprite name={enemy.name} size={64} />
+                    <p style={{ fontSize: "9px", color: "#64748b", marginTop: "2px" }}>64px</p>
+                  </div>
+                </div>
+                <p style={{ fontSize: "11px", color: "#94a3b8", marginTop: "4px" }}>{enemy.label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Dusthaven (pending) */}
+        <div style={{ marginBottom: "32px" }}>
+          <h3 style={{ fontSize: "14px", marginBottom: "12px", color: "#fbbf24" }}>
+            Dusthaven (sprites pending)
+          </h3>
+          <p style={{ fontSize: "11px", color: "#4a4a5a" }}>
+            bandit, bandit_leader, sandworm, sandworm_queen
+          </p>
+        </div>
+
+        {/* Frostpeak (pending) */}
+        <div style={{ marginBottom: "32px" }}>
+          <h3 style={{ fontSize: "14px", marginBottom: "12px", color: "#38bdf8" }}>
+            Frostpeak (sprites pending)
+          </h3>
+          <p style={{ fontSize: "11px", color: "#4a4a5a" }}>
+            ice_wraith, frost_bear, frost_dragon
+          </p>
+        </div>
+
+        {/* Dragon's Reach */}
+        <div style={{ marginBottom: "32px" }}>
+          <h3 style={{ fontSize: "14px", marginBottom: "12px", color: "#ef4444" }}>
+            Dragon&apos;s Reach
+          </h3>
+          <div style={{ display: "flex", gap: "24px", flexWrap: "wrap" }}>
+            {[
+              { name: "fire_imp_pixel", label: "Fire Imp" },
+              { name: "drake_pixel", label: "Drake" },
+              { name: "lava_serpent_pixel", label: "Lava Serpent" },
+              { name: "obsidian_guardian_pixel", label: "Obsidian Guardian" },
+              { name: "elder_dragon_pixel", label: "Elder Dragon (Boss)" },
+            ].map((enemy) => (
+              <div key={enemy.name} style={{ textAlign: "center" }}>
+                <div style={{ display: "flex", gap: "12px", alignItems: "end" }}>
+                  <div>
+                    <Sprite name={enemy.name} size={48} />
+                    <p style={{ fontSize: "9px", color: "#64748b", marginTop: "2px" }}>48px</p>
+                  </div>
+                  <div>
+                    <Sprite name={enemy.name} size={64} />
+                    <p style={{ fontSize: "9px", color: "#64748b", marginTop: "2px" }}>64px</p>
+                  </div>
+                </div>
+                <p style={{ fontSize: "11px", color: "#94a3b8", marginTop: "4px" }}>{enemy.label}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
       {/* Ember Glow palette swatch */}
       <div style={{ marginTop: "48px" }}>
         <h2 style={{ fontSize: "14px", marginBottom: "16px", color: "#94a3b8" }}>

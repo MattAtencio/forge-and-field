@@ -239,7 +239,7 @@ export default function WorldMapScreen() {
                 <span style={{ display: "inline-flex", alignItems: "center", gap: 4 }}>
                   <Sprite name={template?.icon || "map"} size={18} /> {template?.name || "Unknown"}
                 </span>
-                <button className={styles.claimBtn} onClick={() => handleClaim(exp)}>
+                <button className={`${styles.claimBtn} juiceBtn`} onClick={() => handleClaim(exp)}>
                   Claim Rewards
                 </button>
               </PixelFrame>
@@ -378,7 +378,7 @@ export default function WorldMapScreen() {
             </div>
 
             <button
-              className={styles.sendBtn}
+              className={`${styles.sendBtn} juiceBtn`}
               disabled={!canSendExpedition(selectedExpedition, selectedHeroes, state.heroes, state.inventory)}
               onClick={handleSend}
             >

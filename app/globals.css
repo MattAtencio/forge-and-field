@@ -21,3 +21,34 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
+
+/* Juice — shared micro-animation utilities */
+.juiceBtn {
+  transition: transform 0.1s ease;
+}
+
+.juiceBtn:active:not(:disabled) {
+  transform: scale(0.95);
+  transition: transform 0.05s ease;
+}
+
+@keyframes goldFlash {
+  0% { transform: scale(1); filter: brightness(1); }
+  30% { transform: scale(1.25); filter: brightness(1.5); }
+  100% { transform: scale(1); filter: brightness(1); }
+}
+
+.goldFlash {
+  animation: goldFlash 0.4s ease-out;
+}
+
+@keyframes levelUpPop {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(249, 115, 22, 0.5); }
+  40% { transform: scale(1.2); box-shadow: 0 0 12px 4px rgba(249, 115, 22, 0.4); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(249, 115, 22, 0); }
+}
+
+@keyframes craftReadyGlow {
+  0%, 100% { border-color: rgba(249, 115, 22, 0.3); box-shadow: 0 0 0 0 rgba(249, 115, 22, 0); }
+  50% { border-color: rgba(249, 115, 22, 0.8); box-shadow: 0 0 8px 2px rgba(249, 115, 22, 0.25); }
+}
