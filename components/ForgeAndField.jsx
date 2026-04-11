@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, useCallback } from "react";
 import { GameProvider, useGameState, useGameDispatch } from "@/lib/gameContext";
+import { getDevSpeed } from "@/lib/devSpeed";
 import { calculateOfflineProgress } from "@/lib/tick";
 import { getPlayerLevel, getUnlocksForLevel } from "@/data/progression";
 import { HERO_TEMPLATES } from "@/data/heroes";
@@ -118,8 +119,32 @@ function GameShell() {
     );
   }
 
+  const devSpeed = getDevSpeed();
+
   return (
     <div className={styles.container}>
+      {devSpeed > 1 && (
+        <div
+          style={{
+            position: "fixed",
+            top: 8,
+            right: 8,
+            zIndex: 9999,
+            background: "#f97316",
+            color: "#1a1a1a",
+            fontFamily: "var(--font-jetbrains-mono), monospace",
+            fontSize: "0.7rem",
+            fontWeight: 700,
+            padding: "3px 8px",
+            borderRadius: 3,
+            boxShadow: "0 0 0 1px #1a1a1a, 0 2px 0 #7c2d12",
+            letterSpacing: "0.05em",
+            pointerEvents: "none",
+          }}
+        >
+          DEV {devSpeed}×
+        </div>
+      )}
       <ResourceBar />
       <div className={styles.screenArea}>{renderScreen()}</div>
       <NavBar />
