@@ -1,0 +1,94 @@
+{
+  "usage": {
+    "type": "usd",
+    "usd": 0.008524994611740113
+  },
+  "id": "032bf11b-1556-4653-8fc3-eca2753986d1",
+  "status": "completed",
+  "created_at": "2026-04-12T13:25:22.208338+00:00",
+  "last_response": {
+    "seed": 710616351,
+    "type": "done",
+    "view": "low top-down",
+    "usage": {
+      "seconds": 31.72495150566101
+    },
+    "images": {
+      "east": {
+        "type": "rgba_bytes",
+        "width": 48,
+        "base64": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA...[12288 chars]",
+        "height": 48
+      },
+      "west": {
+        "type": "rgba_bytes",
+        "width": 48,
+        "base64": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA...[12288 chars]",
+        "height": 48
+      },
+      "north": {
+        "type": "rgba_bytes",
+        "width": 48,
+        "base64": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA...[12288 chars]",
+        "height": 48
+      },
+      "south": {
+        "type": "rgba_bytes",
+        "width": 48,
+        "base64": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA...[12288 chars]",
+        "height": 48
+      }
+    },
+    "image_width": 48,
+    "template_id": "mannequin",
+    "character_id": "03ad045f-1538-4bb5-93e6-d7028ab15808",
+    "image_height": 48,
+    "storage_urls": {
+      "east": "https://backblaze.pixellab.ai/file/pixellab-characters/e88b127c-3ad3-4e3c-b674-b2a20f0e6a60/03ad045f-1538-4bb5-93e6-d7028ab15808/rotations/east.png",
+      "west": "https://backblaze.pixellab.ai/file/pixellab-characters/e88b127c-3ad3-4e3c-b674-b2a20f0e6a60/03ad045f-1538-4bb5-93e6-d7028ab15808/rotations/west.png",
+      "north": "https://backblaze.pixellab.ai/file/pixellab-characters/e88b127c-3ad3-4e3c-b674-b2a20f0e6a60/03ad045f-1538-4bb5-93e6-d7028ab15808/rotations/north.png",
+      "south": "https://backblaze.pixellab.ai/file/pixellab-characters/e88b127c-3ad3-4e3c-b674-b2a20f0e6a60/03ad045f-1538-4bb5-93e6-d7028ab15808/rotations/south.png"
+    },
+    "generation_id": "6d2cf29d-23fb-4d9d-bb29-2d693ce5603d",
+    "character_name": "Medieval warrior knight, stocky rectangle silhouette, steel plate armor, large sword with orange glowing edge, dark background, pixel art RPG character",
+    "directions_type": "4-directions",
+    "directions_count": 4,
+    "quantized_images": {
+      "east": {
+        "type": "rgba_bytes",
+        "width": 48,
+        "base64": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA...[12450 chars]",
+        "height": 48
+      },
+      "west": {
+        "type": "rgba_bytes",
+        "width": 48,
+        "base64": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA...[12450 chars]",
+        "height": 48
+      },
+      "north": {
+        "type": "rgba_bytes",
+        "width": 48,
+        "base64": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA...[12450 chars]",
+        "height": 48
+      },
+      "south": {
+        "type": "rgba_bytes",
+        "width": 48,
+        "base64": "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA...[12450 chars]",
+        "height": 48
+      }
+    },
+    "saved_to_storage": true,
+    "uploaded_directions": [
+      "south",
+      "east",
+      "north",
+      "west"
+    ],
+    "character_description": "Medieval warrior knight, stocky rectangle silhouette, steel plate armor, large sword with orange glowing edge, dark background, pixel art RPG character",
+    "original_image_n_colors": 96,
+    "quantized_image_n_colors": 13,
+    "billing_charged": true
+  }
+}
