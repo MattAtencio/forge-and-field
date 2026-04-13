@@ -1,0 +1,109 @@
+{
+  "project_name": "Forge & Field",
+  "aseprite_path": "C:\\Program Files\\Aseprite\\aseprite.exe",
+  "dalle_style_prefix": "Professional pixel art game sprite, Aseprite style, clean crisp pixels with NO anti-aliasing, NO gradients, NO blurring. Each pixel is a distinct sharp square. 32x32 pixel resolution upscaled to show detail. Dark charcoal background (#0f0e17). Medieval fantasy RPG character. 2-heads-tall chunky proportions. Inspired by Shovel Knight, Moonlighter, and Eastward character design quality. ",
+  "dalle_palette_note": "Use ONLY these colors: charcoal #0f0e17, dark #1a1824, parchment #e8e0d4, ember orange #f97316, flame #fb923c, gold #fbbf24, leather brown #92400e, steel light #cbd5e1, steel #94a3b8, steel dark #64748b, forest green #22c55e, arcane purple #a855f7, skin #fcd5b0, danger red #ef4444.",
+  "palette": {
+    "name": "Ember Glow",
+    "colors": [
+      { "r": 15,  "g": 14,  "b": 23,  "name": "Void",         "hex": "#0f0e17" },
+      { "r": 26,  "g": 24,  "b": 36,  "name": "Dark Surface",  "hex": "#1a1824" },
+      { "r": 232, "g": 224, "b": 212, "name": "Parchment",     "hex": "#e8e0d4" },
+      { "r": 249, "g": 115, "b": 22,  "name": "Ember Core",    "hex": "#f97316" },
+      { "r": 251, "g": 146, "b": 60,  "name": "Flame",         "hex": "#fb923c" },
+      { "r": 251, "g": 191, "b": 36,  "name": "Gold",          "hex": "#fbbf24" },
+      { "r": 146, "g": 64,  "b": 14,  "name": "Leather",       "hex": "#92400e" },
+      { "r": 203, "g": 213, "b": 225, "name": "Steel Light",   "hex": "#cbd5e1" },
+      { "r": 148, "g": 163, "b": 184, "name": "Steel Mid",     "hex": "#94a3b8" },
+      { "r": 100, "g": 116, "b": 139, "name": "Steel Dark",    "hex": "#64748b" },
+      { "r": 34,  "g": 197, "b": 94,  "name": "Forest",        "hex": "#22c55e" },
+      { "r": 168, "g": 85,  "b": 247, "name": "Arcane",        "hex": "#a855f7" },
+      { "r": 252, "g": 213, "b": 176, "name": "Skin",          "hex": "#fcd5b0" },
+      { "r": 239, "g": 68,  "b": 68,  "name": "Danger Red",    "hex": "#ef4444" }
+    ]
+  },
+  "sprites": [
+    {
+      "name": "aldric",
+      "description": "Medieval fantasy warrior knight, broad stocky rectangle silhouette, full-face closed steel helm with narrow dark eye slit visor across face, heavy plate armor with rivets, large iron sword with glowing orange edge, square confident stance, faceless imposing knight, pixel art RPG character",
+      "size": 32,
+      "category": "heroes"
+    },
+    {
+      "name": "lyra",
+      "description": "Medieval fantasy ranger, slim agile build, hooded green cloak over leather armor, longbow slung on back, quiver of arrows with glowing orange tips, narrow triangle silhouette, alert hunting stance, pixel art RPG character",
+      "size": 32,
+      "category": "heroes"
+    },
+    {
+      "name": "theron",
+      "description": "Medieval fantasy mage, flowing purple robes flaring wide at bottom creating inverted triangle silhouette, tall wooden staff with glowing orange crystal on top, elderly wise face with short white beard, gold trim on robes, pixel art RPG character",
+      "size": 32,
+      "category": "heroes"
+    },
+    {
+      "name": "sera",
+      "description": "Medieval fantasy paladin, heavy gold and steel armor, large ornate shield with glowing orange cross emblem at center, short sword in other hand, noble protective stance, wide cross-shaped silhouette from shield, pixel art RPG character",
+      "size": 32,
+      "category": "heroes"
+    },
+    {
+      "name": "goblin",
+      "description": "Small green goblin creature, oversized head, beady red eyes, crude rusty dagger, scrappy leather scraps, pointed ears, hunched cowardly posture, fantasy RPG enemy, menacing but small, pixel art",
+      "size": 32,
+      "category": "enemies",
+      "region": "greenwood"
+    },
+    {
+      "name": "dire-wolf",
+      "description": "Large aggressive grey dire wolf, bristling dark fur, bared fangs, red eyes, muscular low hunting stance, scars on muzzle, wild forest predator, fantasy RPG enemy, pixel art",
+      "size": 32,
+      "category": "enemies",
+      "region": "greenwood"
+    },
+    {
+      "name": "forest-spider",
+      "description": "Large dark green-black venomous forest spider, eight spindly legs spread wide, multiple glowing red eyes, red markings on abdomen, silk web trailing, fantasy RPG enemy creature, pixel art",
+      "size": 32,
+      "category": "enemies",
+      "region": "greenwood"
+    },
+    {
+      "name": "treant-elder",
+      "description": "Ancient massive tree creature boss, gnarled bark body, branch arms reaching out, thick root legs, glowing golden eyes in knothole sockets, hanging moss and vines, towering ancient forest guardian, fantasy RPG boss enemy, pixel art",
+      "size": 32,
+      "category": "enemies",
+      "region": "greenwood",
+      "is_boss": true
+    },
+    {
+      "name": "mountain-goat",
+      "description": "Aggressive mountain ram, massive curled horns, thick grey fur, red angry eyes, stocky muscular build, charging stance head lowered, hooves on rocky ground, mountain beast, fantasy RPG enemy, pixel art",
+      "size": 32,
+      "category": "enemies",
+      "region": "stormridge"
+    },
+    {
+      "name": "rock-golem",
+      "description": "Humanoid creature made of stacked boulders and stone slabs, purple arcane energy glowing in cracks between stones, massive stone fists, dark gap for face with red eyes peering out, chunky heavy silhouette, fantasy RPG enemy, pixel art",
+      "size": 32,
+      "category": "enemies",
+      "region": "stormridge"
+    },
+    {
+      "name": "harpy",
+      "description": "Half-woman half-bird creature, large dark wings spread wide, taloned feet, wild feathered hair, shrieking expression, dark blue-grey feathers, airborne menacing pose, fantasy RPG enemy, pixel art",
+      "size": 32,
+      "category": "enemies",
+      "region": "stormridge"
+    },
+    {
+      "name": "stone-colossus",
+      "description": "Enormous animated ancient stone statue boss, cracked weathered surface with glowing arcane runes, golden glowing eyes in carved stone face, massive hammer-fist raised, towering imposing silhouette, fantasy RPG boss enemy, pixel art",
+      "size": 32,
+      "category": "enemies",
+      "region": "stormridge",
+      "is_boss": true
+    }
+  ]
+}

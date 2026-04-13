@@ -58,7 +58,7 @@ This is a strict palette. No additional colors without explicit approval and an 
 - Enemies use cool colors (C1-C3, C4, C5) — they LACK the forge-touch. No ember orange on enemies.
 - Boss enemies get Gold (W3) glowing eyes as their ONLY warm accent
 - Background is always Void (F1) or Dark Surface (F2)
-- Aseprite palette file: `assets/palettes/ember-glow.gpl`
+- Aseprite palette file: `art/palettes/ember-glow.gpl`
 
 ---
 
@@ -214,30 +214,42 @@ Study these for specific elements:
 ## 10. File Organization
 
 ```
-public/sprites/
-  v2/                     # AI-generated concept art (DALL-E)
-  heroes/                  # Final hero sprite sheets
-  enemies/                 # Final enemy sprite sheets
-    greenwood/
-    stormridge/
-    dusthaven/
-    frostpeak/
-    dragons-reach/
-  items/                   # 16x16 item sprites
-  resources/               # 16x16 resource sprites
-  ui/                      # Frames, buttons, icons
-  environment/             # Tiles, decorative elements
-
-assets/
+art/                        # All art pipeline assets (tracked in git)
+  ART_BIBLE.md              # This file — single source of truth
+  sprites.json              # Game-specific sprite definitions (feeds global SDK)
   palettes/
-    ember-glow.gpl         # Aseprite-compatible palette
-  templates/               # Aseprite template files
+    ember-glow.gpl          # Aseprite-compatible palette
+  concepts/                 # AI-generated concept art (DALL-E, reference only)
+    heroes/
+    enemies/
+    pixellab/               # PixelLab raw outputs and iterations
+  production/               # Final PixelLab sprites (source of truth)
+    heroes/
+    enemies/
+      greenwood/
+      stormridge/
+      dusthaven/
+      frostpeak/
+      dragons-reach/
+    items/
+    resources/
+    ui/
+    environment/
+
+public/sprites/             # Game-ready assets (copied from art/production/)
+  heroes/                   # What the app actually renders
+  enemies/
+    greenwood/
+    ...
 ```
+
+**Pipeline flow:** `art/concepts/` → `art/production/` → `public/sprites/`
+The `pixel-artist` skill copies final assets to `public/sprites/` as its last step.
 
 ### Naming Convention
 - All lowercase, hyphens for multi-word: `warrior-idle.png`, `goblin-idle-sheet.png`
 - Sprite sheets: `{name}-sheet.png` with accompanying `{name}-sheet.json`
-- Concepts: `{name}-concept.png` (in v2/ directory)
+- Concepts: `{name}-concept.png` (in `art/concepts/`)
 - Frame suffix for individual frames: `{name}-frame-{n}.png`
 
 ---

@@ -26,3 +26,8 @@ public/sw.js
 public/sw.js.map
 public/workbox-*.js
 public/workbox-*.js.map
+
+# Art pipeline — source of truth is art/, synced to public/sprites/ at dev/build time
+public/sprites/v2/
+public/sprites/pixellab/
+public/sprites/production/
