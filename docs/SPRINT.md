@@ -24,11 +24,11 @@ Status key: `[ ]` pending | `[~]` in-progress | `[x]` done | `[!]` blocked
 
 | # | Task | Spec | Size | Status | Depends On |
 |---|------|------|------|--------|------------|
-| 06 | Exploration engine (movement + endurance) | [06-exploration-engine.md](specs/06-exploration-engine.md) | M | [ ] | 01, 02 |
-| 07 | Loot bag system | [07-loot-bag.md](specs/07-loot-bag.md) | S | [ ] | 01 |
-| 08 | Interactive combat mode | [08-interactive-combat.md](specs/08-interactive-combat.md) | M | [ ] | 01, 05 |
-| 09 | Consumable usage in combat & exploration | [09-consumable-usage.md](specs/09-consumable-usage.md) | S | [ ] | 03, 08 |
-| 10 | Flee mechanic | [10-flee-mechanic.md](specs/10-flee-mechanic.md) | S | [ ] | 06, 08 |
+| 06 | Exploration engine (movement + endurance) | [06-exploration-engine.md](specs/06-exploration-engine.md) | M | [x] | 01, 02 |
+| 07 | Loot bag system | [07-loot-bag.md](specs/07-loot-bag.md) | S | [x] | 01 |
+| 08 | Interactive combat mode | [08-interactive-combat.md](specs/08-interactive-combat.md) | M | [x] | 01, 05 |
+| 09 | Consumable usage in combat & exploration | [09-consumable-usage.md](specs/09-consumable-usage.md) | S | [x] | 03, 08 |
+| 10 | Flee mechanic | [10-flee-mechanic.md](specs/10-flee-mechanic.md) | S | [x] | 06, 08 |
 
 ### Wave 3: Reducer Integration (depends on Wave 2)
 
