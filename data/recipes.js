@@ -215,4 +215,69 @@ export const RECIPES = [
     baseStats: { atk: 0, def: 30, spd: -3 },
     unlockLevel: 13,
   },
+
+  // Exploration Consumables — craftable at forge, consumed during exploration
+  {
+    id: "health_tonic",
+    name: "Health Tonic",
+    icon: "health_tonic",
+    tier: 1,
+    slot: "consumable",
+    ingredients: { herbs: 10, gold: 5 },
+    duration: 15000,
+    effect: { type: "heal", value: 0.3 },  // restore 30% max HP
+    maxStack: 5,
+    unlockLevel: 6,
+    description: "Bitter herbs steeped in forge-warmed water. It mends what rest alone cannot.",
+  },
+  {
+    id: "stamina_draught",
+    name: "Stamina Draught",
+    icon: "stamina_draught",
+    tier: 1,
+    slot: "consumable",
+    ingredients: { herbs: 8, wood: 5 },
+    duration: 15000,
+    effect: { type: "restore_endurance", value: 20 },  // restore 20 endurance points
+    maxStack: 5,
+    unlockLevel: 6,
+    description: "Tastes like bark and determination. The legs stop complaining for a while.",
+  },
+  {
+    id: "escape_scroll",
+    name: "Escape Scroll",
+    icon: "escape_scroll",
+    tier: 1,
+    slot: "consumable",
+    ingredients: { herbs: 5, gems: 1 },
+    duration: 20000,
+    effect: { type: "instant_flee", keepLoot: true },  // flee combat, keep loot bag
+    maxStack: 3,
+    unlockLevel: 6,
+    description: "Ink that moves on its own. Break the seal and the forest spits you out where you started, pack and all.",
+  },
+
+  // Exploration-exclusive recipes — require resources only found through exploration
+  {
+    id: "ancient_bow",
+    name: "Ancient Bow",
+    icon: "ancient_bow",
+    tier: 2,
+    slot: "weapon",
+    ingredients: { ancientWood: 5, wood: 15, iron: 10 },
+    duration: 60000,
+    baseStats: { atk: 12, def: 0, spd: 6 },
+    unlockLevel: 7,
+  },
+  {
+    id: "star_iron_shield",
+    name: "Star Iron Shield",
+    icon: "star_iron_shield",
+    tier: 2,
+    slot: "armor",
+    ingredients: { starIron: 4, iron: 20, stone: 10 },
+    duration: 60000,
+    baseStats: { atk: 0, def: 14, spd: -1 },
+    unlockLevel: 7,
+  },
 ];

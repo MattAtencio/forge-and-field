@@ -14,11 +14,11 @@ Status key: `[ ]` pending | `[~]` in-progress | `[x]` done | `[!]` blocked
 
 | # | Task | Spec | Size | Status | Depends On |
 |---|------|------|------|--------|------------|
-| 01 | Exploration state slice | [01-exploration-state.md](specs/01-exploration-state.md) | S | [ ] | — |
-| 02 | Node map data structure | [02-node-map-data.md](specs/02-node-map-data.md) | S | [ ] | — |
-| 03 | Exploration consumable recipes | [03-consumable-recipes.md](specs/03-consumable-recipes.md) | S | [ ] | — |
-| 04 | Exploration-only resources & recipes | [04-exploration-resources.md](specs/04-exploration-resources.md) | S | [ ] | — |
-| 05 | Exploration difficulty multipliers | [05-difficulty-multipliers.md](specs/05-difficulty-multipliers.md) | S | [ ] | — |
+| 01 | Exploration state slice | [01-exploration-state.md](specs/01-exploration-state.md) | S | [x] | — |
+| 02 | Node map data structure | [02-node-map-data.md](specs/02-node-map-data.md) | S | [x] | — |
+| 03 | Exploration consumable recipes | [03-consumable-recipes.md](specs/03-consumable-recipes.md) | S | [x] | — |
+| 04 | Exploration-only resources & recipes | [04-exploration-resources.md](specs/04-exploration-resources.md) | S | [x] | — |
+| 05 | Exploration difficulty multipliers | [05-difficulty-multipliers.md](specs/05-difficulty-multipliers.md) | S | [x] | — |
 
 ### Wave 2: Core Logic (depends on Wave 1)
 
