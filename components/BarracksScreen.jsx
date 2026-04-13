@@ -168,6 +168,9 @@ export default function BarracksScreen() {
                 {isResting && (
                   <p className={styles.restingNote}>Resting... {restRemaining}s remaining</p>
                 )}
+                {selectedHero.status === "exploring" && (
+                  <p className={styles.restingNote} style={{ color: "#a855f7" }}>Exploring...</p>
+                )}
                 {needsRecovery && selectedHero.status === "idle" && (
                   <div className={styles.enduranceActions}>
                     <button
@@ -257,7 +260,7 @@ export default function BarracksScreen() {
                       <button
                         className={styles.unequipBtn}
                         onClick={() => handleUnequip(slot)}
-                        disabled={selectedHero.status === "expedition"}
+                        disabled={selectedHero.status === "expedition" || selectedHero.status === "exploring"}
                       >
                         {"\u2715"}
                       </button>
@@ -266,7 +269,7 @@ export default function BarracksScreen() {
                     <button
                       className={`${styles.equipBtn} juiceBtn`}
                       onClick={() => setEquipSlot(slot)}
-                      disabled={selectedHero.status === "expedition"}
+                      disabled={selectedHero.status === "expedition" || selectedHero.status === "exploring"}
                     >
                       + Equip
                     </button>

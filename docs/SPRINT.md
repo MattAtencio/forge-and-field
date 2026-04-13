@@ -34,8 +34,8 @@ Status key: `[ ]` pending | `[~]` in-progress | `[x]` done | `[!]` blocked
 
 | # | Task | Spec | Size | Status | Depends On |
 |---|------|------|------|--------|------------|
-| 11 | Exploration reducer actions | [11-exploration-reducer.md](specs/11-exploration-reducer.md) | M | [ ] | 06, 07, 08 |
-| 12 | Hero status "exploring" integration | [12-hero-exploring-status.md](specs/12-hero-exploring-status.md) | S | [ ] | 01 |
+| 11 | Exploration reducer actions | [11-exploration-reducer.md](specs/11-exploration-reducer.md) | M | [x] | 06, 07, 08 |
+| 12 | Hero status "exploring" integration | [12-hero-exploring-status.md](specs/12-hero-exploring-status.md) | S | [x] | 01 |
 
 ### Wave 4: UI Components (depends on Wave 3)
 
