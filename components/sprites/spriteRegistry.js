@@ -1355,16 +1355,44 @@ const PIXEL_SPRITES = {
   elder_dragon_pixel: { type: "animated_pixel", frames: elder_dragon_pixel, fps: 2 },
 };
 
+// PixelLab production sprites (true pixel art PNGs)
+// These override everything — highest priority in getSpriteData()
+const PIXELLAB_SPRITES = {
+  // Heroes (south-facing as default game view)
+  warrior: { type: "image", src: "/sprites/pixellab/aldric-south.png" },
+  ranger: { type: "image", src: "/sprites/pixellab/lyra-south.png" },
+  mage: { type: "image", src: "/sprites/pixellab/theron-south.png" },
+  paladin: { type: "image", src: "/sprites/pixellab/sera-south.png" },
+
+  // Greenwood enemies
+  goblin: { type: "image", src: "/sprites/pixellab/goblin-south.png" },
+  wolf: { type: "image", src: "/sprites/pixellab/dire-wolf-south.png" },
+  treant: { type: "image", src: "/sprites/pixellab/treant-elder-south.png" },
+  treant_elder: { type: "image", src: "/sprites/pixellab/treant-elder-south.png" },
+  forest_spider: { type: "image", src: "/sprites/pixellab/forest-spider-south.png" },
+
+  // Stormridge enemies
+  mountain_goat: { type: "image", src: "/sprites/pixellab/mountain-goat-south.png" },
+  rock_golem: { type: "image", src: "/sprites/pixellab/rock-golem-south.png" },
+  stone_golem: { type: "image", src: "/sprites/pixellab/rock-golem-south.png" },
+  harpy: { type: "image", src: "/sprites/pixellab/harpy-south.png" },
+  stone_colossus: { type: "image", src: "/sprites/pixellab/stone-colossus-south.png" },
+};
+
 /**
  * Get sprite data by name.
  * Returns a structured object with a `type` field:
- *   - { type: 'svg', shapes: [...] } for SVG sprites (current default)
- *   - { type: 'sprite', sheet, x, y, width, height, frames, fps } for sprite sheet entries
+ *   - { type: 'image', src: '...' } for PixelLab PNG sprites (highest priority)
  *   - { type: 'animated_pixel', frames: [...], fps } for SVG-based pixel art with animation
+ *   - { type: 'sprite', sheet, x, y, width, height, frames, fps } for sprite sheet entries
+ *   - { type: 'svg', shapes: [...] } for SVG sprites (legacy fallback)
  * Returns null if not found.
  */
 export function getSpriteData(name) {
-  // Check pixel art overrides first
+  // Check PixelLab production sprites first (highest priority)
+  if (PIXELLAB_SPRITES[name]) return PIXELLAB_SPRITES[name];
+
+  // Check old pixel art overrides
   if (PIXEL_SPRITES[name]) return PIXEL_SPRITES[name];
 
   const entry = SPRITES[name] || (RECIPE_SPRITE_MAP[name] && SPRITES[RECIPE_SPRITE_MAP[name]]);

@@ -62,6 +62,23 @@ export default function Sprite({ name, size = 24, className = "", muted = false,
     );
   }
 
+  // PixelLab PNG sprite (true pixel art)
+  if (data.type === "image") {
+    const animClass = animate ? styles[animate] || "" : "";
+    return (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        src={data.src}
+        alt={name}
+        width={size}
+        height={size}
+        className={`${styles.sprite} ${muted ? styles.muted : ""} ${animClass} ${className}`}
+        style={{ imageRendering: "pixelated" }}
+        aria-hidden="true"
+      />
+    );
+  }
+
   // Pixel art sprite sheet
   if (data.type === "sprite") {
     return (
