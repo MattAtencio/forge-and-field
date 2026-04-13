@@ -1,0 +1,25 @@
+.indicator {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: #1e293b;
+  border: 1px solid #334155;
+  border-radius: 8px;
+  padding: 6px 12px;
+  cursor: pointer;
+  z-index: 5;
+  transition: border-color 0.2s ease;
+}
+
+.indicator.hasLoot {
+  border-color: #fbbf24;
+}
+
+.count {
+  font-family: var(--font-jetbrains-mono), monospace;
+  font-size: 0.7rem;
+  color: #e8e0d4;
+}

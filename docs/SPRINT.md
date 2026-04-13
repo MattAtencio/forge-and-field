@@ -41,10 +41,10 @@ Status key: `[ ]` pending | `[~]` in-progress | `[x]` done | `[!]` blocked
 
 | # | Task | Spec | Size | Status | Depends On |
 |---|------|------|------|--------|------------|
-| 13 | ExplorationMap component | [13-exploration-map-ui.md](specs/13-exploration-map-ui.md) | M | [ ] | 11 |
-| 14 | Interactive combat UI | [14-combat-ui.md](specs/14-combat-ui.md) | M | [ ] | 11 |
-| 15 | Loot bag UI + deposit/lose flow | [15-loot-bag-ui.md](specs/15-loot-bag-ui.md) | S | [ ] | 11 |
-| 16 | Exploration entry point in WorldMapScreen | [16-exploration-entry.md](specs/16-exploration-entry.md) | S | [ ] | 13 |
+| 13 | ExplorationMap component | [13-exploration-map-ui.md](specs/13-exploration-map-ui.md) | M | [x] | 11 |
+| 14 | Interactive combat UI | [14-combat-ui.md](specs/14-combat-ui.md) | M | [x] | 11 |
+| 15 | Loot bag UI + deposit/lose flow | [15-loot-bag-ui.md](specs/15-loot-bag-ui.md) | S | [x] | 11 |
+| 16 | Exploration entry point in WorldMapScreen | [16-exploration-entry.md](specs/16-exploration-entry.md) | S | [x] | 13 |
 
 ### Wave 5: Polish & Integration (depends on Wave 4)
 
