@@ -50,10 +50,10 @@ Status key: `[ ]` pending | `[~]` in-progress | `[x]` done | `[!]` blocked
 
 | # | Task | Spec | Size | Status | Depends On |
 |---|------|------|------|--------|------------|
-| 17 | Exploration tutorial (contextual onboarding) | [17-exploration-tutorial.md](specs/17-exploration-tutorial.md) | S | [ ] | 16 |
-| 18 | Node maps for all 5 regions | [18-all-region-maps.md](specs/18-all-region-maps.md) | M | [ ] | 02 |
-| 19 | Exploration narrative text | [19-narrative-text.md](specs/19-narrative-text.md) | S | [ ] | 13 |
-| 20 | Save/load exploration state | [20-save-load.md](specs/20-save-load.md) | S | [ ] | 11 |
+| 17 | Exploration tutorial (contextual onboarding) | [17-exploration-tutorial.md](specs/17-exploration-tutorial.md) | S | [x] | 16 |
+| 18 | Node maps for all 5 regions | [18-all-region-maps.md](specs/18-all-region-maps.md) | M | [x] | 02 |
+| 19 | Exploration narrative text | [19-narrative-text.md](specs/19-narrative-text.md) | S | [x] | 13 |
+| 20 | Save/load exploration state | [20-save-load.md](specs/20-save-load.md) | S | [x] | 11 |
 
 ---
 
@@ -70,14 +70,14 @@ Status key: `[ ]` pending | `[~]` in-progress | `[x]` done | `[!]` blocked
 
 ## Definition of Done (Full Sprint)
 
-- [ ] Player can enter exploration from World Map for any unlocked region
-- [ ] Node-based map renders with connected nodes (combat, resource, rest, POI, boss)
-- [ ] Player moves hero between nodes, draining endurance
-- [ ] Combat encounters are interactive (player chooses Attack/Skill/Item/Flee)
-- [ ] Exploration enemies deal 2-3x more damage than idle expedition enemies
-- [ ] Loot bag collects resources during exploration, deposited on safe return
-- [ ] Defeat during exploration loses loot bag contents
-- [ ] 3 consumables craftable and usable (Health Tonic, Stamina Draught, Escape Scroll)
-- [ ] Hero can only explore OR go on expedition, not both
-- [ ] Exploration state persists through save/load
-- [ ] `npm run dev` succeeds, no console errors, existing game features unbroken
+- [x] Player can enter exploration from World Map for any unlocked region
+- [x] Node-based map renders with connected nodes (combat, resource, rest, POI, boss)
+- [x] Player moves hero between nodes, draining endurance
+- [x] Combat encounters are interactive (player chooses Attack/Skill/Item/Flee)
+- [x] Exploration enemies deal 2-3x more damage than idle expedition enemies
+- [x] Loot bag collects resources during exploration, deposited on safe return
+- [x] Defeat during exploration loses loot bag contents
+- [x] 3 consumables craftable and usable (Health Tonic, Stamina Draught, Escape Scroll)
+- [x] Hero can only explore OR go on expedition, not both
+- [x] Exploration state persists through save/load
+- [x] `npm run dev` succeeds, no console errors, existing game features unbroken

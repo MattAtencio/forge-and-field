@@ -298,3 +298,18 @@
   cursor: pointer;
   margin-top: 8px;
 }
+
+.tutorialModal {
+  max-width: 340px;
+  width: 90%;
+  padding: 24px 20px;
+  text-align: center;
+}
+
+.tutorialText {
+  font-size: 0.95rem;
+  color: #4a3728;
+  line-height: 1.6;
+  margin-bottom: 16px;
+  font-family: var(--font-dm-serif), serif;
+}

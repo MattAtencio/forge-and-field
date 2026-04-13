@@ -6,6 +6,7 @@ import { getAdjacentNodes, getMoveCost, getLootBagSummary } from "@/lib/explorat
 import { getUsableConsumables } from "@/lib/consumables";
 import { getRegionById } from "@/data/regions";
 import { RESOURCES } from "@/data/resources";
+import { EXPLORATION_TEXT } from "@/data/explorationText";
 import ExplorationCombat from "./ExplorationCombat";
 import LootBagIndicator from "./LootBagIndicator";
 import Sprite from "@/components/sprites/Sprite";
@@ -37,6 +38,9 @@ export default function ExplorationScreen() {
   const [showLootModal, setShowLootModal] = useState(false);
   const [retreatSummary, setRetreatSummary] = useState(null);
   const [defeatSummary, setDefeatSummary] = useState(null);
+  const [tutorialStep, setTutorialStep] = useState(
+    state.player?.explorationTutorialDone ? -1 : 0
+  );
 
   const exp = state.exploration;
   if (!exp?.active && !retreatSummary && !defeatSummary) return null;
@@ -317,6 +321,42 @@ export default function ExplorationScreen() {
             )}
             <button className={`${styles.closeBtn} juiceBtn`} onClick={() => setShowLootModal(false)}>
               Close
+            </button>
+          </PixelFrame>
+        </div>
+      )}
+
+      {/* Tutorial Overlay */}
+      {tutorialStep >= 0 && tutorialStep <= 2 && (
+        <div className={styles.overlay}>
+          <PixelFrame variant="parchment" className={styles.tutorialModal}>
+            {tutorialStep === 0 && (
+              <p className={styles.tutorialText}>
+                The forest opens before you. Each mark on the trail is a choice — shelter, danger, or fortune.
+              </p>
+            )}
+            {tutorialStep === 1 && (
+              <p className={styles.tutorialText}>
+                Your strength is not infinite. Every step costs endurance. Press too far and you will not make it back.
+              </p>
+            )}
+            {tutorialStep === 2 && (
+              <p className={styles.tutorialText}>
+                What you find stays in your pack until you return to the forge. If you fall, the forest takes it all.
+              </p>
+            )}
+            <button
+              className={`${styles.resultBtn} juiceBtn`}
+              onClick={() => {
+                if (tutorialStep < 2) {
+                  setTutorialStep(tutorialStep + 1);
+                } else {
+                  setTutorialStep(-1);
+                  dispatch({ type: "EXPLORATION_TUTORIAL_COMPLETE" });
+                }
+              }}
+            >
+              {tutorialStep < 2 ? "Next" : "Begin"}
             </button>
           </PixelFrame>
         </div>
