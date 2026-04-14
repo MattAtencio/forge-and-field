@@ -25,13 +25,10 @@ function GameShell() {
   const state = useGameState();
   const dispatch = useGameDispatch();
   const tickRef = useRef(null);
-  const [mounted, setMounted] = useState(false);
   const [offlineData, setOfflineData] = useState(null);
   const [showSettings, setShowSettings] = useState(false);
   const [unlockedHeroes, setUnlockedHeroes] = useState([]);
   const initializedRef = useRef(false);
-
-  useEffect(() => setMounted(true), []);
 
   // Calculate offline progress on first load
   useEffect(() => {
@@ -110,14 +107,6 @@ function GameShell() {
         return <HubScreen onOpenSettings={() => setShowSettings(true)} />;
     }
   };
-
-  if (!mounted) {
-    return (
-      <div className={styles.container} style={{ display: "flex", alignItems: "center", justifyContent: "center", minHeight: "100dvh" }}>
-        <span style={{ color: "#f97316", fontFamily: "var(--font-dm-serif), serif", fontSize: "1.2rem" }}>Lighting the forge...</span>
-      </div>
-    );
-  }
 
   const devSpeed = getDevSpeed();
 
