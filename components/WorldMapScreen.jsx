@@ -277,11 +277,14 @@ export default function WorldMapScreen() {
             ).length;
 
             return (
-              <button
+              <div
                 key={region.id}
+                role="button"
+                tabIndex={0}
                 className={`${styles.regionCard} ${!unlocked ? styles.regionLocked : ""} ${cleared ? styles.regionCleared : ""}`}
                 style={{
                   "--region-accent": region.theme.accent,
+                  cursor: "pointer",
                 }}
                 aria-disabled={!unlocked}
                 onClick={() => {
@@ -344,7 +347,7 @@ export default function WorldMapScreen() {
                     </span>
                   )}
                 </PixelFrame>
-              </button>
+              </div>
             );
           })}
         </div>

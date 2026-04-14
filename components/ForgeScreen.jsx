@@ -241,9 +241,15 @@ export default function ForgeScreen() {
                   </span>
                 </div>
                 <div className={styles.recipeStats}>
-                  {recipe.baseStats.atk > 0 && <span>ATK {recipe.baseStats.atk}</span>}
-                  {recipe.baseStats.def > 0 && <span>DEF {recipe.baseStats.def}</span>}
-                  {recipe.baseStats.spd !== 0 && <span>SPD {recipe.baseStats.spd > 0 ? "+" : ""}{recipe.baseStats.spd}</span>}
+                  {recipe.baseStats ? (
+                    <>
+                      {recipe.baseStats.atk > 0 && <span>ATK {recipe.baseStats.atk}</span>}
+                      {recipe.baseStats.def > 0 && <span>DEF {recipe.baseStats.def}</span>}
+                      {recipe.baseStats.spd !== 0 && <span>SPD {recipe.baseStats.spd > 0 ? "+" : ""}{recipe.baseStats.spd}</span>}
+                    </>
+                  ) : recipe.effect ? (
+                    <span className={styles.effectLabel}>{recipe.description}</span>
+                  ) : null}
                 </div>
                 <button
                   className={`${styles.craftBtn} juiceBtn`}
