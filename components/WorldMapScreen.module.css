@@ -150,25 +150,52 @@
 
 .regionCardInner {
   padding: 14px;
+  position: relative;
+  overflow: hidden;
+  /* Temperature-band drop-shadow — warmth near the forge, cold at the frontier */
+  box-shadow:
+    inset 0 0 0 1px rgba(100, 116, 139, 0.3),
+    0 0 12px var(--region-temp, rgba(148, 163, 184, 0.12));
 }
 
 .regionCard:active:not(.regionLocked) .regionCardInner {
-  box-shadow: 0 0 12px rgba(255, 255, 255, 0.05);
+  box-shadow:
+    inset 0 0 0 1px rgba(100, 116, 139, 0.3),
+    0 0 12px rgba(255, 255, 255, 0.05);
 }
 
 .regionLocked {
-  opacity: 0.35;
+  opacity: 0.5;
   cursor: not-allowed;
 }
 
-.regionCleared {
-  /* cleared styling handled by PixelFrame */
+.regionCleared .regionCardInner {
+  /* PixelFrame glow prop handles the ember outer glow; reinforce with a
+     subtle permanent border tint so the card reads "cleared" at a glance */
+  border-color: rgba(249, 115, 22, 0.4);
+}
+
+/* Trophy silhouette — faded boss sprite behind the card content */
+.clearedTrophy {
+  position: absolute;
+  right: -8px;
+  bottom: -12px;
+  opacity: 0.25;
+  pointer-events: none;
+  filter: grayscale(0.3);
+  z-index: 0;
+}
+
+.clearedTrophy > * {
+  display: block;
 }
 
 .regionHeader {
   display: flex;
   align-items: flex-start;
   gap: 10px;
+  position: relative;
+  z-index: 1;
 }
 
 .regionIcon {
@@ -194,10 +221,29 @@
   color: #8888a0;
 }
 
+.regionLockedHint {
+  font-size: 0.62rem;
+  color: #6b6b80;
+  font-style: italic;
+  margin-top: 2px;
+  line-height: 1.35;
+}
+
+/* Iron-frame style ember-tinted "Cleared" badge — reuses the ember border
+   and inset ring language of PixelFrame without introducing a new token */
 .clearedBadge {
-  color: #22c55e;
-  font-size: 1rem;
   flex-shrink: 0;
+  font-size: 0.55rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #f97316;
+  background: rgba(249, 115, 22, 0.08);
+  border: 1px solid rgba(249, 115, 22, 0.4);
+  box-shadow: inset 0 0 0 1px rgba(249, 115, 22, 0.15);
+  padding: 3px 7px;
+  border-radius: 0;
+  align-self: flex-start;
 }
 
 .regionMeta {
@@ -206,6 +252,8 @@
   margin-top: 8px;
   font-size: 0.6rem;
   color: #6b6b80;
+  position: relative;
+  z-index: 1;
 }
 
 /* Send Modal */
@@ -375,6 +423,8 @@
   font-weight: 600;
   cursor: pointer;
   text-align: center;
+  position: relative;
+  z-index: 1;
 }
 
 .exploreBtn:disabled {
@@ -390,4 +440,16 @@
   color: #64748b;
   text-align: center;
   font-style: italic;
+  position: relative;
+  z-index: 1;
+}
+
+/* Respect reduced-motion: neutralize pulsing animations on this screen. */
+@media (prefers-reduced-motion: reduce) {
+  .claimBtn {
+    animation: none;
+  }
+  .discoveryIcon {
+    animation: none;
+  }
 }

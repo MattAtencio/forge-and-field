@@ -177,6 +177,16 @@ export default function WorldMapScreen() {
     }
   };
 
+  // Temperature-band tints per region — reinforces warm-forge / cold-frontier
+  // palette storytelling. Used as an outer box-shadow via --region-temp.
+  const REGION_TEMP_TINT = {
+    greenwood: "rgba(245, 158, 11, 0.15)",    // warm-gold
+    stormridge: "rgba(148, 163, 184, 0.15)",  // cool-stone
+    dusthaven: "rgba(251, 146, 60, 0.15)",    // amber
+    frostpeak: "rgba(125, 211, 252, 0.15)",   // icy-cyan
+    dragons_reach: "rgba(239, 68, 68, 0.15)", // volcanic-red
+  };
+
   const formatDuration = (ms) => {
     const sec = Math.ceil(ms / 1000);
     if (sec < 60) return `${sec}s`;
@@ -284,6 +294,7 @@ export default function WorldMapScreen() {
                 className={`${styles.regionCard} ${!unlocked ? styles.regionLocked : ""} ${cleared ? styles.regionCleared : ""}`}
                 style={{
                   "--region-accent": region.theme.accent,
+                  "--region-temp": REGION_TEMP_TINT[region.id] || "rgba(148, 163, 184, 0.12)",
                   cursor: "pointer",
                 }}
                 aria-disabled={!unlocked}
@@ -297,7 +308,12 @@ export default function WorldMapScreen() {
                   }
                 }}
               >
-                <PixelFrame variant="iron" className={styles.regionCardInner}>
+                <PixelFrame variant="iron" glow={cleared} className={styles.regionCardInner}>
+                  {cleared && (
+                    <span className={styles.clearedTrophy} aria-hidden="true">
+                      <Sprite name={region.icon} size={96} />
+                    </span>
+                  )}
                   <div className={styles.regionHeader}>
                     <span className={styles.regionIcon}>
                       <Sprite
@@ -314,12 +330,17 @@ export default function WorldMapScreen() {
                         <span className={styles.regionDesc}>{region.description}</span>
                       )}
                       {!unlocked && (
-                        <span className={styles.regionDesc}>
-                          Clear {region.unlockCondition} boss to unlock
-                        </span>
+                        <>
+                          <span className={styles.regionDesc}>
+                            Clear {region.unlockCondition} boss to unlock
+                          </span>
+                          {region.lockedHint && (
+                            <span className={styles.regionLockedHint}>{region.lockedHint}</span>
+                          )}
+                        </>
                       )}
                     </div>
-                    {cleared && <span className={styles.clearedBadge}>{"\u2714"}</span>}
+                    {cleared && <span className={styles.clearedBadge}>Cleared</span>}
                   </div>
                   {unlocked && (
                     <div className={styles.regionMeta}>
