@@ -20,6 +20,8 @@ import WelcomeBackModal from "./WelcomeBackModal";
 import HeroUnlockModal from "./HeroUnlockModal";
 import SettingsModal from "./SettingsModal";
 import ExplorationScreen from "./ExplorationScreen";
+import WanderingMerchantModal from "./WanderingMerchantModal";
+import { getOfferById } from "@/data/events";
 import styles from "./ForgeAndField.module.css";
 
 function GameShell() {
@@ -155,6 +157,24 @@ function GameShell() {
           onDismiss={() => setOfflineData(null)}
         />
       )}
+
+      {/* Wandering merchant event */}
+      {state.merchant?.active && state.player.tutorialDone && (() => {
+        const offer = getOfferById(state.merchant.offerId);
+        if (!offer) return null;
+        const canAfford = Object.entries(offer.cost || {}).every(
+          ([res, amt]) => (state.resources[res] || 0) >= amt
+        );
+        return (
+          <WanderingMerchantModal
+            offer={offer}
+            expiresAt={state.merchant.expiresAt}
+            canAfford={canAfford}
+            onAccept={() => dispatch({ type: "MERCHANT_ACCEPT" })}
+            onDecline={() => dispatch({ type: "MERCHANT_DECLINE" })}
+          />
+        );
+      })()}
 
       {/* Hero Unlock Celebration */}
       {unlockedHeroes.length > 0 && (
