@@ -1,0 +1,75 @@
+.frame {
+  position: relative;
+  width: 100vw;
+  min-height: 100dvh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: radial-gradient(ellipse at center, #1a0f08 0%, #0a0604 80%);
+  overflow: hidden;
+}
+
+.viewport {
+  position: relative;
+  z-index: 2;
+  max-width: 430px;
+  width: 100%;
+  min-height: 100dvh;
+  border-left: 1px solid rgba(180, 83, 9, 0.25);
+  border-right: 1px solid rgba(180, 83, 9, 0.25);
+  box-shadow:
+    inset 0 0 32px rgba(180, 83, 9, 0.08),
+    0 0 48px rgba(249, 115, 22, 0.06);
+}
+
+.vignetteLeft,
+.vignetteRight {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: calc((100vw - 430px) / 2);
+  z-index: 1;
+  pointer-events: none;
+  background-color: #1a0f08;
+  background-image:
+    /* Ember glow from the top of the inner edge */
+    radial-gradient(ellipse at var(--ember-x, 100%) 0%, rgba(249, 115, 22, 0.18) 0%, rgba(249, 115, 22, 0) 45%),
+    /* Warm stone variation */
+    radial-gradient(circle at 30% 20%, rgba(161, 98, 7, 0.22) 0%, transparent 50%),
+    radial-gradient(circle at 70% 70%, rgba(120, 53, 15, 0.35) 0%, transparent 55%),
+    /* Stone dot texture via inline SVG */
+    url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='40' height='40' viewBox='0 0 40 40'><circle cx='6' cy='8' r='0.8' fill='%23b45309' opacity='0.18'/><circle cx='22' cy='14' r='0.6' fill='%2378350f' opacity='0.3'/><circle cx='33' cy='6' r='0.5' fill='%23a16207' opacity='0.22'/><circle cx='12' cy='28' r='0.7' fill='%2378350f' opacity='0.25'/><circle cx='28' cy='34' r='0.5' fill='%23b45309' opacity='0.2'/><circle cx='4' cy='22' r='0.4' fill='%23a16207' opacity='0.2'/></svg>"),
+    linear-gradient(180deg, #1f120a 0%, #120805 100%);
+  background-size: auto, auto, auto, 40px 40px, auto;
+}
+
+.vignetteLeft {
+  left: 0;
+  --ember-x: 100%;
+}
+
+.vignetteRight {
+  right: 0;
+  --ember-x: 0%;
+}
+
+@media (max-width: 767px) {
+  .frame {
+    width: 100%;
+    min-height: auto;
+    background: none;
+    overflow: visible;
+  }
+
+  .viewport {
+    max-width: none;
+    border: none;
+    box-shadow: none;
+    min-height: auto;
+  }
+
+  .vignetteLeft,
+  .vignetteRight {
+    display: none;
+  }
+}
