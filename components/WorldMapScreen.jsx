@@ -30,6 +30,7 @@ export default function WorldMapScreen() {
   const [lockToast, setLockToast] = useState(null);
   const lockToastRef = useRef(null);
   const [discoveryPending, setDiscoveryPending] = useState(null);
+  const [exploreHeroSelect, setExploreHeroSelect] = useState(null);
 
   const now = Date.now();
   const idleHeroes = state.heroes.filter((h) => h.status === "idle");
@@ -79,6 +80,22 @@ export default function WorldMapScreen() {
     });
     setSelectedExpedition(null);
     setSelectedHeroes([]);
+  };
+
+  const handleStartExploration = (regionId) => {
+    if (state.exploration?.active) return;
+    if (idleHeroes.length === 0) return;
+    if (idleHeroes.length === 1) {
+      dispatch({ type: "EXPLORATION_START", regionId, heroId: idleHeroes[0].id });
+    } else {
+      setExploreHeroSelect(regionId);
+    }
+  };
+
+  const handleSelectExploreHero = (heroId) => {
+    if (!exploreHeroSelect) return;
+    dispatch({ type: "EXPLORATION_START", regionId: exploreHeroSelect, heroId });
+    setExploreHeroSelect(null);
   };
 
   const handleClaim = (exp) => {
@@ -260,11 +277,14 @@ export default function WorldMapScreen() {
             ).length;
 
             return (
-              <button
+              <div
                 key={region.id}
+                role="button"
+                tabIndex={0}
                 className={`${styles.regionCard} ${!unlocked ? styles.regionLocked : ""} ${cleared ? styles.regionCleared : ""}`}
                 style={{
                   "--region-accent": region.theme.accent,
+                  cursor: "pointer",
                 }}
                 aria-disabled={!unlocked}
                 onClick={() => {
@@ -309,8 +329,25 @@ export default function WorldMapScreen() {
                       )}
                     </div>
                   )}
+                  {unlocked && state.player.level >= 6 && (
+                    <button
+                      className={`${styles.exploreBtn} juiceBtn`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleStartExploration(region.id);
+                      }}
+                      disabled={idleHeroes.length === 0 || state.exploration?.active}
+                    >
+                      Explore
+                    </button>
+                  )}
+                  {unlocked && state.player.level === 5 && (
+                    <span className={styles.exploreLocked}>
+                      Explore — Unlocks at Level 6
+                    </span>
+                  )}
                 </PixelFrame>
-              </button>
+              </div>
             );
           })}
         </div>
@@ -409,6 +446,26 @@ export default function WorldMapScreen() {
             setRewardPending(null);
           }}
         />
+      )}
+
+      {/* Explore Hero Selection */}
+      {exploreHeroSelect && (
+        <Modal title="Choose a Hero to Explore" onClose={() => setExploreHeroSelect(null)}>
+          <div className={styles.heroPicker}>
+            {idleHeroes.length === 0 ? (
+              <p className={styles.empty}>All hands are spoken for.</p>
+            ) : (
+              idleHeroes.map((hero) => (
+                <HeroCard
+                  key={hero.id}
+                  hero={hero}
+                  inventory={state.inventory}
+                  onClick={() => handleSelectExploreHero(hero.id)}
+                />
+              ))
+            )}
+          </div>
+        </Modal>
       )}
 
       {/* Discovery Callout */}

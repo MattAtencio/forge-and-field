@@ -117,9 +117,9 @@ export const CREATURE_LOOT = {
   // Greenwood
   goblin:        { dropChance: 0.25, resources: { gold: [2, 8] }, itemChance: 0.05, rarityBoost: 0 },
   wolf:          { dropChance: 0.20, resources: { herbs: [3, 8] }, itemChance: 0.05, rarityBoost: 0 },
-  treant:        { dropChance: 0.30, resources: { wood: [8, 20] }, itemChance: 0.08, rarityBoost: 0 },
+  treant:        { dropChance: 0.30, resources: { wood: [8, 20] }, itemChance: 0.08, rarityBoost: 0, explorationLoot: { ancientWood: [1, 3] } },
   // Stormridge
-  rock_golem:    { dropChance: 0.30, resources: { stone: [10, 25], iron: [3, 8] }, itemChance: 0.08, rarityBoost: 5 },
+  rock_golem:    { dropChance: 0.30, resources: { stone: [10, 25], iron: [3, 8] }, itemChance: 0.08, rarityBoost: 5, explorationLoot: { starIron: [1, 2] } },
   harpy:         { dropChance: 0.25, resources: { gold: [5, 15] }, itemChance: 0.06, rarityBoost: 5 },
   // Dusthaven
   bandit:        { dropChance: 0.35, resources: { gold: [8, 20] }, itemChance: 0.08, rarityBoost: 5 },
@@ -132,8 +132,8 @@ export const CREATURE_LOOT = {
   fire_imp:      { dropChance: 0.35, resources: { gems: [2, 5], gold: [10, 25] }, itemChance: 0.12, rarityBoost: 15 },
   drake:         { dropChance: 0.40, resources: { iron: [10, 25], gems: [2, 6] }, itemChance: 0.15, rarityBoost: 15 },
   // Bosses — always drop, guaranteed item with rarity boost
-  treant_elder:   { dropChance: 1.0, resources: { wood: [30, 60], herbs: [15, 30] }, itemChance: 1.0, rarityBoost: 25 },
-  stone_golem:    { dropChance: 1.0, resources: { stone: [40, 80], iron: [20, 40] }, itemChance: 1.0, rarityBoost: 30 },
+  treant_elder:   { dropChance: 1.0, resources: { wood: [30, 60], herbs: [15, 30] }, itemChance: 1.0, rarityBoost: 25, explorationLoot: { ancientWood: [3, 6] } },
+  stone_golem:    { dropChance: 1.0, resources: { stone: [40, 80], iron: [20, 40] }, itemChance: 1.0, rarityBoost: 30, explorationLoot: { starIron: [2, 4] } },
   sandworm_queen: { dropChance: 1.0, resources: { gold: [50, 100], gems: [5, 12] }, itemChance: 1.0, rarityBoost: 35 },
   frost_dragon:   { dropChance: 1.0, resources: { gems: [8, 16], iron: [30, 60] }, itemChance: 1.0, rarityBoost: 40 },
   elder_dragon:   { dropChance: 1.0, resources: { gems: [12, 24], gold: [80, 150] }, itemChance: 1.0, rarityBoost: 50 },

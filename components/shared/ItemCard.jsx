@@ -34,11 +34,17 @@ export default function ItemCard({ item, onClick, compact = false }) {
         <span className={styles.name} style={{ color: rarityColor }}>
           {item.name}{(item.level || 1) > 1 ? ` Lv.${item.level}` : ""}
         </span>
-        <span className={styles.rarity}>{getRarityLabel(item.rarity)}</span>
+        <span className={styles.rarity}>{item.rarity ? getRarityLabel(item.rarity) : item.slot === "consumable" ? `×${item.count || 1}` : ""}</span>
         <div className={styles.stats}>
-          {item.stats.atk > 0 && <span className={styles.stat}>ATK {item.stats.atk}</span>}
-          {item.stats.def > 0 && <span className={styles.stat}>DEF {item.stats.def}</span>}
-          {item.stats.spd !== 0 && <span className={styles.stat}>SPD {item.stats.spd > 0 ? "+" : ""}{item.stats.spd}</span>}
+          {item.stats ? (
+            <>
+              {item.stats.atk > 0 && <span className={styles.stat}>ATK {item.stats.atk}</span>}
+              {item.stats.def > 0 && <span className={styles.stat}>DEF {item.stats.def}</span>}
+              {item.stats.spd !== 0 && <span className={styles.stat}>SPD {item.stats.spd > 0 ? "+" : ""}{item.stats.spd}</span>}
+            </>
+          ) : item.effect ? (
+            <span className={styles.stat}>{item.description}</span>
+          ) : null}
         </div>
       </div>
       {item.equippedBy && <span className={styles.equipped}>E</span>}

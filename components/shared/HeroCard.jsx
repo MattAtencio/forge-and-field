@@ -8,6 +8,7 @@ const STATUS_SPRITE = {
   idle: "idle",
   expedition: "expedition",
   resting: "resting",
+  exploring: "exploring",
 };
 
 export default function HeroCard({ hero, inventory, onClick, selected = false }) {
@@ -16,6 +17,7 @@ export default function HeroCard({ hero, inventory, onClick, selected = false })
     idle: "#22c55e",
     expedition: "#f59e0b",
     resting: "#6b7280",
+    exploring: "#a855f7",
   };
 
   return (

@@ -360,3 +360,34 @@
   0%, 100% { box-shadow: 0 0 0 0 rgba(168, 85, 247, 0.3); }
   50% { box-shadow: 0 0 16px 4px rgba(168, 85, 247, 0.15); }
 }
+
+.exploreBtn {
+  display: block;
+  width: 100%;
+  margin-top: 6px;
+  padding: 6px 12px;
+  background: #a855f7;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  font-family: var(--font-dm-serif), serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  text-align: center;
+}
+
+.exploreBtn:disabled {
+  background: #334155;
+  color: #64748b;
+  cursor: not-allowed;
+}
+
+.exploreLocked {
+  display: block;
+  margin-top: 6px;
+  font-size: 0.7rem;
+  color: #64748b;
+  text-align: center;
+  font-style: italic;
+}

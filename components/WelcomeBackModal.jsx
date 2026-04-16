@@ -2,6 +2,7 @@
 
 import { RESOURCES } from "@/data/resources";
 import { RECIPES } from "@/data/recipes";
+import { getRegionById } from "@/data/regions";
 import Sprite from "@/components/sprites/Sprite";
 import styles from "./WelcomeBackModal.module.css";
 
@@ -213,6 +214,18 @@ export default function WelcomeBackModal({ offlineData, state, onDismiss }) {
                 </div>
               </div>
             )}
+          </div>
+        )}
+
+        {/* Active Exploration Notice */}
+        {state?.exploration?.active && (
+          <div className={styles.section}>
+            <div className={styles.infoCard}>
+              <Sprite name="map" size={22} />
+              <span className={styles.infoText}>
+                You left mid-exploration in {getRegionById(state.exploration.regionId)?.name || "unknown lands"}. Your hero awaits.
+              </span>
+            </div>
           </div>
         )}
 

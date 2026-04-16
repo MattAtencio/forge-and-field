@@ -19,6 +19,7 @@ import OnboardingModal from "./onboarding/OnboardingModal";
 import WelcomeBackModal from "./WelcomeBackModal";
 import HeroUnlockModal from "./HeroUnlockModal";
 import SettingsModal from "./SettingsModal";
+import ExplorationScreen from "./ExplorationScreen";
 import styles from "./ForgeAndField.module.css";
 
 function GameShell() {
@@ -137,6 +138,9 @@ function GameShell() {
       <ResourceBar />
       <div className={styles.screenArea}>{renderScreen()}</div>
       <NavBar />
+
+      {/* Exploration overlay — fullscreen when active */}
+      {state.exploration?.active && <ExplorationScreen />}
 
       {/* Onboarding — first launch only */}
       {!state.player.tutorialDone && (
