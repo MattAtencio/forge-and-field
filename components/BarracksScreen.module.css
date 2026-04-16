@@ -358,6 +358,42 @@
   gap: 6px;
 }
 
+.invHeader {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 6px;
+}
+
+.invGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+}
+
+.viewToggle {
+  display: flex;
+  gap: 4px;
+}
+
+.viewToggleBtn {
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #8888a0;
+  font-size: 0.65rem;
+  font-weight: 600;
+  padding: 3px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.viewToggleBtn.active {
+  background: rgba(249, 115, 22, 0.15);
+  border-color: rgba(249, 115, 22, 0.4);
+  color: #f97316;
+}
+
 .empty {
   text-align: center;
   color: #6b6b80;

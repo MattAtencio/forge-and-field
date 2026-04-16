@@ -27,6 +27,7 @@ export default function BarracksScreen() {
     state.screenPayload?.heroId || state.heroes[0]?.id || null
   );
   const [equipSlot, setEquipSlot] = useState(null);
+  const [inventoryView, setInventoryView] = useState("list");
   const [showTitlePicker, setShowTitlePicker] = useState(false);
   const [levelUpFlash, setLevelUpFlash] = useState(false);
   const levelUpTimerRef = useRef(null);
@@ -291,23 +292,47 @@ export default function BarracksScreen() {
       )}
 
       {/* Equipment Picker Modal */}
-      {equipSlot && (
-        <Modal title={`Equip ${equipSlot}`} onClose={() => setEquipSlot(null)}>
-          <div className={styles.equipPicker}>
-            {getUnequippedItems(state.inventory, equipSlot).length === 0 ? (
-              <p className={styles.empty}>Nothing forged for this slot yet.</p>
-            ) : (
-              getUnequippedItems(state.inventory, equipSlot).map((item) => (
-                <ItemCard
-                  key={item.id}
-                  item={item}
-                  onClick={() => handleEquip(item.id)}
-                />
-              ))
+      {equipSlot && (() => {
+        const pickerItems = getUnequippedItems(state.inventory, equipSlot);
+        return (
+          <Modal title={`Equip ${equipSlot}`} onClose={() => setEquipSlot(null)}>
+            {pickerItems.length > 0 && (
+              <div className={styles.invHeader}>
+                <div className={styles.viewToggle} role="group" aria-label="Inventory view">
+                  <button
+                    className={`${styles.viewToggleBtn} ${inventoryView === "list" ? styles.active : ""}`}
+                    onClick={() => setInventoryView("list")}
+                    aria-pressed={inventoryView === "list"}
+                  >
+                    List
+                  </button>
+                  <button
+                    className={`${styles.viewToggleBtn} ${inventoryView === "grid" ? styles.active : ""}`}
+                    onClick={() => setInventoryView("grid")}
+                    aria-pressed={inventoryView === "grid"}
+                  >
+                    Grid
+                  </button>
+                </div>
+              </div>
             )}
-          </div>
-        </Modal>
-      )}
+            <div className={inventoryView === "grid" ? styles.invGrid : styles.equipPicker}>
+              {pickerItems.length === 0 ? (
+                <p className={styles.empty}>Nothing forged for this slot yet.</p>
+              ) : (
+                pickerItems.map((item) => (
+                  <ItemCard
+                    key={item.id}
+                    item={item}
+                    compact={inventoryView === "grid"}
+                    onClick={() => handleEquip(item.id)}
+                  />
+                ))
+              )}
+            </div>
+          </Modal>
+        );
+      })()}
 
       {/* Title Picker Modal */}
       {showTitlePicker && selectedHero && (
