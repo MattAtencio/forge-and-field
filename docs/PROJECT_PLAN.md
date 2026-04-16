@@ -1,8 +1,26 @@
 # Forge & Field -- Master Project Plan
 
 **EP:** Marcus Hale
-**Date:** 2026-04-10
-**Status:** APPROVED (Apr 10, 2026)
+**Date:** 2026-04-10 (updated 2026-04-16)
+**Status:** APPROVED (Apr 10, 2026) — augmented by two-track overlay (Apr 16, 2026)
+
+---
+
+## Status Update — 2026-04-16
+
+Execution is ahead of the original plan. Phase 0, Phase 1A–C, and Phase 2 (Exploration MVP) have shipped on `feature/v2-phase3-push` (merged from `v2/visual-overhaul` + `feature/autonomous-v2`). The March balance report's final open item (Epic pity system) shipped the same day.
+
+**Shipped (not updated inline below to preserve original plan):**
+- ✅ Phase 0 — Combat balance fixes, Crit Craft mechanic, Welcome Back modal overhaul, Prestige rebalance (Veteran's Start 5 stars + Forgemaster's Memory), Aldric 32×32 pixel art with 4-frame idle, Sprite component dual-mode, Demo Scope document. **Open:** Steamworks registration ($100 fee) — founder action.
+- ✅ Phase 1A — 4 hero sprites with forge-touched ember accents, PixelFrame (parchment + iron), frames applied to Hub/Forge/Barracks, font swap (Crimson Pro, JetBrains Mono, DM Serif Display).
+- ✅ Phase 1B — Narrative voice rewrite of regions + expeditions, The Reforging rename, in-voice microcopy, item sprites, narrative event text.
+- ✅ Phase 1C — Enemy sprites, button juice, craft sparkle + gold-coin fly (shipped today as part of Wave 1), hero flavor text, PixelFrame on Village/Season/Modal screens. **Open:** Steam Coming Soon page — founder action.
+- ✅ Phase 2 — Full Exploration MVP (20-spec autonomous sprint). Node maps for all 5 regions, player-controlled interactive combat, loot bag, 3 consumables, flee, exploration-only resources, save/load integration.
+- ✅ **Wave 1 polish (2026-04-16):** DesktopFrame for Steam wide-screen, Forge juice (craft sparkle + coin fly), Barracks inventory grid toggle, Wandering Merchant event (cadence 30–45 min), Hub resource cap indicators, Epic pity system.
+
+**Two-track overlay active (2026-04-16):** See `docs/TWO_TRACK_PLAN.md`. Track A continues mechanics polish on `feature/v2-phase3-push`. Track B begins a Town Hub visual prototype on new `feature/town-prototype` branch (pan/zoom diorama, pixel-art 3/4 dusk scene, sealed from game state). Reviewed and locked by art director + senior indie dev + Marcus. Hard kill at week 2 if Iter 1 isn't lookable.
+
+**Net effect on the timeline below:** Phase 3 (Demo & Steam Prep, Jul 20 – Sep 1) can begin earlier with Track A polish already banked. Town Hub's integration — if prototype converges by early May — drops into Phase 3 as a new Sprint 3B item. If it slips past mid-May, it becomes the Q1 2027 launch centerpiece (not a demo feature).
 **Founder Decisions:**
 - Plan: APPROVED as-is
 - Steamworks: Founder will register after first major MVP showing (not this week)
