@@ -1,0 +1,261 @@
+/* Iter 1 palette locks — only two environment tones added to Ember Glow palette.
+   Loam #6b5d3e (ground midtone), Dusk sky #2a2438.
+   Forge door is the ONLY warm emissive in scene; everything else dusk-ambient. */
+
+.page {
+  min-height: 100dvh;
+  background: #1a1824;
+  color: #e8e0d4;
+  font-family: "Crimson Pro", Georgia, serif;
+  display: flex;
+  flex-direction: column;
+}
+
+.pageHeader {
+  padding: 16px 24px 12px;
+  border-bottom: 1px solid #3a3346;
+}
+
+.title {
+  margin: 0;
+  font-size: 18px;
+  font-weight: 600;
+  color: #f97316;
+  letter-spacing: 0.3px;
+}
+
+.caption {
+  margin: 6px 0 0;
+  font-size: 12px;
+  color: #94a3b8;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+}
+
+.viewport {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  background: radial-gradient(ellipse at center, #2a2438 0%, #15121c 70%, #0a0710 100%);
+}
+
+.wrapper {
+  width: 100%;
+  height: 100%;
+}
+
+.content {
+  /* TransformComponent centers its contents; nothing to add here. */
+}
+
+/* ----- Scene layers ----- */
+
+.scene {
+  position: relative;
+  /* Dusk ambient sky over loam ground, split roughly 60/40. */
+  background: linear-gradient(to bottom, #2a2438 0%, #2a2438 58%, #6b5d3e 58%, #554a33 100%);
+}
+
+.sky,
+.ground {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+}
+
+.siloCluster {
+  /* Background building silhouettes at ~60% darkness — "town continues" hint. */
+  position: absolute;
+  right: 40px;
+  top: 110px;
+  width: 260px;
+  height: 180px;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    transparent 40%,
+    #1a1624 40%,
+    #1a1624 52%,
+    transparent 52%,
+    transparent 60%,
+    #17131f 60%,
+    #17131f 72%,
+    transparent 72%,
+    transparent 78%,
+    #14101b 78%,
+    #14101b 100%
+  );
+  opacity: 0.7;
+  filter: blur(0.4px);
+  pointer-events: none;
+}
+
+/* ----- Hotspots (placeholder buildings, click targets) ----- */
+
+.hotspot {
+  position: absolute;
+  border: 2px solid #3a3346;
+  background: linear-gradient(to bottom, #4a3f2d 0%, #3a3020 60%, #2a2218 100%);
+  color: #e8e0d4;
+  font-family: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  transition: transform 120ms ease-out, border-color 120ms ease-out, box-shadow 120ms ease-out;
+  padding: 0;
+  overflow: visible;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+.hotspot::after {
+  /* Subtle top light — dusk sun-catch on rooflines. */
+  content: "";
+  position: absolute;
+  inset: 0 0 70% 0;
+  background: linear-gradient(to bottom, rgba(232, 224, 212, 0.08), transparent);
+  pointer-events: none;
+}
+
+.hotspot:hover,
+.hotspot:focus-visible {
+  border-color: #f97316;
+  box-shadow: 0 0 16px rgba(249, 115, 22, 0.2);
+  outline: none;
+  transform: translateY(-1px);
+}
+
+.hotspotLabel {
+  position: absolute;
+  bottom: -22px;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  background: rgba(26, 24, 36, 0.88);
+  border: 1px solid #3a3346;
+  padding: 2px 8px;
+  border-radius: 2px;
+  font-size: 11px;
+  font-family: "JetBrains Mono", ui-monospace, monospace;
+  color: #cbd5e1;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 120ms ease-out;
+}
+
+.hotspot:hover .hotspotLabel,
+.hotspot:focus-visible .hotspotLabel {
+  opacity: 1;
+}
+
+/* Forge lock — the only warm emissive in the scene. */
+.emissive {
+  background: linear-gradient(to bottom, #4a3f2d 0%, #3a3020 55%, #2a2218 100%);
+  box-shadow:
+    inset 0 -20px 30px rgba(249, 115, 22, 0.35),
+    0 0 40px rgba(249, 115, 22, 0.15);
+}
+
+.emissive::before {
+  /* Door aperture with warm glow — placeholder, replaced by painted asset in Iter 2. */
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: 12px;
+  width: 36px;
+  height: 56px;
+  background: radial-gradient(ellipse at center bottom, #fbbf24 0%, #f97316 40%, #9a2f0a 85%, transparent 100%);
+  border-radius: 18px 18px 4px 4px;
+  transform: translateX(-50%);
+  pointer-events: none;
+}
+
+/* Gate — the only "see through" silhouette in the scene per art lock. */
+.arch {
+  background: transparent;
+  border: none;
+  background-image:
+    /* Two flanking pillars */
+    linear-gradient(to right, transparent 0%, transparent 8%, #2a2218 8%, #2a2218 30%, transparent 30%, transparent 70%, #2a2218 70%, #2a2218 92%, transparent 92%, transparent 100%);
+  background-repeat: no-repeat;
+  background-position: center bottom;
+  background-size: 100% 75%;
+}
+
+.arch::after {
+  /* Lintel */
+  content: "";
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  top: 0;
+  height: 30px;
+  background: #2a2218;
+  border-bottom-left-radius: 80% 40px;
+  border-bottom-right-radius: 80% 40px;
+}
+
+.arch:hover,
+.arch:focus-visible {
+  filter: drop-shadow(0 0 10px rgba(249, 115, 22, 0.35));
+  border: none;
+  box-shadow: none;
+}
+
+/* ----- Ambient motion: chimney smoke + ember flicker ----- */
+
+.chimneySmoke {
+  position: absolute;
+  left: 170px;
+  top: 130px;
+  width: 40px;
+  height: 70px;
+  background: radial-gradient(ellipse at center bottom, rgba(148, 163, 184, 0.35), transparent 70%);
+  animation: smokeDrift 5.5s ease-in-out infinite;
+  pointer-events: none;
+  filter: blur(4px);
+}
+
+.emberGlow {
+  position: absolute;
+  left: 140px;
+  top: 360px;
+  width: 120px;
+  height: 80px;
+  background: radial-gradient(ellipse at center, rgba(249, 115, 22, 0.35), transparent 70%);
+  animation: emberFlicker 2.3s ease-in-out infinite;
+  pointer-events: none;
+  filter: blur(8px);
+}
+
+@keyframes smokeDrift {
+  0% { transform: translateY(0) translateX(0); opacity: 0.6; }
+  50% { transform: translateY(-24px) translateX(6px); opacity: 0.3; }
+  100% { transform: translateY(-48px) translateX(-4px); opacity: 0; }
+}
+
+@keyframes emberFlicker {
+  0%, 100% { opacity: 0.85; }
+  37% { opacity: 1; }
+  48% { opacity: 0.6; }
+  72% { opacity: 0.95; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chimneySmoke,
+  .emberGlow {
+    animation: none;
+  }
+  .hotspot,
+  .hotspot:hover,
+  .hotspot:focus-visible {
+    transition: none;
+    transform: none;
+  }
+}
+
+/* ----- Mobile — still usable, but the diorama is authored for desktop presentation. ----- */
+
+@media (max-width: 767px) {
+  .title { font-size: 15px; }
+  .caption { font-size: 11px; }
+}
