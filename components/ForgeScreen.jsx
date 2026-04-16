@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useMemo } from "react";
+import { useState, useRef, useMemo, useEffect } from "react";
 import { useGameState, useGameDispatch } from "@/lib/gameContext";
 import { canCraft, getAvailableRecipes, generateItem, getCraftRefund, getRecipeById } from "@/lib/crafting";
 import { getSellValue, getRarityColor, getRarityLabel, getUpgradeCost, getRepairCost, getDismantleReturns } from "@/lib/rarity";
@@ -15,6 +15,19 @@ import styles from "./ForgeScreen.module.css";
 const RARITY_ORDER = { common: 0, uncommon: 1, rare: 2, epic: 3 };
 const SLOT_ORDER = { weapon: 0, armor: 1, accessory: 2 };
 
+function SparkleBurst() {
+  return (
+    <div className={styles.sparkleLayer} aria-hidden="true">
+      <span className={styles.sparkleGlow} />
+      <span className={styles.sparkleParticle} style={{ "--sx": "28px", "--sy": "-22px", animationDelay: "0ms" }} />
+      <span className={styles.sparkleParticle} style={{ "--sx": "-26px", "--sy": "-18px", animationDelay: "60ms" }} />
+      <span className={styles.sparkleParticle} style={{ "--sx": "18px", "--sy": "24px", animationDelay: "120ms" }} />
+      <span className={styles.sparkleParticle} style={{ "--sx": "-20px", "--sy": "20px", animationDelay: "180ms" }} />
+      <span className={styles.sparkleParticle} style={{ "--sx": "0px", "--sy": "-30px", animationDelay: "240ms" }} />
+    </div>
+  );
+}
+
 export default function ForgeScreen() {
   const state = useGameState();
   const dispatch = useGameDispatch();
@@ -24,7 +37,39 @@ export default function ForgeScreen() {
   const [selectedIds, setSelectedIds] = useState(new Set());
   const [sortBy, setSortBy] = useState("rarity"); // 'rarity' | 'level' | 'type'
   const [filterSlot, setFilterSlot] = useState("all"); // 'all' | 'weapon' | 'armor' | 'accessory'
+  const [sparkleAt, setSparkleAt] = useState(null);
+  const [coins, setCoins] = useState([]);
   const longPressRef = useRef(null);
+  const sparkleTimerRef = useRef(null);
+  const coinTimersRef = useRef(new Set());
+  const sellBtnRef = useRef(null);
+  const batchSellBtnRef = useRef(null);
+
+  // Clear pending timers on unmount so no setState after teardown.
+  useEffect(() => {
+    return () => {
+      if (sparkleTimerRef.current) clearTimeout(sparkleTimerRef.current);
+      coinTimersRef.current.forEach((t) => clearTimeout(t));
+      coinTimersRef.current.clear();
+    };
+  }, []);
+
+  const spawnCoin = (fromX, fromY) => {
+    const id = `coin-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
+    setCoins((prev) => [...prev, { id, fromX, fromY }]);
+    const t = setTimeout(() => {
+      setCoins((prev) => prev.filter((c) => c.id !== id));
+      coinTimersRef.current.delete(t);
+    }, 750);
+    coinTimersRef.current.add(t);
+  };
+
+  const getSellOrigin = (ref) => {
+    const el = ref?.current;
+    if (!el) return { x: window.innerWidth / 2, y: window.innerHeight / 2 };
+    const r = el.getBoundingClientRect();
+    return { x: r.left + r.width / 2, y: r.top + r.height / 2 };
+  };
 
   const recipes = getAvailableRecipes(state.player.level);
 
@@ -36,11 +81,15 @@ export default function ForgeScreen() {
     dispatch({ type: "START_CRAFT", recipe });
   };
 
-  const handleCollect = (craft) => {
+  const handleCollect = (craft, slotIndex) => {
     const recipe = getRecipeById(craft.recipeId);
     if (!recipe) return;
     const item = generateItem(recipe);
     dispatch({ type: "COMPLETE_CRAFT", craftId: craft.id, item });
+    // Track slot index because the craft is removed from state on dispatch.
+    setSparkleAt(slotIndex);
+    if (sparkleTimerRef.current) clearTimeout(sparkleTimerRef.current);
+    sparkleTimerRef.current = setTimeout(() => setSparkleAt(null), 900);
   };
 
   const handleCancel = (craft) => {
@@ -52,6 +101,8 @@ export default function ForgeScreen() {
   const handleSell = (item) => {
     const recipe = getRecipeById(item.recipeId);
     const goldValue = recipe ? getSellValue(recipe, item.rarity, item.level) : 5;
+    const origin = getSellOrigin(sellBtnRef);
+    spawnCoin(origin.x, origin.y);
     dispatch({ type: "SELL_ITEM", itemId: item.id, goldValue });
     setSelectedItem(null);
   };
@@ -85,6 +136,16 @@ export default function ForgeScreen() {
       const recipe = getRecipeById(item.recipeId);
       totalGold += recipe ? getSellValue(recipe, item.rarity, item.level) : 5;
       itemIds.push(item.id);
+    }
+    // Cap at 8 coins to avoid DOM spam on large batch sells.
+    const coinCount = Math.min(items.length, 8);
+    const origin = getSellOrigin(batchSellBtnRef);
+    for (let i = 0; i < coinCount; i++) {
+      const t = setTimeout(() => {
+        spawnCoin(origin.x, origin.y);
+        coinTimersRef.current.delete(t);
+      }, i * 80);
+      coinTimersRef.current.add(t);
     }
     dispatch({ type: "SELL_ITEMS_BATCH", itemIds, totalGold });
     setSelectionMode(false);
@@ -150,6 +211,7 @@ export default function ForgeScreen() {
 
             return (
               <div key={craft.id} className={`${styles.queueItem} ${done ? styles.craftReady : ""}`}>
+                {sparkleAt === i && <SparkleBurst />}
                 <span className={styles.queueIcon}>
                   <Sprite name={recipe?.icon || "forge"} size={22} animate={done ? "glow" : "spin"} />
                 </span>
@@ -163,7 +225,7 @@ export default function ForgeScreen() {
                   </div>
                 </div>
                 {done ? (
-                  <button className={`${styles.collectBtn} juiceBtn`} onClick={() => handleCollect(craft)}>
+                  <button className={`${styles.collectBtn} juiceBtn`} onClick={() => handleCollect(craft, i)}>
                     Collect
                   </button>
                 ) : (
@@ -179,6 +241,7 @@ export default function ForgeScreen() {
           }
           return (
             <div key={`empty-${i}`} className={`${styles.queueItem} ${styles.queueEmpty}`}>
+              {sparkleAt === i && <SparkleBurst />}
               <span className={styles.queueIcon}>
                 <Sprite name="forge" size={22} />
               </span>
@@ -334,6 +397,7 @@ export default function ForgeScreen() {
               Cancel
             </button>
             <button
+              ref={batchSellBtnRef}
               className={`${styles.batchSellBtn} juiceBtn`}
               disabled={selectedIds.size === 0}
               onClick={handleBatchSell}
@@ -461,6 +525,7 @@ export default function ForgeScreen() {
               <p className={styles.equippedNote}>Currently equipped</p>
             ) : (
               <button
+                ref={sellBtnRef}
                 className={`${styles.sellBtn} juiceBtn`}
                 onClick={() => handleSell(selectedItem)}
               >
@@ -469,6 +534,20 @@ export default function ForgeScreen() {
             )}
           </div>
         </Modal>
+      )}
+
+      {coins.length > 0 && (
+        <div className={styles.coinFlyLayer} aria-hidden="true">
+          {coins.map((c) => (
+            <span
+              key={c.id}
+              className={styles.coinFly}
+              style={{ left: c.fromX, top: c.fromY }}
+            >
+              <Sprite name="gold" size={18} />
+            </span>
+          ))}
+        </div>
       )}
     </div>
   );
