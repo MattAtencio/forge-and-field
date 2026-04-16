@@ -21,20 +21,58 @@
   color: #8888a0;
 }
 
-.textarea {
-  width: 100%;
+.segmented {
+  display: flex;
+  gap: 4px;
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 8px;
-  color: #c0c0d4;
-  font-family: monospace;
-  font-size: 0.65rem;
-  padding: 8px;
-  resize: vertical;
+  padding: 4px;
 }
 
-.textarea::placeholder {
-  color: #4a4a5e;
+.segment {
+  flex: 1;
+  padding: 8px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: #8888a0;
+  font-size: 0.7rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.segment:active {
+  background: rgba(249, 115, 22, 0.08);
+}
+
+.segmentActive {
+  background: rgba(249, 115, 22, 0.18);
+  color: #f97316;
+}
+
+.sliderRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.slider {
+  flex: 1;
+  accent-color: #f97316;
+}
+
+.sliderValue {
+  min-width: 42px;
+  text-align: right;
+  font-size: 0.7rem;
+  font-variant-numeric: tabular-nums;
+  color: #c0c0d4;
+}
+
+.hiddenInput {
+  display: none;
 }
 
 .primaryBtn {
