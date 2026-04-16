@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import DesktopFrame from "@/components/DesktopFrame";
 
 const ForgeAndField = dynamic(() => import("@/components/ForgeAndField"), {
   ssr: false,
@@ -12,5 +13,9 @@ const ForgeAndField = dynamic(() => import("@/components/ForgeAndField"), {
 });
 
 export default function Home() {
-  return <ForgeAndField />;
+  return (
+    <DesktopFrame>
+      <ForgeAndField />
+    </DesktopFrame>
+  );
 }
