@@ -14,6 +14,19 @@ import Sprite from "@/components/sprites/Sprite";
 import PixelFrame from "@/components/shared/PixelFrame";
 import styles from "./HubScreen.module.css";
 
+const RESOURCE_ROW_KEYS = ["wood", "stone", "iron", "herbs", "gems", "gold"];
+
+// Milestone ladder — gives a visually-satisfying fill that moves on normal timescales
+// without us needing a real cap system. Each tier is the next round-number goal the
+// player is most likely to care about reaching.
+function getResourceTarget(resourceKey, amount) {
+  const ladder = [50, 100, 250, 500, 1000, 2500, 5000, 10000, 25000, 50000];
+  for (const tier of ladder) {
+    if (amount < tier) return tier;
+  }
+  return Math.ceil(amount / 10000) * 10000 + 10000;
+}
+
 const NAV_TILES = [
   { screen: "forge", icon: "forge", label: "Forge", desc: "Shape iron into purpose", color: "#f97316" },
   { screen: "barracks", icon: "barracks", label: "Barracks", desc: "Those who carry your work", color: "#3b82f6", unlockLevel: 3 },
@@ -164,6 +177,33 @@ export default function HubScreen({ onOpenSettings }) {
           label="XP"
         />
       </PixelFrame>
+
+      {/* Resource Caps */}
+      <div className={styles.resourceCaps}>
+        {RESOURCE_ROW_KEYS.map((key) => {
+          const amount = Math.floor(state.resources?.[key] || 0);
+          const target = getResourceTarget(key, amount);
+          const pct = Math.min(100, (amount / target) * 100);
+          const color = RESOURCES[key]?.color || "#8888a0";
+          const atCap = amount >= target;
+          return (
+            <div key={key} className={styles.resourceCapChip}>
+              <div className={styles.resourceCapHeader}>
+                <Sprite name={RESOURCES[key]?.icon || key} size={14} />
+                <span className={styles.resourceCapAmount} style={{ color }}>
+                  {amount}
+                </span>
+              </div>
+              <div className={styles.resourceCapBar}>
+                <div
+                  className={`${styles.resourceCapFill} ${atCap ? styles.resourceCapPulse : ""}`}
+                  style={{ width: `${pct}%`, background: color }}
+                />
+              </div>
+            </div>
+          );
+        })}
+      </div>
 
       {/* Notifications */}
       {notifications.length > 0 && (

@@ -59,6 +59,63 @@
   border-radius: 10px;
 }
 
+/* Resource Caps */
+.resourceCaps {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.resourceCapChip {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 6px 8px;
+}
+
+.resourceCapHeader {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.resourceCapAmount {
+  font-size: 0.75rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.resourceCapBar {
+  height: 3px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.resourceCapFill {
+  height: 100%;
+  border-radius: 2px;
+  transition: width 0.4s ease;
+}
+
+.resourceCapPulse {
+  animation: resourceCapPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes resourceCapPulse {
+  0%, 100% { opacity: 0.75; }
+  50% { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .resourceCapPulse {
+    animation: none;
+  }
+}
+
 /* Notifications */
 .notifications {
   display: flex;
