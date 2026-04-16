@@ -1,26 +1,23 @@
-# Task 23: Barracks UI Polish — Inventory Grid + Equipment Slot Redesign
+# Task 23: Barracks Inventory Grid Toggle
 
 ## Objective
-Two polish items in the Barracks screen, both isolated to `BarracksScreen.jsx` and its CSS module:
-1. **Inventory grid view toggle** — let the player switch between list (current) and a 4-column compact grid
-2. **Equipment slot visual redesign** — bordered squares for weapon/armor/accessory slots, with empty-slot silhouettes
+Add a list / grid view toggle to the Barracks inventory panel so players can see more of their items at once. Isolated to `BarracksScreen.jsx` and its CSS module.
+
+> Note: The equipment slot redesign that used to be part of this spec is already done — the current BarracksScreen already renders slots inside `<PixelFrame variant="iron">` with proper borders. Do NOT touch the equipment panel.
 
 ## Context Files (READ to understand)
-- `components/BarracksScreen.jsx` (~357 lines) — the whole screen, has hero selector, equipment panel, and inventory list
-- `components/BarracksScreen.module.css` — existing styles
-- `components/shared/ItemCard.jsx` — use as a reference; it supports a `compact` prop. Do NOT modify it.
-- `components/sprites/Sprite.jsx` — the `"weapon"`, `"armor"`, `"accessory"` sprite names exist for slot icons
+- `components/BarracksScreen.jsx` — the whole screen
+- `components/BarracksScreen.module.css`
+- `components/shared/ItemCard.jsx` — already supports a `compact` prop for small squares. Do NOT modify it.
 
 ## What To Build
 
-### 1. Inventory Grid Toggle
-
 - Add local state: `const [inventoryView, setInventoryView] = useState("list");`
-- Above the inventory list, add a small segmented toggle (two buttons: List / Grid, or icons for each)
-- When `inventoryView === "grid"`, render the inventory as a 4-column CSS grid. Each cell uses the existing `ItemCard` component with `compact` prop (it already exists and renders as a small square)
-- When `inventoryView === "list"`, render the existing layout unchanged
+- Above the inventory list, add a small segmented toggle (two buttons — list icon + grid icon, or "List" / "Grid" text)
+- When `inventoryView === "grid"`, render the inventory as a 4-column CSS grid. Each cell uses the existing `<ItemCard item={...} compact onClick={...} />`.
+- When `inventoryView === "list"`, render the existing layout unchanged.
 - Keep the toggle visually small and unobtrusive — it lives in the inventory header row
-- No persistence needed — defaults to "list" each session (keep scope tight)
+- No persistence — session state only (keep scope tight)
 
 CSS sketch in `BarracksScreen.module.css`:
 ```css
@@ -29,29 +26,9 @@ CSS sketch in `BarracksScreen.module.css`:
   grid-template-columns: repeat(4, 1fr);
   gap: 6px;
 }
-.viewToggle { display: flex; gap: 4px; /* small segmented control */ }
-.viewToggleBtn { /* minimal, uses existing button color tokens */ }
-.viewToggleBtn.active { /* highlighted */ }
-```
-
-### 2. Equipment Slot Redesign
-
-Current equipment panel likely shows three slots (weapon / armor / accessory) inline. Redesign to three bordered square slots, each ~56–64px:
-
-- Bordered square with rounded corners (1–2px iron-grey border, darker when empty)
-- **Empty slot**: shows a faint silhouette icon of the slot type (use Sprite names `"weapon"`, `"armor"`, `"accessory"` at ~32px, `opacity: 0.35`)
-- **Equipped slot**: shows the item sprite at ~40px, with a rarity-colored border overriding the default (use `getRarityColor(item.rarity)` from `@/lib/rarity` — already imported in BarracksScreen)
-- Hover/focus state: subtle scale 1.02 or glow
-- Clicking a filled slot retains current unequip behavior; clicking an empty slot is a no-op (or opens inventory — match whatever the current behavior is, don't change reducer logic)
-
-CSS sketch:
-```css
-.equipSlots { display: flex; gap: 8px; justify-content: center; }
-.equipSlot { width: 56px; height: 56px; border-radius: 4px; border: 2px solid #3f3f46; background: #1a1a1a; position: relative; }
-.equipSlot.empty { border-style: dashed; border-color: #52525b; }
-.equipSlot.filled { /* border-color set inline via rarity */ }
-.equipSlotIcon { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); }
-.equipSlotEmpty { opacity: 0.35; }
+.viewToggle { display: flex; gap: 4px; }
+.viewToggleBtn { /* use existing button token colors */ }
+.viewToggleBtn.active { /* highlighted with forge-orange accent */ }
 ```
 
 ## Files You MUST Touch
@@ -60,31 +37,28 @@ CSS sketch:
 
 ## Files You MUST NOT Touch
 - `components/shared/ItemCard.jsx`
+- `components/shared/PixelFrame.jsx`
 - `components/sprites/*`
+- Equipment slot code in BarracksScreen (the `.equipSlots` / `.equipSlot` sections — already done)
 - `lib/*`, `data/*`
 - any other component
 
 ## Acceptance Criteria
-- Toggle switches inventory between list and 4-col grid cleanly
-- Grid uses existing `ItemCard compact` rendering — no visual regressions
-- Equipment panel shows three clearly-bordered squares with silhouettes in empty slots
-- Equipped items keep their rarity-colored border
-- Unequip still works via click (existing reducer action, do not change)
+- Toggle switches inventory cleanly between list and 4-col grid
+- Grid uses existing `ItemCard compact` rendering — no visual regression
+- Equipment panel untouched
+- Item click handler (selection or detail modal) continues to work in both views
 - `npm run dev` succeeds, HTTP 200 on `/`
 - No new console errors/warnings
-- `prefers-reduced-motion` honored (no new animations at all is acceptable — keep it static)
 
 ## Verification
-1. `npm run dev` in worktree
-2. Open Barracks, toggle between List / Grid — confirm smooth switch
-3. Unequip a weapon via the equipment panel — silhouette appears in the empty slot
-4. Equip again from inventory — rarity border shows correctly
-5. Curl HTTP 200
+1. `npm run dev`
+2. Open Barracks, toggle between list / grid
+3. Click an item in grid view — detail/selection behavior matches list view
+4. Curl HTTP 200
 
 ## Code Style
-- No narrative summary comments
-- Only comment WHY-non-obvious things
-- No new .md files
+- No trailing summary comments, no planning .md output, WHY-only comments
 
 ## Commit
-One commit on the current branch. Suggested message: `Add Barracks inventory grid toggle + equipment slot redesign`. Do NOT push.
+One commit on the current worktree branch. Suggested message: `Add Barracks inventory grid-view toggle`. Do NOT push.
