@@ -7,6 +7,8 @@ import { getHeroPower } from "@/lib/hero";
 import { RESOURCES } from "@/data/resources";
 import HeroCard from "./shared/HeroCard";
 import Modal from "./shared/Modal";
+import PixelFrame from "@/components/shared/PixelFrame";
+import ProgressBar from "./shared/ProgressBar";
 import styles from "./ExpeditionScreen.module.css";
 
 export default function ExpeditionScreen() {
@@ -73,20 +75,18 @@ export default function ExpeditionScreen() {
           <h3 className={styles.subheading}>Active</h3>
           {state.expeditions.active.map((exp) => {
             const remaining = Math.max(0, (exp.startedAt + exp.duration) - now);
-            const pct = Math.min(((now - exp.startedAt) / exp.duration) * 100, 100);
+            const elapsed = Math.max(0, exp.duration - remaining);
             const template = expeditions.find((e) => e.id === exp.templateId);
-
             return (
-              <div key={exp.id} className={styles.activeCard}>
+              <PixelFrame key={exp.id} variant="iron" className={styles.activeCard}>
                 <div className={styles.activeHeader}>
                   <span>{template?.icon || "?"}</span>
                   <span className={styles.activeName}>{template?.name || "Unknown"}</span>
                   <span className={styles.activeTime}>{formatDuration(remaining)}</span>
                 </div>
-                <div className={styles.progressBar}>
-                  <div className={styles.progressFill} style={{ width: `${pct}%` }} />
-                </div>
-              </div>
+                {/* WHY: shared ProgressBar gives warm-orange fill matching Hub/Forge treatment */}
+                <ProgressBar value={elapsed} max={exp.duration} height={4} />
+              </PixelFrame>
             );
           })}
         </div>
@@ -99,12 +99,12 @@ export default function ExpeditionScreen() {
           {state.expeditions.completed.map((exp) => {
             const template = expeditions.find((e) => e.id === exp.templateId);
             return (
-              <div key={exp.id} className={styles.completedCard}>
+              <PixelFrame key={exp.id} variant="iron" glow className={styles.completedCard}>
                 <span>{template?.icon || "?"} {template?.name || "Unknown"}</span>
                 <button className={`${styles.claimBtn} juiceBtn`} onClick={() => handleClaim(exp)}>
                   Claim Rewards
                 </button>
-              </div>
+              </PixelFrame>
             );
           })}
         </div>
