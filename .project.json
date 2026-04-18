@@ -1,0 +1,10 @@
+{
+  "$schema": "https://raw.githubusercontent.com/MattAtencio/portfolio/main/schemas/project.schema.json",
+  "id": "forge-and-field",
+  "name": "Forge & Field",
+  "kind": "project",
+  "type": "game",
+  "status": "active",
+  "group": "games-strategy",
+  "tags": ["strategy", "wip", "public"]
+}
