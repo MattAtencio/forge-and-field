@@ -1,0 +1,33 @@
+{
+  "$schema": "https://raw.githubusercontent.com/MattAtencio/portfolio/main/schemas/portfolio.schema.json",
+  "title": "Forge & Field",
+  "tagline": "An idle RPG where idle time funds real strategic decisions",
+  "description": "A mobile-first PWA idle RPG that rejects clicker-style number inflation in favor of meaningful decisions: what to craft, which heroes to equip, where to send expeditions, and when to prestige. Runs entirely client-side — no backend, no accounts, no loading screens — with offline progress, versioned save migrations, and weekly rotating seasonal content.",
+  "category": "games",
+  "status": "active",
+  "liveUrl": "https://forge.mattatencio.com",
+  "githubUrl": "https://github.com/MattAtencio/forge-and-field",
+  "techStack": [
+    "Next.js",
+    "React 19",
+    "TypeScript",
+    "Turbopack",
+    "PWA",
+    "Cloudflare Pages"
+  ],
+  "images": {
+    "thumbnail": "/images/projects/forge-and-field-thumb.png"
+  },
+  "highlights": [
+    "Single-reducer architecture with ~60 action types — deterministic state transitions make save/load and offline calculation trivial",
+    "Crafting and rarity system with weighted drops (Common 58%, Uncommon 25%, Rare 12%, Epic 5%) and stat-multiplied tiers",
+    "Deterministic turn-based combat engine: speed-sorted turns, cooldown-gated skills, party-wide auras, defense-penetration math",
+    "Multi-axis progression — player levels, hero skill evolution trees, village buildings, and prestige multipliers",
+    "Weekly rotating seasons (Harvest Festival, Iron Age, Golden Market) with exclusive recipes and resource boosts",
+    "Region-based world map with endurance-gated expeditions and loot scaled to player progress",
+    "Installable as a native-feel app on mobile with full offline play"
+  ],
+  "isPublic": true,
+  "startDate": "2026-02",
+  "featured": false
+}
