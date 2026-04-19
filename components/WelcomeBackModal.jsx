@@ -1,9 +1,11 @@
 "use client";
 
+import { Fragment } from "react";
 import { RESOURCES } from "@/data/resources";
 import { RECIPES } from "@/data/recipes";
 import { getRegionById } from "@/data/regions";
 import Sprite from "@/components/sprites/Sprite";
+import PixelFrame from "@/components/shared/PixelFrame";
 import styles from "./WelcomeBackModal.module.css";
 
 function formatTime(ms) {
@@ -63,11 +65,25 @@ const CHEST_LABELS = {
   epic: "Epic",
 };
 
-const CHEST_SPRITES = {
-  uncommon: "chest_uncommon",
-  rare: "chest_rare",
-  epic: "chest_epic",
-};
+// Chip wrapper: icon on the left, count + subtitle stacked on the right
+function Chip({ iconName, iconSize = 32, count, subtitle, emberCount = false, children }) {
+  return (
+    <div className={styles.sectionChip}>
+      <span className={styles.chipIcon}>
+        <Sprite name={iconName} size={iconSize} />
+      </span>
+      <div className={styles.chipMain}>
+        <span
+          className={`${styles.chipCount} ${emberCount ? styles.chipCountEmber : ""}`}
+        >
+          {count}
+        </span>
+        {subtitle && <span className={styles.chipSubtitle}>{subtitle}</span>}
+        {children}
+      </div>
+    </div>
+  );
+}
 
 export default function WelcomeBackModal({ offlineData, state, onDismiss }) {
   if (!offlineData) return null;
@@ -98,12 +114,120 @@ export default function WelcomeBackModal({ offlineData, state, onDismiss }) {
     return recipe ? recipe.name : "Unknown Item";
   });
 
-  const hasSections =
-    gainedEntries.length > 0 ||
-    completedExpeditions.length > 0 ||
-    completedCrafts.length > 0 ||
-    readyChests.length > 0 ||
-    dailyReset;
+  // Explore notice is its own chip below
+  const exploreActive = Boolean(state?.exploration?.active);
+
+  // Build an ordered list of chips to render; we insert ember dividers between them
+  const chips = [];
+
+  if (gainedEntries.length > 0) {
+    const totalGained = gainedEntries.reduce((sum, [, amt]) => sum + Math.floor(amt), 0);
+    chips.push({
+      key: "resources",
+      render: () => (
+        <Chip
+          iconName={RESOURCES[largestRes]?.icon || largestRes || "gold"}
+          count={`+${totalGained.toLocaleString()} gathered`}
+          emberCount
+          subtitle={null}
+        >
+          <div className={styles.resourceInline}>
+            {gainedEntries.map(([res, amt]) => (
+              <span
+                key={res}
+                className={`${styles.resourceInlineItem} ${res === largestRes ? styles.resourceInlineHighlight : ""}`}
+              >
+                <Sprite name={RESOURCES[res]?.icon || res} size={14} />
+                <span className={styles.resourceInlineAmt}>
+                  +{Math.floor(amt).toLocaleString()}
+                </span>
+              </span>
+            ))}
+          </div>
+        </Chip>
+      ),
+    });
+  }
+
+  if (completedExpeditions.length > 0) {
+    const n = completedExpeditions.length;
+    chips.push({
+      key: "expeditions",
+      render: () => (
+        <Chip
+          iconName="expedition"
+          count={`${n} expedition${n === 1 ? "" : "s"} complete`}
+          subtitle="Rewards await collection."
+        />
+      ),
+    });
+  }
+
+  if (completedCrafts.length > 0) {
+    const n = completedCrafts.length;
+    const subtitle =
+      craftNames.slice(0, 3).join(", ") + (craftNames.length > 3 ? "…" : "");
+    chips.push({
+      key: "crafts",
+      render: () => (
+        <Chip
+          iconName="forge"
+          count={`${n} craft${n === 1 ? "" : "s"} done`}
+          subtitle={subtitle}
+        />
+      ),
+    });
+  }
+
+  if (readyChests.length > 0) {
+    // Use the highest-tier chest icon available for the chip's lead sprite
+    const tierOrder = ["epic", "rare", "uncommon"];
+    const topTier = tierOrder.find((t) => readyChests.includes(t)) || readyChests[0];
+    const subtitle = readyChests
+      .map((t) => CHEST_LABELS[t] || t)
+      .join(" · ");
+    chips.push({
+      key: "chests",
+      render: () => (
+        <Chip
+          iconName={`chest_${topTier}`}
+          count={`${readyChests.length} chest${readyChests.length === 1 ? "" : "s"} ready`}
+          emberCount
+          subtitle={subtitle}
+        />
+      ),
+    });
+  }
+
+  if (dailyReset) {
+    chips.push({
+      key: "daily",
+      render: () => (
+        <Chip
+          iconName="season"
+          count="Daily quests reset"
+          subtitle="A fresh set of tasks awaits."
+        />
+      ),
+    });
+  }
+
+  if (exploreActive) {
+    const regionName =
+      getRegionById(state.exploration.regionId)?.name || "unknown lands";
+    chips.push({
+      key: "explore",
+      render: () => (
+        <Chip
+          iconName="map"
+          count="Exploration paused"
+          subtitle={`Your hero waits in ${regionName}.`}
+        />
+      ),
+    });
+  }
+
+  const hasSections = chips.length > 0;
 
   return (
     <div className={styles.overlay} onClick={onDismiss}>
@@ -125,112 +249,26 @@ export default function WelcomeBackModal({ offlineData, state, onDismiss }) {
           </span>
         </div>
 
-        {/* Scrollable sections */}
-        {hasSections && (
-          <div className={styles.sections}>
-            {/* Resources Earned */}
-            {gainedEntries.length > 0 && (
-              <div className={styles.section}>
-                <p className={styles.sectionLabel}>Resources Gathered</p>
-                <div className={styles.resourceGrid}>
-                  {gainedEntries.map(([res, amt]) => (
-                    <div
-                      key={res}
-                      className={`${styles.resourceItem} ${res === largestRes ? styles.resourceHighlight : ""}`}
-                    >
-                      <Sprite name={RESOURCES[res]?.icon || res} size={20} />
-                      <span className={styles.resourceName}>
-                        {RESOURCES[res]?.name || res}
-                      </span>
-                      <span
-                        className={styles.resourceAmt}
-                        style={{ color: RESOURCES[res]?.color }}
-                      >
-                        +{Math.floor(amt).toLocaleString()}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Expeditions Completed */}
-            {completedExpeditions.length > 0 && (
-              <div className={styles.section}>
-                <p className={styles.sectionLabel}>Expeditions Completed</p>
-                <div className={styles.infoCard}>
-                  <Sprite name="expedition" size={22} />
-                  <span className={styles.infoText}>
-                    {completedExpeditions.length}{" "}
-                    {completedExpeditions.length === 1 ? "expedition" : "expeditions"}{" "}
-                    finished — rewards await!
-                  </span>
-                </div>
-              </div>
-            )}
-
-            {/* Crafts Completed */}
-            {completedCrafts.length > 0 && (
-              <div className={styles.section}>
-                <p className={styles.sectionLabel}>Crafts Completed</p>
-                <div className={styles.infoCard}>
-                  <Sprite name="forge" size={22} />
-                  <div className={styles.craftList}>
-                    {craftNames.map((name, i) => (
-                      <span key={i} className={styles.craftName}>
-                        {name}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {/* Chests Ready */}
-            {readyChests.length > 0 && (
-              <div className={styles.section}>
-                <p className={styles.sectionLabel}>Chests Ready</p>
-                <div className={styles.chestRow}>
-                  {readyChests.map((type) => (
-                    <div key={type} className={styles.chestItem}>
-                      <Sprite name={CHEST_SPRITES[type] || "chest_uncommon"} size={28} />
-                      <span className={styles.chestLabel}>
-                        {CHEST_LABELS[type] || type}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
-            {/* Daily Quests Reset */}
-            {dailyReset && (
-              <div className={styles.section}>
-                <div className={styles.dailyReset}>
-                  <Sprite name="season" size={20} />
-                  <span className={styles.dailyText}>
-                    Daily quests have reset!
-                  </span>
-                </div>
-              </div>
-            )}
-          </div>
-        )}
-
-        {/* Active Exploration Notice */}
-        {state?.exploration?.active && (
-          <div className={styles.section}>
-            <div className={styles.infoCard}>
-              <Sprite name="map" size={22} />
-              <span className={styles.infoText}>
-                You left mid-exploration in {getRegionById(state.exploration.regionId)?.name || "unknown lands"}. Your hero awaits.
-              </span>
+        {/* Parchment body — wraps chips + recommendation */}
+        <PixelFrame variant="parchment" className={styles.bodyFrame}>
+          {hasSections && (
+            <div className={styles.sections}>
+              {chips.map((chip, i) => (
+                <Fragment key={chip.key}>
+                  {i > 0 && <div className={styles.emberDivider} aria-hidden="true" />}
+                  {chip.render()}
+                </Fragment>
+              ))}
             </div>
-          </div>
-        )}
+          )}
 
-        {/* Actionable Prompt */}
-        <p className={styles.recommendation}>{recommendation}</p>
+          {hasSections && (
+            <div className={styles.emberDivider} aria-hidden="true" />
+          )}
+
+          {/* Actionable Prompt — the visual anchor */}
+          <p className={styles.recommendation}>{recommendation}</p>
+        </PixelFrame>
 
         {/* CTA */}
         <button className={styles.btn} onClick={onDismiss}>
