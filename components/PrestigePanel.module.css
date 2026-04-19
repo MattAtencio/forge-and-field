@@ -1,8 +1,7 @@
+/* PrestigePanel — The Reforging surface.
+   Parchment PixelFrame wraps the panel; iron PixelFrame wraps the rebirth button. */
+
 .panel {
-  background: rgba(255, 215, 0, 0.04);
-  border: 1px solid rgba(255, 215, 0, 0.12);
-  border-radius: 14px;
-  padding: 14px;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -39,6 +38,37 @@
   font-size: 0.85rem;
   font-weight: 700;
   color: #fbbf24;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  /* Reserve space for shimmer text-shadow so layout doesn't jitter */
+  text-shadow: 0 0 0 rgba(249, 115, 22, 0);
+  transition: text-shadow 0.2s ease, color 0.2s ease;
+}
+
+.starShimmer {
+  animation: starShimmer 600ms ease-out;
+}
+
+@keyframes starShimmer {
+  0% {
+    color: #fbbf24;
+    text-shadow: 0 0 0 rgba(249, 115, 22, 0);
+  }
+  40% {
+    color: #fdba74;
+    text-shadow: 0 0 8px rgba(249, 115, 22, 0.55), 0 0 14px rgba(249, 115, 22, 0.25);
+  }
+  100% {
+    color: #fbbf24;
+    text-shadow: 0 0 0 rgba(249, 115, 22, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .starShimmer {
+    animation: none;
+  }
 }
 
 .totalStars {
@@ -49,40 +79,85 @@
 .actions {
   display: flex;
   gap: 8px;
+  align-items: stretch;
 }
 
+/* Shop button — subtle parchment tone to match panel */
 .shopBtn {
   flex: 1;
   padding: 10px;
-  border: 1px solid rgba(251, 191, 36, 0.2);
-  border-radius: 8px;
-  background: rgba(251, 191, 36, 0.08);
+  border: 1px solid rgba(146, 64, 14, 0.45);
+  border-radius: 0;
+  background: rgba(232, 224, 212, 0.04);
   color: #fbbf24;
   font-size: 0.75rem;
   font-weight: 700;
   cursor: pointer;
+  transition: background 0.15s ease, border-color 0.15s ease;
 }
 
-.shopBtn:active { background: rgba(251, 191, 36, 0.15); }
+.shopBtn:hover {
+  background: rgba(232, 224, 212, 0.08);
+  border-color: rgba(146, 64, 14, 0.7);
+}
+
+.shopBtn:active {
+  background: rgba(232, 224, 212, 0.12);
+}
+
+/* Iron frame around rebirth button — PixelFrame provides border, we fill it */
+.rebirthFrame {
+  flex: 1;
+  padding: 0;
+  display: flex;
+}
 
 .rebirthBtn {
   flex: 1;
+  width: 100%;
   padding: 10px;
   border: none;
-  border-radius: 8px;
-  background: rgba(168, 85, 247, 0.15);
-  color: #a855f7;
+  border-radius: 0;
+  background: linear-gradient(180deg, rgba(249, 115, 22, 0.18), rgba(168, 85, 247, 0.12));
+  color: #fdba74;
   font-size: 0.75rem;
   font-weight: 700;
   cursor: pointer;
-  animation: glow 2s infinite;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  transition: background 0.15s ease, transform 0.1s ease, filter 0.15s ease;
+  animation: rebirthEmber 2.4s ease-in-out infinite;
 }
 
-.rebirthBtn:active { background: rgba(168, 85, 247, 0.25); }
+.rebirthBtn:hover {
+  background: linear-gradient(180deg, rgba(249, 115, 22, 0.28), rgba(168, 85, 247, 0.18));
+  filter: brightness(1.12);
+}
 
-@keyframes glow {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(168, 85, 247, 0.3); }
-  50% { box-shadow: 0 0 8px 2px rgba(168, 85, 247, 0.15); }
+.rebirthBtn:active:not(:disabled) {
+  transform: translateY(2px);
+  transition: transform 100ms ease;
+  background: linear-gradient(180deg, rgba(249, 115, 22, 0.32), rgba(168, 85, 247, 0.22));
+}
+
+@keyframes rebirthEmber {
+  0%, 100% {
+    box-shadow: inset 0 0 0 0 rgba(249, 115, 22, 0);
+  }
+  50% {
+    box-shadow: inset 0 0 12px 0 rgba(249, 115, 22, 0.22);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rebirthBtn {
+    animation: none;
+  }
+  .rebirthBtn:active:not(:disabled) {
+    transform: none;
+  }
 }
 
 /* Confirm Modal */
@@ -142,14 +217,17 @@
   gap: 8px;
 }
 
+/* Bonus cards — parchment treatment to match the Reforging surface */
 .bonusCard {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  border-radius: 10px;
+  background: rgba(232, 224, 212, 0.04);
+  border: 1px solid rgba(146, 64, 14, 0.4);
+  border-radius: 0;
   padding: 10px;
+  position: relative;
+  box-shadow: inset 0 0 0 1px rgba(26, 24, 36, 0.35);
 }
 
 .bonusMaxed {
