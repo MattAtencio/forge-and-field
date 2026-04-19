@@ -8,13 +8,21 @@ import Sprite from "@/components/sprites/Sprite";
 import PixelFrame from "@/components/shared/PixelFrame";
 import styles from "./ExplorationCombat.module.css";
 
+// FX lifetimes (kept in JS so hit-flash timeout matches CSS duration exactly)
+const DAMAGE_FLOAT_MS = 800;
+const HIT_FLASH_MS = 150;
+
 export default function ExplorationCombat() {
   const state = useGameState();
   const dispatch = useGameDispatch();
   const [showItems, setShowItems] = useState(false);
   const [autoAdvancing, setAutoAdvancing] = useState(false);
+  const [damageFloats, setDamageFloats] = useState([]); // { id, combatantId, amount, tone }
+  const [hitFlashes, setHitFlashes] = useState({}); // { [combatantId]: true }
   const logRef = useRef(null);
   const timerRef = useRef(null);
+  const processedLogRef = useRef(0);
+  const fxIdRef = useRef(0);
 
   const combat = state.exploration?.combat;
   if (!combat) return null;
@@ -44,6 +52,69 @@ export default function ExplorationCombat() {
     }
   }, [combat.log.length]);
 
+  // Observe new log entries for damage/hit FX. We diff against processedLogRef
+  // rather than adding actions to the reducer — the log is the source of truth.
+  useEffect(() => {
+    const log = combat.log;
+    if (log.length <= processedLogRef.current) {
+      // Log was cleared/reset (new encounter) — resync baseline.
+      processedLogRef.current = log.length;
+      return;
+    }
+
+    const fresh = log.slice(processedLogRef.current);
+    processedLogRef.current = log.length;
+
+    const newFloats = [];
+    const newlyHit = new Set();
+
+    for (const entry of fresh) {
+      if (typeof entry.damage !== "number" || entry.damage <= 0) continue;
+      const targetCombatant = combat.combatants.find((c) => c.name === entry.target);
+      if (!targetCombatant) continue;
+
+      fxIdRef.current += 1;
+      newFloats.push({
+        id: fxIdRef.current,
+        combatantId: targetCombatant.id,
+        amount: entry.damage,
+        // ember = hero hit enemy, red = enemy hit hero
+        tone: targetCombatant.isEnemy ? "ember" : "red",
+      });
+      newlyHit.add(targetCombatant.id);
+    }
+
+    if (newFloats.length) {
+      setDamageFloats((prev) => [...prev, ...newFloats]);
+      for (const f of newFloats) {
+        const id = f.id;
+        setTimeout(() => {
+          setDamageFloats((prev) => prev.filter((x) => x.id !== id));
+        }, DAMAGE_FLOAT_MS);
+      }
+    }
+
+    if (newlyHit.size) {
+      setHitFlashes((prev) => {
+        const next = { ...prev };
+        for (const cid of newlyHit) next[cid] = (next[cid] || 0) + 1;
+        return next;
+      });
+      for (const cid of newlyHit) {
+        setTimeout(() => {
+          setHitFlashes((prev) => {
+            const count = prev[cid];
+            if (!count) return prev;
+            const next = { ...prev };
+            if (count <= 1) delete next[cid];
+            else next[cid] = count - 1;
+            return next;
+          });
+        }, HIT_FLASH_MS);
+      }
+    }
+  }, [combat.log, combat.combatants]);
+
   const handleAction = (action) => {
     setShowItems(false);
     dispatch({ type: "EXPLORATION_COMBAT_ACTION", action });
@@ -66,15 +137,53 @@ export default function ExplorationCombat() {
 
   const combatConsumables = getUsableConsumables(state.inventory, "combat");
 
+  const floatsFor = (combatantId) =>
+    damageFloats.filter((f) => f.combatantId === combatantId);
+
   return (
     <div className={styles.screen}>
+      {/* Turn indicator */}
+      <div className={styles.turnIndicatorRow}>
+        <span
+          className={[
+            styles.turnPill,
+            isOver
+              ? styles.turnPillIdle
+              : isHeroTurn
+              ? styles.turnPillHero
+              : styles.turnPillEnemy,
+          ].join(" ")}
+          aria-live="polite"
+        >
+          {isOver
+            ? "—"
+            : isHeroTurn
+            ? "Your turn"
+            : "Enemy turn"}
+        </span>
+      </div>
+
       {/* Battlefield */}
       <div className={styles.battlefield}>
         {/* Hero Side */}
         <div className={styles.heroSide}>
           {hero && (
             <div className={`${styles.combatant} ${hero.hp <= 0 ? styles.defeated : ""}`}>
-              <Sprite name={hero.templateId} size={48} />
+              <div className={styles.spriteWrap}>
+                <Sprite name={hero.templateId} size={48} />
+                {hitFlashes[hero.id] ? (
+                  <span className={`${styles.hitFlash} ${styles.hitFlashRed}`} aria-hidden="true" />
+                ) : null}
+                {floatsFor(hero.id).map((f) => (
+                  <span
+                    key={f.id}
+                    className={`${styles.damageFloat} ${styles.damageRed}`}
+                    aria-hidden="true"
+                  >
+                    -{f.amount}
+                  </span>
+                ))}
+              </div>
               <span className={styles.combatantName}>{hero.name}</span>
               <div className={styles.hpBar}>
                 <div
@@ -99,7 +208,21 @@ export default function ExplorationCombat() {
               key={enemy.id}
               className={`${styles.combatant} ${enemy.hp <= 0 ? styles.defeated : ""}`}
             >
-              <Sprite name={enemy.icon} size={enemy.isBoss ? 64 : 40} />
+              <div className={styles.spriteWrap}>
+                <Sprite name={enemy.icon} size={enemy.isBoss ? 64 : 40} />
+                {hitFlashes[enemy.id] ? (
+                  <span className={`${styles.hitFlash} ${styles.hitFlashWhite}`} aria-hidden="true" />
+                ) : null}
+                {floatsFor(enemy.id).map((f) => (
+                  <span
+                    key={f.id}
+                    className={`${styles.damageFloat} ${styles.damageEmber}`}
+                    aria-hidden="true"
+                  >
+                    -{f.amount}
+                  </span>
+                ))}
+              </div>
               <span className={styles.combatantName}>{enemy.name}</span>
               <div className={styles.hpBar}>
                 <div
@@ -132,56 +255,58 @@ export default function ExplorationCombat() {
         </div>
       </PixelFrame>
 
-      {/* Action Bar — only on hero turn */}
+      {/* Action Bar — only on hero turn. Iron frame = action context. */}
       {isHeroTurn && !isOver && (
-        <div className={styles.actionBar}>
-          {showItems ? (
-            <div className={styles.itemMenu}>
-              {combatConsumables.length === 0 ? (
-                <p className={styles.noItems}>No usable items.</p>
-              ) : (
-                combatConsumables.map((item) => (
-                  <button
-                    key={item.id}
-                    className={`${styles.itemBtn} juiceBtn`}
-                    onClick={() => handleItemUse(item.id)}
-                  >
-                    <Sprite name={item.icon} size={16} />
-                    <span>{item.name}</span>
-                    <span className={styles.itemCount}>x{item.count || 1}</span>
-                  </button>
-                ))
-              )}
-              <button
-                className={styles.backBtn}
-                onClick={() => setShowItems(false)}
-              >
-                Back
-              </button>
-            </div>
-          ) : (
-            <div className={styles.actionButtons}>
-              <button
-                className={`${styles.actionBtn} ${styles.attackBtn} juiceBtn`}
-                onClick={() => handleAction({ type: "attack" })}
-              >
-                Attack
-              </button>
-              <button
-                className={`${styles.actionBtn} ${styles.itemActionBtn} juiceBtn`}
-                onClick={() => setShowItems(true)}
-              >
-                Item
-              </button>
-              <button
-                className={`${styles.actionBtn} ${styles.fleeBtn} juiceBtn`}
-                onClick={() => handleAction({ type: "flee" })}
-              >
-                Flee
-              </button>
-            </div>
-          )}
-        </div>
+        <PixelFrame variant="iron" className={styles.actionFrame}>
+          <div className={styles.actionBar}>
+            {showItems ? (
+              <div className={styles.itemMenu}>
+                {combatConsumables.length === 0 ? (
+                  <p className={styles.noItems}>No usable items.</p>
+                ) : (
+                  combatConsumables.map((item) => (
+                    <button
+                      key={item.id}
+                      className={`${styles.itemBtn} ${styles.pressBtn} juiceBtn`}
+                      onClick={() => handleItemUse(item.id)}
+                    >
+                      <Sprite name={item.icon} size={16} />
+                      <span>{item.name}</span>
+                      <span className={styles.itemCount}>x{item.count || 1}</span>
+                    </button>
+                  ))
+                )}
+                <button
+                  className={`${styles.backBtn} ${styles.pressBtn}`}
+                  onClick={() => setShowItems(false)}
+                >
+                  Back
+                </button>
+              </div>
+            ) : (
+              <div className={styles.actionButtons}>
+                <button
+                  className={`${styles.actionBtn} ${styles.attackBtn} ${styles.pressBtn} juiceBtn`}
+                  onClick={() => handleAction({ type: "attack" })}
+                >
+                  Attack
+                </button>
+                <button
+                  className={`${styles.actionBtn} ${styles.itemActionBtn} ${styles.pressBtn} juiceBtn`}
+                  onClick={() => setShowItems(true)}
+                >
+                  Item
+                </button>
+                <button
+                  className={`${styles.actionBtn} ${styles.fleeBtn} ${styles.pressBtn} juiceBtn`}
+                  onClick={() => handleAction({ type: "flee" })}
+                >
+                  Flee
+                </button>
+              </div>
+            )}
+          </div>
+        </PixelFrame>
       )}
 
       {/* Result Overlay */}
@@ -207,7 +332,7 @@ export default function ExplorationCombat() {
               </>
             )}
             <button
-              className={`${styles.continueBtn} juiceBtn`}
+              className={`${styles.continueBtn} ${styles.pressBtn} juiceBtn`}
               onClick={handleCombatEnd}
             >
               Continue
