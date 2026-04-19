@@ -8,11 +8,61 @@
   padding: 16px;
 }
 
+/* ─── Turn indicator ─── */
+.turnIndicatorRow {
+  display: flex;
+  justify-content: center;
+  padding: 4px 0 2px;
+  flex-shrink: 0;
+}
+
+.turnPill {
+  display: inline-block;
+  padding: 3px 12px;
+  border-radius: 999px;
+  border: 1px solid;
+  font-family: var(--font-dm-serif), serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.turnPillHero {
+  background: rgba(232, 224, 212, 0.08);
+  border-color: #92400e;
+  color: #e8e0d4;
+  animation: turnPulse 1.6s ease-in-out infinite;
+}
+
+.turnPillEnemy {
+  background: rgba(30, 41, 59, 0.6);
+  border-color: #334155;
+  color: #94a3b8;
+}
+
+.turnPillIdle {
+  background: transparent;
+  border-color: #1e293b;
+  color: #475569;
+}
+
+@keyframes turnPulse {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(249, 115, 22, 0);
+    border-color: #92400e;
+  }
+  50% {
+    box-shadow: 0 0 6px 1px rgba(249, 115, 22, 0.35);
+    border-color: #f97316;
+  }
+}
+
+/* ─── Battlefield ─── */
 .battlefield {
   display: flex;
   align-items: center;
   justify-content: space-around;
-  padding: 24px 8px;
+  padding: 18px 8px;
   flex-shrink: 0;
 }
 
@@ -41,6 +91,14 @@
   opacity: 0.3;
 }
 
+/* Wraps sprite so damage floats & hit-flash can position absolutely */
+.spriteWrap {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .combatantName {
   font-size: 0.7rem;
   color: #e8e0d4;
@@ -67,6 +125,85 @@
   color: #94a3b8;
 }
 
+/* ─── Hit-flash ─── */
+.hitFlash {
+  position: absolute;
+  inset: -2px;
+  pointer-events: none;
+  border-radius: 2px;
+  opacity: 0;
+  animation: hitFlashAnim 150ms ease-out;
+}
+
+.hitFlashWhite {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.hitFlashRed {
+  background: rgba(239, 68, 68, 0.4);
+}
+
+@keyframes hitFlashAnim {
+  0% { opacity: 0.4; }
+  100% { opacity: 0; }
+}
+
+/* ─── Damage floats ─── */
+.damageFloat {
+  position: absolute;
+  left: 50%;
+  top: -4px;
+  transform: translateX(-50%);
+  pointer-events: none;
+  font-family: var(--font-jetbrains-mono), monospace;
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-shadow:
+    0 0 2px rgba(0, 0, 0, 0.9),
+    1px 1px 0 rgba(0, 0, 0, 0.9);
+  animation: damageFloatAnim 800ms ease-out forwards;
+}
+
+.damageRed {
+  color: #fca5a5;
+}
+
+.damageEmber {
+  color: #fbbf24;
+}
+
+@keyframes damageFloatAnim {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 4px);
+  }
+  15% {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -24px);
+  }
+}
+
+/* Reduced motion: damage number stays still, just fades. */
+@media (prefers-reduced-motion: reduce) {
+  .damageFloat {
+    animation: damageFloatStatic 800ms ease-out forwards;
+  }
+  .turnPillHero {
+    animation: none;
+  }
+}
+
+@keyframes damageFloatStatic {
+  0% { opacity: 0; }
+  15% { opacity: 1; }
+  100% { opacity: 0; }
+}
+
+/* ─── Log ─── */
 .logFrame {
   flex: 1;
   min-height: 0;
@@ -87,9 +224,14 @@
   padding: 2px 0;
 }
 
-.actionBar {
+/* ─── Action panel ─── */
+.actionFrame {
   flex-shrink: 0;
-  padding: 8px 0;
+  margin-top: 0;
+}
+
+.actionBar {
+  padding: 4px 0;
 }
 
 .actionButtons {
@@ -122,6 +264,24 @@
 .fleeBtn {
   background: #1e293b;
   color: #94a3b8;
+}
+
+/* Button press-down juice — ~2px translateY + darken, ~100ms.
+   Scoped so it stacks with the global .juiceBtn scale without conflict. */
+.pressBtn {
+  transition: transform 100ms ease, filter 100ms ease, box-shadow 100ms ease;
+}
+
+.pressBtn:active:not(:disabled) {
+  transform: translateY(2px);
+  filter: brightness(0.88);
+  box-shadow: inset 0 2px 0 rgba(0, 0, 0, 0.25);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pressBtn:active:not(:disabled) {
+    transform: none;
+  }
 }
 
 .itemMenu {
@@ -169,6 +329,7 @@
   align-self: center;
 }
 
+/* ─── Result overlay ─── */
 .resultOverlay {
   position: fixed;
   inset: 0;
