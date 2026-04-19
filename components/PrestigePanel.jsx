@@ -1,10 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useGameState, useGameDispatch } from "@/lib/gameContext";
 import { canPrestige, calculatePrestigeStars, canBuyBonus } from "@/lib/prestige";
 import { PRESTIGE_BONUSES } from "@/data/prestige";
 import Modal from "./shared/Modal";
+import PixelFrame from "./shared/PixelFrame";
 import Sprite from "@/components/sprites/Sprite";
 import styles from "./PrestigePanel.module.css";
 
@@ -13,10 +14,22 @@ export default function PrestigePanel() {
   const dispatch = useGameDispatch();
   const [showShop, setShowShop] = useState(false);
   const [confirmRebirth, setConfirmRebirth] = useState(false);
+  const [shimmer, setShimmer] = useState(false);
 
   const prestige = state.prestige || { tier: 0, totalStars: 0, availableStars: 0, bonuses: {} };
   const eligible = canPrestige(state);
   const starsPreview = eligible ? calculatePrestigeStars(state) : 0;
+
+  // Ember shimmer when availableStars changes (bonus bought or rebirth granted more)
+  const prevStars = useRef(prestige.availableStars);
+  useEffect(() => {
+    if (prevStars.current !== prestige.availableStars) {
+      setShimmer(true);
+      const t = setTimeout(() => setShimmer(false), 600);
+      prevStars.current = prestige.availableStars;
+      return () => clearTimeout(t);
+    }
+  }, [prestige.availableStars]);
 
   const handleRebirth = () => {
     dispatch({ type: "PRESTIGE_REBIRTH", stars: starsPreview });
@@ -33,7 +46,7 @@ export default function PrestigePanel() {
   if (!eligible && prestige.tier === 0) return null;
 
   return (
-    <div className={styles.panel}>
+    <PixelFrame variant="parchment" className={styles.panel}>
       <div className={styles.header}>
         <h3 className={styles.title}><Sprite name="season" size={14} /> The Reforging</h3>
         {prestige.tier > 0 && (
@@ -42,7 +55,9 @@ export default function PrestigePanel() {
       </div>
 
       <div className={styles.starInfo}>
-        <span className={styles.starCount}><Sprite name="season" size={14} /> {prestige.availableStars} Forge Marks</span>
+        <span className={`${styles.starCount} ${shimmer ? styles.starShimmer : ""}`}>
+          <Sprite name="season" size={14} /> {prestige.availableStars} Forge Marks
+        </span>
         {prestige.totalStars > prestige.availableStars && (
           <span className={styles.totalStars}>({prestige.totalStars} lifetime)</span>
         )}
@@ -50,19 +65,21 @@ export default function PrestigePanel() {
 
       <div className={styles.actions}>
         <button
-          className={styles.shopBtn}
+          className={`${styles.shopBtn} juiceBtn`}
           onClick={() => setShowShop(true)}
         >
           Marks of the Forge
         </button>
 
         {eligible && (
-          <button
-            className={`${styles.rebirthBtn} juiceBtn`}
-            onClick={() => setConfirmRebirth(true)}
-          >
-            Reforge (+{starsPreview} <Sprite name="season" size={14} />)
-          </button>
+          <PixelFrame variant="iron" glow className={styles.rebirthFrame}>
+            <button
+              className={`${styles.rebirthBtn} juiceBtn`}
+              onClick={() => setConfirmRebirth(true)}
+            >
+              Reforge (+{starsPreview} <Sprite name="season" size={14} />)
+            </button>
+          </PixelFrame>
         )}
       </div>
 
@@ -78,7 +95,7 @@ export default function PrestigePanel() {
               Marks of the Forge and discoveries are kept.
             </p>
             <div className={styles.confirmActions}>
-              <button className={styles.cancelBtn} onClick={() => setConfirmRebirth(false)}>
+              <button className={`${styles.cancelBtn} juiceBtn`} onClick={() => setConfirmRebirth(false)}>
                 Cancel
               </button>
               <button className={`${styles.confirmBtn} juiceBtn`} onClick={handleRebirth}>
@@ -111,7 +128,7 @@ export default function PrestigePanel() {
                     </span>
                   </div>
                   <button
-                    className={styles.buyBtn}
+                    className={`${styles.buyBtn} juiceBtn`}
                     onClick={() => handleBuyBonus(bonus.id)}
                     disabled={maxed || !affordable}
                   >
@@ -123,6 +140,6 @@ export default function PrestigePanel() {
           </div>
         </Modal>
       )}
-    </div>
+    </PixelFrame>
   );
 }
