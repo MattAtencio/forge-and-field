@@ -11,15 +11,114 @@
   padding: 6px 12px;
   cursor: pointer;
   z-index: 5;
-  transition: border-color 0.2s ease;
+  transition: border-color 0.2s ease, box-shadow 0.25s ease, transform 80ms ease;
+  box-shadow: 0 0 0 0 rgba(251, 146, 60, 0);
 }
 
 .indicator.hasLoot {
   border-color: #fbbf24;
 }
 
+/* Steady ember halo while the bag carries weight. */
+.indicator.hasLoot {
+  box-shadow: 0 0 10px 1px rgba(251, 146, 60, 0.18);
+}
+
+.indicator:active {
+  transform: translateY(1px);
+}
+
+.iconWrap {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: filter 0.25s ease, transform 0.25s ease;
+}
+
 .count {
   font-family: var(--font-jetbrains-mono), monospace;
   font-size: 0.7rem;
   color: #e8e0d4;
+  transition: font-size 0.25s ease, font-weight 0.25s ease, color 0.25s ease;
+}
+
+/* ---- Fill-state tiers ---- */
+.tier-empty .iconWrap {
+  filter: grayscale(0.6) brightness(0.75);
+  opacity: 0.7;
+}
+.tier-empty .count {
+  color: #94a3b8;
+}
+
+.tier-light .iconWrap {
+  opacity: 0.92;
+}
+.tier-light .count {
+  color: #e8e0d4;
+}
+
+.tier-full .iconWrap {
+  filter: brightness(1.05) saturate(1.1) drop-shadow(0 0 2px rgba(251, 191, 36, 0.35));
+}
+.tier-full .count {
+  color: #fde68a;
+  font-size: 0.78rem;
+}
+
+.tier-heavy .iconWrap {
+  filter: brightness(1.15) saturate(1.3)
+    drop-shadow(0 0 3px rgba(251, 146, 60, 0.55));
+}
+.tier-heavy .count {
+  color: #fdba74;
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+.indicator.tier-heavy {
+  border-color: #fb923c;
+  box-shadow: 0 0 14px 2px rgba(251, 146, 60, 0.32),
+    inset 0 0 6px rgba(251, 146, 60, 0.15);
+}
+
+/* ---- Pulse on gain ---- */
+.pulse {
+  animation: lootbag-pulse 300ms ease-out 1;
+}
+
+@keyframes lootbag-pulse {
+  0% {
+    transform: scale(1);
+  }
+  45% {
+    transform: scale(1.08);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* Reduced-motion: no scale pulse; a brief ember-glow flash provides feedback. */
+@media (prefers-reduced-motion: reduce) {
+  .indicator {
+    transition: border-color 0.2s ease, box-shadow 0.25s ease;
+  }
+  .indicator:active {
+    transform: none;
+  }
+  .pulse {
+    animation: lootbag-glow-flash 300ms ease-out 1;
+  }
+  @keyframes lootbag-glow-flash {
+    0% {
+      box-shadow: 0 0 0 0 rgba(251, 146, 60, 0);
+    }
+    50% {
+      box-shadow: 0 0 16px 3px rgba(251, 146, 60, 0.55);
+    }
+    100% {
+      box-shadow: 0 0 10px 1px rgba(251, 146, 60, 0.18);
+    }
+  }
 }
