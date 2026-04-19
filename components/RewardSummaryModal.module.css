@@ -12,6 +12,17 @@
   margin: 0;
 }
 
+.subline {
+  font-family: var(--font-dm-serif), serif;
+  font-size: 0.78rem;
+  color: #a8a8c0;
+  font-style: italic;
+  text-align: center;
+  margin: -8px 0 0 0;
+  opacity: 0;
+  animation: sublineFade 0.5s ease 0.1s forwards;
+}
+
 .section {
   display: flex;
   flex-direction: column;
@@ -40,6 +51,8 @@
   border: 1px solid rgba(255, 255, 255, 0.06);
   border-radius: 8px;
   padding: 6px 10px;
+  opacity: 0;
+  animation: chipReveal 0.32s ease forwards;
 }
 
 .resourceIcon {
@@ -65,6 +78,7 @@
 }
 
 .itemChip {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -72,16 +86,52 @@
   border: 1px solid;
   border-radius: 10px;
   padding: 10px;
-  animation: fadeIn 0.3s ease;
+  overflow: hidden;
+  opacity: 0;
+  animation: chipReveal 0.32s ease forwards;
+}
+
+/* Rare/Epic: animated ember shimmer sweep across the chip */
+.itemChipRare::before,
+.itemChipEpic::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: linear-gradient(
+    100deg,
+    transparent 30%,
+    var(--shimmer-color, rgba(59, 130, 246, 0.22)) 50%,
+    transparent 70%
+  );
+  background-size: 220% 100%;
+  background-repeat: no-repeat;
+  background-position: 200% 0;
+  animation: emberSweep 2s linear infinite;
+  mix-blend-mode: screen;
+}
+
+.itemChipRare {
+  --shimmer-color: rgba(59, 130, 246, 0.22);
+  box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.15), 0 0 12px rgba(59, 130, 246, 0.08);
+}
+
+.itemChipEpic {
+  --shimmer-color: rgba(233, 178, 90, 0.32);
+  box-shadow: 0 0 0 1px rgba(168, 85, 247, 0.25), 0 0 16px rgba(233, 178, 90, 0.12);
 }
 
 .itemIcon {
   font-size: 1.2rem;
+  position: relative;
+  z-index: 1;
 }
 
 .itemInfo {
   display: flex;
   flex-direction: column;
+  position: relative;
+  z-index: 1;
 }
 
 .itemName {
@@ -113,13 +163,66 @@
   font-size: 0.8rem;
   font-weight: 700;
   cursor: pointer;
+  transition: transform 100ms ease, background 120ms ease;
+}
+
+.collectBtn:hover {
+  background: rgba(34, 197, 94, 0.2);
 }
 
 .collectBtn:active {
-  background: rgba(34, 197, 94, 0.25);
+  background: rgba(34, 197, 94, 0.28);
+  transform: translateY(2px);
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(6px); }
+@keyframes chipReveal {
+  from { opacity: 0; transform: translateY(8px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes sublineFade {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 0.9; transform: translateY(0); }
+}
+
+@keyframes emberSweep {
+  0% { background-position: 200% 0; }
+  100% { background-position: -120% 0; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .resourceChip,
+  .itemChip {
+    opacity: 1;
+    animation: none;
+    transform: none;
+  }
+
+  .subline {
+    opacity: 0.9;
+    animation: none;
+    transform: none;
+  }
+
+  .itemChipRare::before,
+  .itemChipEpic::before {
+    animation: none;
+    background: none;
+  }
+
+  /* Static ember tell for Rare+ when motion is reduced */
+  .itemChipRare {
+    box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.35), 0 0 10px rgba(59, 130, 246, 0.18);
+  }
+
+  .itemChipEpic {
+    box-shadow: 0 0 0 1px rgba(168, 85, 247, 0.45), 0 0 14px rgba(233, 178, 90, 0.22);
+  }
+
+  .collectBtn {
+    transition: none;
+  }
+  .collectBtn:active {
+    transform: none;
+  }
 }
