@@ -1,9 +1,15 @@
+/* PixelFrame wraps .combat — frame handles parchment padding/border */
+.frame {
+  padding: 14px;
+}
+
 .combat {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
+/* ─── Enemy row ─── */
 .enemyRow {
   display: flex;
   flex-wrap: wrap;
@@ -11,30 +17,58 @@
   justify-content: center;
 }
 
+/* Iron-style bordered plate — square corners echo PixelFrame iron variant */
 .enemyChip {
   display: flex;
   align-items: center;
-  gap: 4px;
-  background: rgba(239, 68, 68, 0.08);
-  border: 1px solid rgba(239, 68, 68, 0.15);
-  border-radius: 8px;
-  padding: 6px 10px;
+  gap: 6px;
+  background: rgba(148, 163, 184, 0.06);
+  border: 1px solid rgba(100, 116, 139, 0.45);
+  border-radius: 0;
+  padding: 5px 9px;
+  box-shadow: inset 0 0 0 1px rgba(26, 24, 36, 0.35);
+  position: relative;
 }
 
-.enemyIcon { font-size: 1.1rem; }
-.enemyName { font-size: 0.7rem; font-weight: 600; color: #e8e8f0; }
+/* Boss — ember border + underline glow, reads "the big one" at a glance */
+.enemyChipBoss {
+  border-color: rgba(249, 115, 22, 0.7);
+  background: rgba(249, 115, 22, 0.08);
+  box-shadow:
+    inset 0 0 0 1px rgba(146, 64, 14, 0.5),
+    0 2px 0 -1px rgba(249, 115, 22, 0.55);
+}
+
+/* Dim backing plate so sprite silhouettes don't wash out on parchment */
+.enemyIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  background: rgba(26, 24, 36, 0.55);
+  border: 1px solid rgba(26, 24, 36, 0.6);
+  font-size: 1.1rem;
+}
+
+.enemyName {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #e8e8f0;
+}
 
 .bossTag {
   font-size: 0.5rem;
   font-weight: 800;
-  color: #ef4444;
-  background: rgba(239, 68, 68, 0.15);
+  color: #f97316;
+  background: rgba(249, 115, 22, 0.18);
   padding: 1px 5px;
-  border-radius: 3px;
+  border-radius: 0;
   text-transform: uppercase;
+  letter-spacing: 0.08em;
 }
 
-/* Combat Log */
+/* ─── Combat log ─── */
 .log {
   display: flex;
   flex-direction: column;
@@ -43,6 +77,7 @@
   overflow-y: auto;
 }
 
+/* Per-line entrance — fade + 4px rise. Keyed on mount via animation. */
 .logLine {
   display: flex;
   align-items: center;
@@ -52,13 +87,21 @@
   padding: 4px 8px;
   background: rgba(255, 255, 255, 0.02);
   border-radius: 6px;
-  animation: fadeIn 0.3s ease forwards;
   opacity: 0;
+  animation: logLineIn 180ms ease-out forwards;
 }
 
 .killLine {
   background: rgba(239, 68, 68, 0.08);
   color: #ef4444;
+  /* Stack entrance + kill warm flash so both play on mount */
+  animation: logLineIn 180ms ease-out forwards, killFlash 400ms ease-out forwards;
+}
+
+/* Bolded defeated-target name inside kill line */
+.killTarget {
+  font-weight: 800;
+  color: #fbbf24;
 }
 
 .turnNum {
@@ -73,57 +116,146 @@
   flex: 1;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateX(-6px); }
-  to { opacity: 1; transform: translateX(0); }
+@keyframes logLineIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-/* Skip */
+/* Warm glow fades to neutral — emphasizes the kill moment */
+@keyframes killFlash {
+  0% {
+    background: rgba(251, 191, 36, 0.28);
+    box-shadow: 0 0 8px rgba(249, 115, 22, 0.35);
+  }
+  100% {
+    background: rgba(239, 68, 68, 0.08);
+    box-shadow: 0 0 0 rgba(249, 115, 22, 0);
+  }
+}
+
+/* ─── Skip button — iron-style press-down ─── */
 .skipBtn {
   align-self: center;
-  background: rgba(255, 255, 255, 0.06);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(148, 163, 184, 0.08);
+  border: 1px solid rgba(100, 116, 139, 0.45);
   color: #a0a0b8;
   font-size: 0.7rem;
   font-weight: 600;
   padding: 6px 20px;
-  border-radius: 6px;
+  border-radius: 0;
   cursor: pointer;
+  transition: transform 80ms ease, background 80ms ease;
 }
 
-.skipBtn:active { background: rgba(255, 255, 255, 0.1); }
+.skipBtn:hover {
+  background: rgba(148, 163, 184, 0.14);
+  border-color: rgba(249, 115, 22, 0.45);
+}
 
-/* Result */
+.skipBtn:active {
+  background: rgba(148, 163, 184, 0.18);
+  transform: translateY(2px);
+}
+
+/* ─── Result block ─── */
 .result {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 6px;
-  padding: 12px 0 4px;
-  animation: fadeIn 0.4s ease forwards;
+  padding: 14px 0 4px;
 }
 
 .resultLabel {
   font-family: var(--font-dm-serif), serif;
-  font-size: 1.3rem;
+  font-size: 1.9rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  text-align: center;
   margin: 0;
+  opacity: 0;
+}
+
+/* Victory — ember/gold glow swell, single pass */
+.resultLabel_victory {
+  color: #22c55e;
+  animation: verdictVictory 600ms ease-in forwards;
+}
+
+/* Draw — muted amber, simple fade */
+.resultLabel_draw {
+  color: #b08040;
+  animation: verdictDraw 500ms ease-out forwards;
+}
+
+/* Defeat — desaturated, dropped banner */
+.resultLabel_defeat {
+  color: #8a6a6a;
+  filter: saturate(0.55);
+  animation: verdictDefeat 550ms ease-out forwards;
+}
+
+@keyframes verdictVictory {
+  0% {
+    opacity: 0;
+    text-shadow: 0 0 0 rgba(249, 115, 22, 0);
+  }
+  60% {
+    opacity: 1;
+    text-shadow:
+      0 0 10px rgba(249, 115, 22, 0.75),
+      0 0 24px rgba(251, 191, 36, 0.55);
+  }
+  100% {
+    opacity: 1;
+    text-shadow:
+      0 0 6px rgba(249, 115, 22, 0.5),
+      0 0 14px rgba(251, 191, 36, 0.3);
+  }
+}
+
+@keyframes verdictDraw {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes verdictDefeat {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(4px);
+  }
 }
 
 .turnCount {
   font-size: 0.65rem;
   color: #6b6b80;
+  letter-spacing: 0.05em;
 }
 
+/* multiplier + consequence render tighter/muted — the "cost" */
 .multiplier {
   font-size: 0.7rem;
   font-weight: 700;
+  opacity: 0.85;
+  letter-spacing: 0.04em;
 }
+
+.multiplier_victory { color: #22c55e; }
+.multiplier_draw { color: #b08040; }
+.multiplier_defeat { color: #a06060; }
 
 .consequence {
   font-size: 0.6rem;
-  color: #a0a0b8;
+  color: #8888a0;
   text-align: center;
   font-style: italic;
+  opacity: 0.8;
+  max-width: 260px;
+  line-height: 1.35;
 }
 
 .doneBtn {
@@ -137,6 +269,56 @@
   font-size: 0.8rem;
   font-weight: 700;
   cursor: pointer;
+  transition: transform 80ms ease, background 120ms ease;
 }
 
-.doneBtn:active { background: rgba(34, 197, 94, 0.25); }
+.doneBtn:hover { background: rgba(34, 197, 94, 0.22); }
+
+.doneBtn:active {
+  background: rgba(34, 197, 94, 0.28);
+  transform: translateY(2px);
+}
+
+/* ─── Reduced motion — strip translate/glow, keep opacity tells ─── */
+@media (prefers-reduced-motion: reduce) {
+  .logLine,
+  .killLine {
+    opacity: 1;
+    animation: none;
+    transform: none;
+  }
+
+  .killLine {
+    /* Static warm tell replaces the flash so kills still read */
+    background: rgba(251, 191, 36, 0.18);
+  }
+
+  .resultLabel,
+  .resultLabel_victory,
+  .resultLabel_draw,
+  .resultLabel_defeat {
+    opacity: 1;
+    animation: none;
+    transform: none;
+    text-shadow: none;
+  }
+
+  /* Preserve outcome color tell without motion */
+  .resultLabel_victory {
+    text-shadow: 0 0 6px rgba(249, 115, 22, 0.35);
+  }
+
+  .resultLabel_defeat {
+    transform: translateY(2px);
+  }
+
+  .skipBtn,
+  .doneBtn {
+    transition: none;
+  }
+
+  .skipBtn:active,
+  .doneBtn:active {
+    transform: none;
+  }
+}
