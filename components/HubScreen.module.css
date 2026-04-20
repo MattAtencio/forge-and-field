@@ -60,6 +60,10 @@
 }
 
 /* Resource Caps */
+.resourceCapsFrame {
+  /* Contain the grid so the parchment frame hugs the chips snugly. */
+}
+
 .resourceCaps {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -88,7 +92,15 @@
   font-variant-numeric: tabular-nums;
 }
 
+.resourceCapTarget {
+  margin-left: auto;
+  font-size: 0.6rem;
+  color: #6b6b80;
+  font-variant-numeric: tabular-nums;
+}
+
 .resourceCapBar {
+  position: relative;
   height: 3px;
   background: rgba(255, 255, 255, 0.08);
   border-radius: 2px;
@@ -99,6 +111,18 @@
   height: 100%;
   border-radius: 2px;
   transition: width 0.4s ease;
+}
+
+.resourceCapTick {
+  /* Milestone notch — absolute so it sits on top of the fill; overflow:hidden on the
+     bar clips it flush with the right edge. */
+  position: absolute;
+  top: -1px;
+  right: 0;
+  width: 2px;
+  height: 5px;
+  background: rgba(255, 255, 255, 0.45);
+  pointer-events: none;
 }
 
 .resourceCapPulse {
@@ -238,23 +262,51 @@
   flex-direction: column;
   gap: 10px;
   animation: fadeIn 0.3s ease;
+  transition: transform 80ms ease, box-shadow 120ms ease;
+}
+
+.goalCardClickable .goalHeader {
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.goalCardClickable:hover {
+  /* @media hover below gates this for pointer-capable devices. */
+}
+
+@media (hover: hover) {
+  .goalCardClickable:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 2px 10px rgba(249, 115, 22, 0.15);
+  }
+}
+
+.goalCardClickable:active {
+  transform: translateY(1px);
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.25);
 }
 
 .goalHeader {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
+}
+
+.goalHeader:focus-visible {
+  outline: 2px solid #f97316;
+  outline-offset: 2px;
+  border-radius: 8px;
 }
 
 .goalIcon {
   font-size: 1.5rem;
   flex-shrink: 0;
-  width: 40px;
-  height: 40px;
+  width: 48px;
+  height: 48px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgba(249, 115, 22, 0.1);
+  background: rgba(249, 115, 22, 0.12);
   border-radius: 10px;
 }
 
@@ -265,33 +317,24 @@
 
 .goalTitle {
   font-family: var(--font-dm-serif), serif;
-  font-size: 0.9rem;
+  font-size: 0.95rem;
   color: #f97316;
   margin-bottom: 2px;
 }
 
 .goalHint {
-  font-size: 0.7rem;
+  font-size: 0.72rem;
   color: #a0a0b8;
-  line-height: 1.35;
+  line-height: 1.4;
 }
 
-.goalAction {
+.goalChevron {
   flex-shrink: 0;
-  background: rgba(249, 115, 22, 0.15);
-  border: 1px solid rgba(249, 115, 22, 0.3);
   color: #f97316;
-  font-size: 0.7rem;
+  font-size: 1.4rem;
   font-weight: 700;
-  padding: 6px 14px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background 0.15s;
-  -webkit-tap-highlight-color: transparent;
-}
-
-.goalAction:active {
-  background: rgba(249, 115, 22, 0.3);
+  opacity: 0.7;
+  padding: 0 4px;
 }
 
 .goalUnlock {
@@ -365,6 +408,10 @@
 }
 
 /* Nav Tiles */
+.navFrame {
+  /* Iron-framed container for the portal grid wrapper; overrides parchment default. */
+}
+
 .grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -381,19 +428,62 @@
   gap: 6px;
   cursor: pointer;
   color: #e8e8f0;
-  transition: border-color 0.2s, box-shadow 0.2s;
+  transition: border-color 120ms ease, box-shadow 120ms ease, transform 100ms ease, filter 100ms ease, background 120ms ease;
   -webkit-tap-highlight-color: transparent;
   position: relative;
 }
 
+@media (hover: hover) {
+  .tile:hover:not(.tileLocked) {
+    transform: translateY(-1px);
+    filter: brightness(1.08);
+    border-color: color-mix(in srgb, var(--tile-color) 60%, #64748b);
+    background: rgba(148, 163, 184, 0.06);
+  }
+}
+
 .tile:active:not(.tileLocked) {
+  /* 2px press-down + inset for that satisfying click; transitions shortened for feedback. */
+  transform: translateY(2px);
+  filter: brightness(1);
   border-color: #f97316;
-  box-shadow: 0 0 12px rgba(249, 115, 22, 0.25);
+  box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.3), 0 0 12px rgba(249, 115, 22, 0.25);
+  transition-duration: 80ms;
 }
 
 .tileLocked {
   opacity: 0.3;
   cursor: not-allowed;
+  filter: grayscale(0.4);
+}
+
+/* Ember pulse on a tile whose unlockLevel === player.level (just-unlocked this level). */
+.tileEmber {
+  border-color: color-mix(in srgb, var(--tile-color) 70%, #64748b);
+}
+
+.tileEmber::before {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border-radius: inherit;
+  pointer-events: none;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--tile-color) 50%, transparent);
+  animation: tileEmberPulse 2s ease-in-out infinite;
+  opacity: 0;
+}
+
+@keyframes tileEmberPulse {
+  0%, 100% { opacity: 0; box-shadow: 0 0 6px color-mix(in srgb, var(--tile-color) 25%, transparent); }
+  50% { opacity: 0.15; box-shadow: 0 0 14px color-mix(in srgb, var(--tile-color) 55%, transparent); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tileEmber::before {
+    animation: none;
+    opacity: 0.12;
+    box-shadow: 0 0 0 2px color-mix(in srgb, var(--tile-color) 45%, transparent);
+  }
 }
 
 .tileIcon {
