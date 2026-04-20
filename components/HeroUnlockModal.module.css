@@ -1,3 +1,9 @@
+/* Outer parchment frame hosts the whole reveal so the ember accent on each
+   card reads as an internal flourish, not a competing border. */
+.frame {
+  padding: 16px;
+}
+
 .content {
   display: flex;
   flex-direction: column;
@@ -10,23 +16,44 @@
   gap: 10px;
 }
 
+/* Left-edge ember bar via ::before ties each champion to the forge without
+   fighting the parchment frame. Gradient runs top-to-bottom for warmth. */
 .heroCard {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 8px;
   background: rgba(249, 115, 22, 0.06);
   border: 1px solid rgba(249, 115, 22, 0.2);
-  border-radius: 12px;
-  padding: 16px;
-  animation: heroReveal 0.5s ease both;
+  padding: 16px 16px 16px 20px;
+  overflow: hidden;
+  animation: heroCardIn 0.4s ease both;
 }
 
-.heroCard:nth-child(2) { animation-delay: 0.15s; }
-.heroCard:nth-child(3) { animation-delay: 0.3s; }
-.heroCard:nth-child(4) { animation-delay: 0.45s; }
+.heroCard::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(
+    180deg,
+    #fbbf24 0%,
+    #f97316 50%,
+    #92400e 100%
+  );
+  pointer-events: none;
+}
+
+/* Stagger full-card entry so multi-hero unlocks arrive in sequence. */
+.heroCard:nth-child(2) { animation-delay: 0.1s; }
+.heroCard:nth-child(3) { animation-delay: 0.2s; }
+.heroCard:nth-child(4) { animation-delay: 0.3s; }
 
 .spriteWrap {
+  position: relative;
   width: 64px;
   height: 64px;
   display: flex;
@@ -35,6 +62,31 @@
   background: rgba(249, 115, 22, 0.1);
   border-radius: 50%;
   animation: float 2s ease-in-out infinite;
+  animation-delay: 0.7s; /* float only starts AFTER the silhouette reveal finishes */
+}
+
+/* Silhouette-to-full reveal: brightness(0) saturate(0) turns the SVG/img
+   into pure black regardless of source color, then fades to no filter. */
+.spriteReveal {
+  display: inline-flex;
+  animation: spriteReveal 0.6s ease-out both;
+}
+
+/* Ember pulse sits behind the sprite, peaks mid-reveal, fades out as the
+   hero steps out of the forge. Radial gradient keeps the bloom soft. */
+.emberGlow {
+  position: absolute;
+  inset: -6px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    rgba(251, 191, 36, 0.55) 0%,
+    rgba(249, 115, 22, 0.3) 40%,
+    rgba(249, 115, 22, 0) 70%
+  );
+  opacity: 0;
+  pointer-events: none;
+  animation: emberPulse 0.6s ease-out both;
 }
 
 .heroInfo {
@@ -62,6 +114,8 @@
   gap: 12px;
 }
 
+/* Stat chips fade + rise after the silhouette reveal completes (~600ms).
+   nth-child delays keep staggering pure CSS — no JS coordination. */
 .stat {
   display: inline-flex;
   align-items: center;
@@ -69,6 +123,23 @@
   font-size: 0.7rem;
   color: #8888a0;
   font-variant-numeric: tabular-nums;
+  animation: statRise 0.2s ease-out both;
+}
+
+.stat:nth-child(1) { animation-delay: 0.60s; }
+.stat:nth-child(2) { animation-delay: 0.68s; }
+.stat:nth-child(3) { animation-delay: 0.76s; }
+.stat:nth-child(4) { animation-delay: 0.84s; }
+
+/* In-voice flavor line sits above the practical hint. DM Serif echoes the
+   title's register; italic nudges it toward "whispered" rather than "stated". */
+.subtitle {
+  text-align: center;
+  font-family: var(--font-dm-serif), serif;
+  font-style: italic;
+  font-size: 0.9rem;
+  color: #e8e0d4;
+  margin: 0;
 }
 
 .hint {
@@ -81,23 +152,33 @@
 .dismissBtn {
   width: 100%;
   padding: 12px;
-  border: none;
+  border: 1px solid rgba(249, 115, 22, 0.35);
   border-radius: 8px;
   background: rgba(249, 115, 22, 0.15);
   color: #f97316;
   font-size: 0.85rem;
   font-weight: 700;
   cursor: pointer;
+  transition: transform 0.08s ease, background 0.3s ease, box-shadow 0.3s ease;
 }
 
+/* Iron-style hover: warm ember glow, no translation — the press handles motion. */
+.dismissBtn:hover {
+  background: rgba(249, 115, 22, 0.22);
+  box-shadow: 0 0 8px rgba(249, 115, 22, 0.35);
+}
+
+/* Iron press: 2px translateY instead of scale — feels like a hammer tap. */
 .dismissBtn:active {
+  transform: translateY(2px);
   background: rgba(249, 115, 22, 0.25);
+  transition: transform 0.08s ease;
 }
 
-@keyframes heroReveal {
+@keyframes heroCardIn {
   from {
     opacity: 0;
-    transform: translateY(12px) scale(0.95);
+    transform: translateY(12px) scale(0.96);
   }
   to {
     opacity: 1;
@@ -105,7 +186,62 @@
   }
 }
 
+@keyframes spriteReveal {
+  0% {
+    filter: brightness(0) saturate(0);
+    transform: scale(0.92);
+  }
+  50% {
+    filter: brightness(0.4) saturate(0.5);
+    transform: scale(1.02);
+  }
+  100% {
+    filter: none;
+    transform: scale(1);
+  }
+}
+
+@keyframes emberPulse {
+  0%   { opacity: 0; transform: scale(0.6); }
+  50%  { opacity: 1; transform: scale(1.15); }
+  100% { opacity: 0; transform: scale(1.3); }
+}
+
+@keyframes statRise {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 @keyframes float {
   0%, 100% { transform: translateY(0); }
   50% { transform: translateY(-3px); }
+}
+
+/* Reduced motion: collapse all reveal choreography to immediate end-state.
+   No silhouette, no ember glow, no stat stagger, no float. */
+@media (prefers-reduced-motion: reduce) {
+  .heroCard,
+  .spriteReveal,
+  .stat,
+  .spriteWrap {
+    animation: none !important;
+  }
+
+  .spriteReveal {
+    filter: none;
+  }
+
+  .emberGlow {
+    display: none;
+  }
+
+  .dismissBtn {
+    transition: background 0.15s ease;
+  }
 }
