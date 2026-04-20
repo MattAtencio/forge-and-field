@@ -179,31 +179,39 @@ export default function HubScreen({ onOpenSettings }) {
       </PixelFrame>
 
       {/* Resource Caps */}
-      <div className={styles.resourceCaps}>
-        {RESOURCE_ROW_KEYS.map((key) => {
-          const amount = Math.floor(state.resources?.[key] || 0);
-          const target = getResourceTarget(key, amount);
-          const pct = Math.min(100, (amount / target) * 100);
-          const color = RESOURCES[key]?.color || "#8888a0";
-          const atCap = amount >= target;
-          return (
-            <div key={key} className={styles.resourceCapChip}>
-              <div className={styles.resourceCapHeader}>
-                <Sprite name={RESOURCES[key]?.icon || key} size={14} />
-                <span className={styles.resourceCapAmount} style={{ color }}>
-                  {amount}
-                </span>
+      <PixelFrame variant="parchment" className={styles.resourceCapsFrame}>
+        <div className={styles.resourceCaps}>
+          {RESOURCE_ROW_KEYS.map((key) => {
+            const amount = Math.floor(state.resources?.[key] || 0);
+            const target = getResourceTarget(key, amount);
+            const pct = Math.min(100, (amount / target) * 100);
+            const color = RESOURCES[key]?.color || "#8888a0";
+            const atCap = amount >= target;
+            // Tick sits at 100% since target is the "next milestone" by definition;
+            // overlay a notch so the ladder boundary is visible even before fill reaches it.
+            return (
+              <div key={key} className={styles.resourceCapChip}>
+                <div className={styles.resourceCapHeader}>
+                  <Sprite name={RESOURCES[key]?.icon || key} size={14} />
+                  <span className={styles.resourceCapAmount} style={{ color }}>
+                    {amount.toLocaleString()}
+                  </span>
+                  <span className={styles.resourceCapTarget}>
+                    / {target.toLocaleString()}
+                  </span>
+                </div>
+                <div className={styles.resourceCapBar}>
+                  <div
+                    className={`${styles.resourceCapFill} ${atCap ? styles.resourceCapPulse : ""}`}
+                    style={{ width: `${pct}%`, background: color }}
+                  />
+                  <span className={styles.resourceCapTick} aria-hidden="true" />
+                </div>
               </div>
-              <div className={styles.resourceCapBar}>
-                <div
-                  className={`${styles.resourceCapFill} ${atCap ? styles.resourceCapPulse : ""}`}
-                  style={{ width: `${pct}%`, background: color }}
-                />
-              </div>
-            </div>
-          );
-        })}
-      </div>
+            );
+          })}
+        </div>
+      </PixelFrame>
 
       {/* Notifications */}
       {notifications.length > 0 && (
@@ -268,23 +276,34 @@ export default function HubScreen({ onOpenSettings }) {
       {(() => {
         const goal = getNextGoal(player);
         const nextUnlock = getNextUnlock(player.level);
+        const goalClickable = Boolean(goal.action) && player.unlockedScreens.includes(goal.action);
+        const onGoalActivate = () => {
+          if (goalClickable) dispatch({ type: "SET_SCREEN", screen: goal.action });
+        };
         return (
-          <PixelFrame variant="parchment" className={styles.goalCard}>
-            <div className={styles.goalHeader}>
+          <PixelFrame variant="parchment" className={`${styles.goalCard} ${goalClickable ? styles.goalCardClickable : ""}`}>
+            {/* Full-card hit target — keeps press-down feel on the whole banner instead of a split button. */}
+            <div
+              className={styles.goalHeader}
+              role={goalClickable ? "button" : undefined}
+              tabIndex={goalClickable ? 0 : undefined}
+              onClick={goalClickable ? onGoalActivate : undefined}
+              onKeyDown={goalClickable ? (e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  onGoalActivate();
+                }
+              } : undefined}
+            >
               <span className={styles.goalIcon}>
-                <Sprite name={goal.icon} size={24} />
+                <Sprite name={goal.icon} size={36} />
               </span>
               <div className={styles.goalText}>
                 <h3 className={styles.goalTitle}>{goal.title}</h3>
                 <p className={styles.goalHint}>{goal.hint}</p>
               </div>
-              {goal.action && player.unlockedScreens.includes(goal.action) && (
-                <button
-                  className={`${styles.goalAction} juiceBtn`}
-                  onClick={() => dispatch({ type: "SET_SCREEN", screen: goal.action })}
-                >
-                  Go
-                </button>
+              {goalClickable && (
+                <span className={styles.goalChevron} aria-hidden="true">&rsaquo;</span>
               )}
             </div>
             {nextUnlock && (
@@ -346,39 +365,44 @@ export default function HubScreen({ onOpenSettings }) {
       )}
 
       {/* Nav Tiles */}
-      <div className={styles.grid}>
-        {NAV_TILES.map((tile) => {
-          const locked = !player.unlockedScreens.includes(tile.screen);
-          return (
-            <button
-              key={tile.screen}
-              className={`${styles.tile} ${locked ? styles.tileLocked : ""}`}
-              style={{
-                "--tile-color": tile.color,
-                "--tile-glow": locked ? "transparent" : tile.color,
-              }}
-              onClick={() => {
-                if (!locked) dispatch({ type: "SET_SCREEN", screen: tile.screen });
-              }}
-              disabled={locked}
-            >
-              <span className={styles.tileIcon}>
-                <Sprite
-                  name={locked ? "lock" : tile.icon}
-                  size={28}
-                  muted={locked}
-                />
-              </span>
-              <span className={styles.tileLabel}>
-                {locked ? `Unlock Lv.${tile.unlockLevel}` : tile.label}
-              </span>
-              {!locked && (
-                <span className={styles.tileDesc}>{tile.desc}</span>
-              )}
-            </button>
-          );
-        })}
-      </div>
+      <PixelFrame variant="iron" className={styles.navFrame}>
+        <div className={styles.grid}>
+          {NAV_TILES.map((tile) => {
+            const locked = !player.unlockedScreens.includes(tile.screen);
+            // Heuristic: if the player's current level matches the tile's unlock level, treat it
+            // as "just unlocked this level" — trigger ember pulse for the whole level duration.
+            const justUnlocked = !locked && tile.unlockLevel != null && player.level === tile.unlockLevel;
+            return (
+              <button
+                key={tile.screen}
+                className={`${styles.tile} ${locked ? styles.tileLocked : ""} ${justUnlocked ? styles.tileEmber : ""}`}
+                style={{
+                  "--tile-color": tile.color,
+                  "--tile-glow": locked ? "transparent" : tile.color,
+                }}
+                onClick={() => {
+                  if (!locked) dispatch({ type: "SET_SCREEN", screen: tile.screen });
+                }}
+                disabled={locked}
+              >
+                <span className={styles.tileIcon}>
+                  <Sprite
+                    name={locked ? "lock" : tile.icon}
+                    size={28}
+                    muted={locked}
+                  />
+                </span>
+                <span className={styles.tileLabel}>
+                  {locked ? `Unlock Lv.${tile.unlockLevel}` : tile.label}
+                </span>
+                {!locked && (
+                  <span className={styles.tileDesc}>{tile.desc}</span>
+                )}
+              </button>
+            );
+          })}
+        </div>
+      </PixelFrame>
 
       {/* The Reforging */}
       <PrestigePanel />
