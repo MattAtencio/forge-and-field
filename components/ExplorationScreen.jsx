@@ -31,6 +31,16 @@ const NODE_LABELS = {
   boss: "Boss",
 };
 
+// Single-glyph silhouette per node type so type reads even desaturated.
+const NODE_GLYPHS = {
+  start: "△",
+  combat: "✕",
+  resource: "◆",
+  rest: "◯",
+  poi: "?",
+  boss: "✦",
+};
+
 export default function ExplorationScreen() {
   const state = useGameState();
   const dispatch = useGameDispatch();
@@ -55,7 +65,6 @@ export default function ExplorationScreen() {
   );
   const adjacentIds = adjacent.map((n) => n.id);
 
-  // If in combat, show combat UI
   if (exp?.combat) {
     return <ExplorationCombat />;
   }
@@ -79,28 +88,29 @@ export default function ExplorationScreen() {
   const canRetreat = currentNode?.type === "start" || (currentNode?.type !== "combat" && currentNode?.type !== "boss");
   const lootSummary = exp?.lootBag ? getLootBagSummary(exp.lootBag) : { resourceCount: 0, itemCount: 0, isEmpty: true };
 
-  // Consumables usable on the map
   const mapConsumables = getUsableConsumables(state.inventory, "exploration");
 
-  // Retreat summary overlay
+  // Retreat summary overlay — parchment frame, warm in-voice headline, bordered chips
   if (retreatSummary) {
+    const hasResources = Object.keys(retreatSummary.resources).length > 0;
+    const itemCount = retreatSummary.items.length;
     return (
       <div className={styles.screen} style={{ background: region?.theme?.bg || "#0d1f0d" }}>
         <div className={styles.overlay}>
           <PixelFrame variant="parchment" className={styles.resultModal}>
-            <h2 className={styles.resultTitle} style={{ color: "#fbbf24" }}>Safe Return</h2>
+            <h2 className={styles.resultTitleRetreat}>Safe Return</h2>
             <p className={styles.resultText}>The forge receives your haul.</p>
-            {Object.keys(retreatSummary.resources).length > 0 && (
+            {(hasResources || itemCount > 0) && (
               <div className={styles.resultLoot}>
-                {Object.entries(retreatSummary.resources).map(([key, amount]) => (
+                {hasResources && Object.entries(retreatSummary.resources).map(([key, amount]) => (
                   <span key={key} className={styles.resultResource}>
                     <Sprite name={RESOURCES[key]?.icon || key} size={14} /> {Math.round(amount)} {RESOURCES[key]?.name || key}
                   </span>
                 ))}
+                {itemCount > 0 && (
+                  <span className={styles.resultItemsChip}>{itemCount} item{itemCount === 1 ? "" : "s"}</span>
+                )}
               </div>
-            )}
-            {retreatSummary.items.length > 0 && (
-              <p className={styles.resultItems}>{retreatSummary.items.length} item(s) collected</p>
             )}
             <button
               className={`${styles.resultBtn} juiceBtn`}
@@ -109,7 +119,7 @@ export default function ExplorationScreen() {
                 dispatch({ type: "SET_SCREEN", screen: "expedition" });
               }}
             >
-              Continue
+              Return to Forge
             </button>
           </PixelFrame>
         </div>
@@ -117,16 +127,16 @@ export default function ExplorationScreen() {
     );
   }
 
-  // Defeat summary overlay
+  // Defeat summary overlay — parchment frame, muted in-voice headline, iron press button
   if (defeatSummary) {
     return (
       <div className={styles.screen} style={{ background: "#0f0e17" }}>
         <div className={styles.overlay}>
           <PixelFrame variant="parchment" className={styles.resultModal}>
-            <h2 className={styles.resultTitle} style={{ color: "#ef4444" }}>Fallen</h2>
+            <h2 className={styles.resultTitleDefeat}>Fallen</h2>
             <p className={styles.resultText}>The forest takes what it is owed. Your pack is lost.</p>
             <button
-              className={`${styles.resultBtn} juiceBtn`}
+              className={`${styles.resultBtn} ${styles.resultBtnDefeat} juiceBtn`}
               onClick={() => {
                 setDefeatSummary(null);
                 dispatch({ type: "SET_SCREEN", screen: "hub" });
@@ -143,15 +153,20 @@ export default function ExplorationScreen() {
   if (!nodeMap || !hero) return null;
 
   const endPct = hero.endurance ? (hero.endurance.current / hero.endurance.max) * 100 : 100;
+  const enduranceLow = endPct < 30;
+  const enduranceCritical = endPct < 15;
+
+  // Boss adjacency drives a deeper glow + an in-voice hint near the action drawer
+  const adjacentToBoss = adjacent.some((n) => n.type === "boss");
 
   return (
     <div className={styles.screen} style={{ background: region?.theme?.bg || "#0d1f0d" }}>
-      {/* Header */}
-      <div className={styles.header}>
+      {/* Top header — parchment frame (info) */}
+      <PixelFrame variant="parchment" className={styles.headerFrame}>
         <div className={styles.headerTop}>
           <h2 className={styles.regionName}>{region?.name || "Exploration"}</h2>
           <button
-            className={`${styles.retreatBtn} juiceBtn`}
+            className={styles.retreatBtn}
             onClick={handleRetreat}
             disabled={!canRetreat}
           >
@@ -161,86 +176,155 @@ export default function ExplorationScreen() {
         <div className={styles.heroInfo}>
           <Sprite name={hero.templateId} size={24} />
           <span className={styles.heroName}>{hero.name}</span>
-          <span className={styles.enduranceText}>
+          <span
+            className={`${styles.enduranceText} ${
+              enduranceCritical ? styles.enduranceTextDanger : enduranceLow ? styles.enduranceTextWarn : ""
+            }`}
+          >
             {hero.endurance?.current || 0}/{hero.endurance?.max || 100}
           </span>
         </div>
-        <div className={styles.enduranceBar}>
-          <div
-            className={styles.enduranceFill}
-            style={{
-              width: `${endPct}%`,
-              background: endPct <= 20 ? "#ef4444" : endPct <= 50 ? "#f59e0b" : "#22c55e",
-            }}
-          />
+        {/* Iron sub-frame plate around the bar — bordered, NOT a nested PixelFrame */}
+        <div className={styles.endurancePlate}>
+          <div className={styles.enduranceBar}>
+            <div
+              className={`${styles.enduranceFill} ${
+                enduranceCritical
+                  ? styles.enduranceFillDanger
+                  : enduranceLow
+                  ? styles.enduranceFillWarn
+                  : styles.enduranceFillSafe
+              }`}
+              style={{ width: `${endPct}%` }}
+            />
+          </div>
         </div>
-      </div>
+        {enduranceCritical && (
+          <p className={styles.enduranceVoice}>Your strength wanes.</p>
+        )}
+      </PixelFrame>
 
-      {/* Node Map SVG */}
-      <div className={styles.mapContainer}>
-        <svg viewBox="0 0 100 100" className={styles.mapSvg}>
-          {/* Edges */}
-          {nodeMap.edges.map(([a, b], i) => {
-            const nodeA = nodeMap.nodes.find((n) => n.id === a);
-            const nodeB = nodeMap.nodes.find((n) => n.id === b);
-            if (!nodeA || !nodeB) return null;
-            const isWalkable =
-              (exp.currentNode === a && adjacentIds.includes(b)) ||
-              (exp.currentNode === b && adjacentIds.includes(a));
-            return (
-              <line
-                key={i}
-                x1={nodeA.x}
-                y1={nodeA.y}
-                x2={nodeB.x}
-                y2={nodeB.y}
-                stroke={isWalkable ? "#94a3b8" : "#334155"}
-                strokeWidth={isWalkable ? 0.6 : 0.3}
-                strokeDasharray={isWalkable ? "none" : "1 1"}
-              />
-            );
-          })}
-
-          {/* Nodes */}
-          {nodeMap.nodes.map((node) => {
-            const isCurrent = node.id === exp.currentNode;
-            const isAdj = adjacentIds.includes(node.id);
-            const isVisited = exp.visitedNodes.includes(node.id);
-            const color = NODE_COLORS[node.type] || "#666";
-            const radius = node.type === "boss" ? 3.5 : 2.5;
-
-            return (
-              <g key={node.id} onClick={() => isAdj && setSelectedNode(node)} style={{ cursor: isAdj ? "pointer" : "default" }}>
-                {/* Glow ring for current node */}
-                {isCurrent && (
-                  <circle cx={node.x} cy={node.y} r={radius + 1.5} fill="none" stroke="#f97316" strokeWidth={0.5} opacity={0.7} />
-                )}
-                <circle
-                  cx={node.x}
-                  cy={node.y}
-                  r={radius}
-                  fill={color}
-                  opacity={isVisited && !isCurrent ? 0.5 : isAdj || isCurrent ? 1 : 0.3}
-                  stroke={isCurrent ? "#f97316" : isAdj ? "#e8e0d4" : "none"}
-                  strokeWidth={0.4}
+      {/* Map viewport — parchment frame */}
+      <PixelFrame variant="parchment" className={styles.mapFrame}>
+        <div className={styles.mapContainer}>
+          <svg viewBox="0 0 100 100" className={styles.mapSvg}>
+            {/* Edges — tinted by traversal state */}
+            {nodeMap.edges.map(([a, b], i) => {
+              const nodeA = nodeMap.nodes.find((n) => n.id === a);
+              const nodeB = nodeMap.nodes.find((n) => n.id === b);
+              if (!nodeA || !nodeB) return null;
+              const reachableNow =
+                (exp.currentNode === a && adjacentIds.includes(b)) ||
+                (exp.currentNode === b && adjacentIds.includes(a));
+              const aVisited = exp.visitedNodes.includes(a);
+              const bVisited = exp.visitedNodes.includes(b);
+              // Visited path = both endpoints visited (the trail you walked)
+              const isVisitedPath = aVisited && bVisited;
+              const cls = reachableNow
+                ? styles.pathReachable
+                : isVisitedPath
+                ? styles.pathVisited
+                : styles.pathLocked;
+              return (
+                <line
+                  key={i}
+                  x1={nodeA.x}
+                  y1={nodeA.y}
+                  x2={nodeB.x}
+                  y2={nodeB.y}
+                  className={cls}
                 />
-                <text
-                  x={node.x}
-                  y={node.y + radius + 3}
-                  textAnchor="middle"
-                  fontSize="2.2"
-                  fill={isAdj || isCurrent ? "#e8e0d4" : "#64748b"}
-                  fontFamily="var(--font-dm-serif), serif"
-                >
-                  {node.label}
-                </text>
-              </g>
-            );
-          })}
-        </svg>
-      </div>
+              );
+            })}
 
-      {/* Node Detail Panel */}
+            {/* Nodes */}
+            {nodeMap.nodes.map((node) => {
+              const isCurrent = node.id === exp.currentNode;
+              const isAdj = adjacentIds.includes(node.id);
+              const isVisited = exp.visitedNodes.includes(node.id);
+              const isBoss = node.type === "boss";
+              const color = NODE_COLORS[node.type] || "#666";
+              const radius = isBoss ? 3.5 : 2.5;
+              const opacity = isCurrent || isAdj ? 1 : isVisited ? 0.55 : 0.3;
+              const glyph = NODE_GLYPHS[node.type] || "";
+
+              return (
+                <g
+                  key={node.id}
+                  className={isAdj ? styles.nodeGroupAdj : styles.nodeGroup}
+                  onClick={() => isAdj && setSelectedNode(node)}
+                >
+                  {/* Adjacent halo: warm pulse telegraphs reachability */}
+                  {isAdj && !isCurrent && (
+                    <circle
+                      cx={node.x}
+                      cy={node.y}
+                      r={radius + 1.5}
+                      fill={isBoss ? "#f97316" : "#fbbf24"}
+                      className={isBoss ? styles.haloBoss : styles.haloAdj}
+                    />
+                  )}
+                  {/* Current node ember ring */}
+                  {isCurrent && (
+                    <circle
+                      cx={node.x}
+                      cy={node.y}
+                      r={radius + 1.6}
+                      fill="none"
+                      stroke="#f97316"
+                      className={styles.ringCurrent}
+                    />
+                  )}
+                  <circle
+                    cx={node.x}
+                    cy={node.y}
+                    r={radius}
+                    fill={color}
+                    opacity={opacity}
+                    stroke={isCurrent ? "#f97316" : isBoss ? "#fbbf24" : isAdj ? "#e8e0d4" : "none"}
+                    strokeWidth={isBoss ? 0.55 : 0.4}
+                    className={`${styles.nodeBody} ${isCurrent ? styles.nodeBodyCurrent : ""}`}
+                  />
+                  {/* Inner glyph cue — readable even when desaturated */}
+                  <text
+                    x={node.x}
+                    y={node.y + (isBoss ? 1.2 : 0.85)}
+                    textAnchor="middle"
+                    fontSize={isBoss ? 3.2 : 2.4}
+                    className={`${styles.nodeIcon} ${!(isCurrent || isAdj) ? styles.nodeIconMuted : ""}`}
+                  >
+                    {glyph}
+                  </text>
+                  {/* Visited check overlay (skip when current — current ring conveys position) */}
+                  {isVisited && !isCurrent && (
+                    <text
+                      x={node.x + radius * 0.85}
+                      y={node.y - radius * 0.55}
+                      textAnchor="middle"
+                      fontSize="1.8"
+                      className={styles.nodeCheck}
+                    >
+                      ✓
+                    </text>
+                  )}
+                  <text
+                    x={node.x}
+                    y={node.y + radius + 3}
+                    textAnchor="middle"
+                    fontSize="2.2"
+                    fill={isAdj || isCurrent ? "#e8e0d4" : "#64748b"}
+                    fontFamily="var(--font-dm-serif), serif"
+                  >
+                    {node.label}
+                  </text>
+                </g>
+              );
+            })}
+          </svg>
+        </div>
+      </PixelFrame>
+
+      {/* Node Detail Panel (already wears its own PixelFrame) */}
       {selectedNode && (
         <PixelFrame variant="parchment" className={styles.nodeDetail}>
           <div className={styles.nodeHeader}>
@@ -271,22 +355,32 @@ export default function ExplorationScreen() {
         </PixelFrame>
       )}
 
-      {/* Consumable quick-use (exploration map context) */}
-      {mapConsumables.length > 0 && (
-        <div className={styles.consumableBar}>
-          {mapConsumables.map((item) => (
-            <button
-              key={item.id}
-              className={`${styles.consumableBtn} juiceBtn`}
-              onClick={() => handleUseConsumable(item.id)}
-              title={item.description}
-            >
-              <Sprite name={item.icon} size={18} />
-              <span className={styles.consumableCount}>{item.count || 1}</span>
-            </button>
-          ))}
-        </div>
-      )}
+      {/* Action drawer — iron frame (action surface) */}
+      <PixelFrame variant="iron" className={styles.actionDrawer}>
+        {adjacentToBoss && (
+          <span className={styles.bossHint}>The deep iron waits.</span>
+        )}
+        {mapConsumables.length > 0 && (
+          <div className={styles.consumableBar}>
+            {mapConsumables.map((item) => (
+              <button
+                key={item.id}
+                className={`${styles.consumableBtn} juiceBtn`}
+                onClick={() => handleUseConsumable(item.id)}
+                title={item.description}
+              >
+                <Sprite name={item.icon} size={18} />
+                <span className={styles.consumableCount}>{item.count || 1}</span>
+              </button>
+            ))}
+          </div>
+        )}
+        {!adjacentToBoss && mapConsumables.length === 0 && (
+          <span style={{ fontSize: "0.7rem", color: "#64748b", fontStyle: "italic" }}>
+            The trail waits.
+          </span>
+        )}
+      </PixelFrame>
 
       {/* Loot Bag Indicator */}
       <LootBagIndicator
