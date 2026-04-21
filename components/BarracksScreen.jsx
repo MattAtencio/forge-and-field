@@ -30,6 +30,8 @@ export default function BarracksScreen() {
   const [inventoryView, setInventoryView] = useState("list");
   const [showTitlePicker, setShowTitlePicker] = useState(false);
   const [levelUpFlash, setLevelUpFlash] = useState(false);
+  // Snapshot of stat deltas for the +N rises; cleared with the flash.
+  const [levelUpDeltas, setLevelUpDeltas] = useState(null);
   const levelUpTimerRef = useRef(null);
 
   const selectedHero = state.heroes.find((h) => h.id === selectedHeroId);
@@ -48,9 +50,14 @@ export default function BarracksScreen() {
       statGrowth: template.statGrowth,
       enduranceGrowth: template.enduranceGrowth || 5,
     });
+    // Capture deltas locally so +N rises can render without a new dispatch action.
+    setLevelUpDeltas({ ...template.statGrowth });
     setLevelUpFlash(true);
     clearTimeout(levelUpTimerRef.current);
-    levelUpTimerRef.current = setTimeout(() => setLevelUpFlash(false), 600);
+    levelUpTimerRef.current = setTimeout(() => {
+      setLevelUpFlash(false);
+      setLevelUpDeltas(null);
+    }, 900);
   };
 
   const handleEquip = (itemId) => {
@@ -83,26 +90,35 @@ export default function BarracksScreen() {
       </h2>
 
       {/* Hero Roster */}
-      <div className={styles.roster}>
-        {state.heroes.map((hero) => (
-          <HeroCard
-            key={hero.id}
-            hero={hero}
-            inventory={state.inventory}
-            selected={hero.id === selectedHeroId}
-            onClick={() => setSelectedHeroId(hero.id)}
-          />
-        ))}
-      </div>
+      <PixelFrame variant="parchment" className={styles.rosterFrame}>
+        <h4 className={styles.sectionHeading}>Roster</h4>
+        <div className={styles.roster}>
+          {state.heroes.map((hero) => (
+            <div
+              key={hero.id}
+              className={`${styles.rosterSlot} ${hero.id === selectedHeroId ? styles.rosterSlotSelected : ""}`}
+            >
+              <HeroCard
+                hero={hero}
+                inventory={state.inventory}
+                selected={hero.id === selectedHeroId}
+                onClick={() => setSelectedHeroId(hero.id)}
+              />
+            </div>
+          ))}
+        </div>
+      </PixelFrame>
 
       {/* Selected Hero Detail */}
       {selectedHero && (
-        <PixelFrame variant="parchment" className={styles.detail}>
+        <PixelFrame variant="parchment" className={`${styles.detail} ${levelUpFlash ? styles.detailLevelUp : ""}`}>
           <div className={styles.detailHeader}>
             <Sprite name={selectedHero.templateId} size={36} animate="float" />
             <h3 className={styles.heroName}>{selectedHero.name}</h3>
+            <span className={`${styles.levelBadge} ${levelUpFlash ? styles.levelBadgeBounce : ""}`}>Lv.{selectedHero.level}</span>
             <span className={`${styles.powerBadge} ${levelUpFlash ? styles.levelUpCelebrate : ""}`}>Power: {power}</span>
           </div>
+          {levelUpFlash && <span className={styles.emberBurst} aria-hidden="true" />}
           {(() => {
             const template = HERO_TEMPLATES.find((t) => t.id === selectedHero.templateId);
             return template?.description ? (
@@ -112,26 +128,26 @@ export default function BarracksScreen() {
 
           {/* Effective Stats */}
           <div className={styles.statsGrid}>
-            <PixelFrame variant="parchment" className={styles.statCell}>
-              <span className={styles.statIcon}><Sprite name="heart" size={16} /></span>
-              <span className={styles.statLabel}>HP</span>
-              <span className={styles.statValue}>{effectiveStats.hp}</span>
-            </PixelFrame>
-            <PixelFrame variant="parchment" className={styles.statCell}>
-              <span className={styles.statIcon}><Sprite name="attack" size={16} /></span>
-              <span className={styles.statLabel}>ATK</span>
-              <span className={styles.statValue}>{effectiveStats.atk}</span>
-            </PixelFrame>
-            <PixelFrame variant="parchment" className={styles.statCell}>
-              <span className={styles.statIcon}><Sprite name="defense" size={16} /></span>
-              <span className={styles.statLabel}>DEF</span>
-              <span className={styles.statValue}>{effectiveStats.def}</span>
-            </PixelFrame>
-            <PixelFrame variant="parchment" className={styles.statCell}>
-              <span className={styles.statIcon}><Sprite name="speed" size={16} /></span>
-              <span className={styles.statLabel}>SPD</span>
-              <span className={styles.statValue}>{effectiveStats.spd}</span>
-            </PixelFrame>
+            {[
+              { key: "hp", icon: "heart", label: "HP" },
+              { key: "atk", icon: "attack", label: "ATK" },
+              { key: "def", icon: "defense", label: "DEF" },
+              { key: "spd", icon: "speed", label: "SPD" },
+            ].map(({ key, icon, label }) => {
+              const delta = levelUpDeltas?.[key] || 0;
+              return (
+                <PixelFrame key={key} variant="parchment" className={styles.statCell}>
+                  <span className={styles.statIcon}><Sprite name={icon} size={16} /></span>
+                  <span className={styles.statLabel}>{label}</span>
+                  <span className={`${styles.statValue} ${levelUpFlash && delta > 0 ? styles.statValueBumped : ""}`}>
+                    {effectiveStats[key]}
+                  </span>
+                  {levelUpFlash && delta > 0 && (
+                    <span className={styles.statRise} aria-hidden="true">+{delta}</span>
+                  )}
+                </PixelFrame>
+              );
+            })}
           </div>
 
           {/* Endurance */}
@@ -228,7 +244,7 @@ export default function BarracksScreen() {
           })()}
 
           {/* Skills */}
-          <h4 className={styles.subheading}>Skills</h4>
+          <h4 className={styles.sectionHeading}>Skills</h4>
           <div className={styles.skillList}>
             {getHeroSkills(selectedHero.templateId).map((skill) => (
               <SkillBadge
@@ -241,40 +257,56 @@ export default function BarracksScreen() {
           </div>
 
           {/* Equipment Slots */}
-          <h4 className={styles.subheading}>Equipment</h4>
+          <h4 className={styles.sectionHeading}>Equipment</h4>
           <div className={styles.equipSlots}>
             {["weapon", "armor", "accessory"].map((slot) => {
               const itemId = selectedHero.equipment[slot];
               const item = itemId ? state.inventory.find((i) => i.id === itemId) : null;
+              // Empty-slot silhouette hint per slot type.
+              const slotHintSprite = slot === "weapon" ? "item_sword" : slot === "armor" ? "item_shield" : "item_ring";
+              const rarityTint = item ? getRarityColor(item.rarity) : null;
 
               return (
-                <PixelFrame key={slot} variant="iron" className={styles.equipSlot}>
+                <PixelFrame
+                  key={slot}
+                  variant="iron"
+                  className={`${styles.equipSlot} ${item ? styles.equipSlotFilled : styles.equipSlotEmpty}`}
+                >
                   <span className={styles.slotLabel}>{slot}</span>
-                  {item ? (
-                    <div className={styles.equippedItem}>
-                      <span
-                        className={styles.equippedName}
-                        style={{ color: getRarityColor(item.rarity), display: "inline-flex", alignItems: "center", gap: 4 }}
-                      >
-                        <Sprite name={item.icon} size={16} /> {item.name}{(item.level || 1) > 1 ? ` Lv.${item.level}` : ""}
-                      </span>
+                  <div
+                    className={styles.equipWell}
+                    style={item ? { boxShadow: `inset 0 0 0 1px ${rarityTint}66, 0 0 8px ${rarityTint}44` } : undefined}
+                  >
+                    {item ? (
+                      <div className={styles.equippedItem}>
+                        <span
+                          className={styles.equippedName}
+                          style={{ color: rarityTint }}
+                        >
+                          <Sprite name={item.icon} size={16} /> {item.name}{(item.level || 1) > 1 ? ` Lv.${item.level}` : ""}
+                        </span>
+                        <button
+                          className={styles.unequipBtn}
+                          onClick={() => handleUnequip(slot)}
+                          disabled={selectedHero.status === "expedition" || selectedHero.status === "exploring"}
+                          aria-label={`Unequip ${slot}`}
+                        >
+                          {"\u2715"}
+                        </button>
+                      </div>
+                    ) : (
                       <button
-                        className={styles.unequipBtn}
-                        onClick={() => handleUnequip(slot)}
+                        className={`${styles.equipBtn} juiceBtn`}
+                        onClick={() => setEquipSlot(slot)}
                         disabled={selectedHero.status === "expedition" || selectedHero.status === "exploring"}
                       >
-                        {"\u2715"}
+                        <span className={styles.slotSilhouette} aria-hidden="true">
+                          <Sprite name={slotHintSprite} size={20} />
+                        </span>
+                        <span className={styles.equipBtnLabel}>+ Equip</span>
                       </button>
-                    </div>
-                  ) : (
-                    <button
-                      className={`${styles.equipBtn} juiceBtn`}
-                      onClick={() => setEquipSlot(slot)}
-                      disabled={selectedHero.status === "expedition" || selectedHero.status === "exploring"}
-                    >
-                      + Equip
-                    </button>
-                  )}
+                    )}
+                  </div>
                 </PixelFrame>
               );
             })}
@@ -316,67 +348,87 @@ export default function BarracksScreen() {
                 </div>
               </div>
             )}
-            <div className={inventoryView === "grid" ? styles.invGrid : styles.equipPicker}>
-              {pickerItems.length === 0 ? (
-                <p className={styles.empty}>Nothing forged for this slot yet.</p>
-              ) : (
-                pickerItems.map((item) => (
-                  <ItemCard
-                    key={item.id}
-                    item={item}
-                    compact={inventoryView === "grid"}
-                    onClick={() => handleEquip(item.id)}
-                  />
-                ))
-              )}
-            </div>
+            <PixelFrame variant="parchment" className={styles.invFrame}>
+              <div className={inventoryView === "grid" ? styles.invGrid : styles.equipPicker}>
+                {pickerItems.length === 0 ? (
+                  <p className={styles.empty}>Nothing forged for this slot yet.</p>
+                ) : (
+                  pickerItems.map((item) => (
+                    <ItemCard
+                      key={item.id}
+                      item={item}
+                      compact={inventoryView === "grid"}
+                      onClick={() => handleEquip(item.id)}
+                    />
+                  ))
+                )}
+              </div>
+            </PixelFrame>
           </Modal>
         );
       })()}
 
       {/* Title Picker Modal */}
-      {showTitlePicker && selectedHero && (
-        <Modal title="Choose Title" onClose={() => setShowTitlePicker(false)}>
-          <div className={styles.titlePicker}>
-            <PixelFrame
-              variant="iron"
-              active={!selectedHero.activeTitle}
-              className={styles.titleOption}
-            >
-              <button
-                className={styles.titleOptionBtn}
-                onClick={() => {
-                  dispatch({ type: "SET_ACTIVE_TITLE", heroId: selectedHero.id, titleId: null });
-                  setShowTitlePicker(false);
-                }}
-              >
-                <span className={styles.titleOptName}>None</span>
-                <span className={styles.titleOptDesc}>No title bonus</span>
-              </button>
-            </PixelFrame>
-            {getUnlockedTitles(state.stats, state.worldMap, state.prestige).map((title) => (
-              <PixelFrame
-                key={title.id}
-                variant="iron"
-                active={selectedHero.activeTitle === title.id}
-                className={styles.titleOption}
-              >
-                <button
-                  className={styles.titleOptionBtn}
-                  onClick={() => {
-                    dispatch({ type: "SET_ACTIVE_TITLE", heroId: selectedHero.id, titleId: title.id });
-                    setShowTitlePicker(false);
-                  }}
+      {showTitlePicker && selectedHero && (() => {
+        const equippedTitleId = selectedHero.activeTitle;
+        return (
+          <Modal title="Choose Title" onClose={() => setShowTitlePicker(false)}>
+            <div className={styles.titlePicker}>
+              <div className={`${styles.titleOptionWrap} ${!equippedTitleId ? styles.titleOptionWrapEquipped : ""}`}>
+                <PixelFrame
+                  variant="iron"
+                  active={!equippedTitleId}
+                  className={styles.titleOption}
                 >
-                  <span className={styles.titleOptName}>{title.name}</span>
-                  <span className={styles.titleOptDesc}>{title.description}</span>
-                  <span className={styles.titleOptBonus}>{title.bonus.label}</span>
-                </button>
-              </PixelFrame>
-            ))}
-          </div>
-        </Modal>
-      )}
+                  <button
+                    className={styles.titleOptionBtn}
+                    onClick={() => {
+                      dispatch({ type: "SET_ACTIVE_TITLE", heroId: selectedHero.id, titleId: null });
+                      setShowTitlePicker(false);
+                    }}
+                  >
+                    <span className={styles.titleOptHeader}>
+                      <span className={styles.titleOptName}>None</span>
+                      {!equippedTitleId && <span className={styles.titleOptEquippedTag}>Equipped</span>}
+                    </span>
+                    <span className={styles.titleOptDesc}>No title bonus</span>
+                  </button>
+                </PixelFrame>
+              </div>
+              {getUnlockedTitles(state.stats, state.worldMap, state.prestige).map((title) => {
+                const isEquipped = equippedTitleId === title.id;
+                return (
+                  <div
+                    key={title.id}
+                    className={`${styles.titleOptionWrap} ${isEquipped ? styles.titleOptionWrapEquipped : ""}`}
+                  >
+                    <PixelFrame
+                      variant="iron"
+                      active={isEquipped}
+                      className={styles.titleOption}
+                    >
+                      <button
+                        className={styles.titleOptionBtn}
+                        onClick={() => {
+                          dispatch({ type: "SET_ACTIVE_TITLE", heroId: selectedHero.id, titleId: title.id });
+                          setShowTitlePicker(false);
+                        }}
+                      >
+                        <span className={styles.titleOptHeader}>
+                          <span className={styles.titleOptName}>{title.name}</span>
+                          {isEquipped && <span className={styles.titleOptEquippedTag}>Equipped</span>}
+                        </span>
+                        <span className={styles.titleOptDesc}>{title.description}</span>
+                        <span className={styles.titleOptBonus}>{title.bonus.label}</span>
+                      </button>
+                    </PixelFrame>
+                  </div>
+                );
+              })}
+            </div>
+          </Modal>
+        );
+      })()}
     </div>
   );
 }
