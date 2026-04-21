@@ -1,0 +1,331 @@
+/* Track B Iter 1 — placeholder rectangles only. Real pixel art lands Iter 2. */
+
+.root {
+  /* Fixed-viewport diorama: covers the document so the wrapper has a stable
+     bounding box for react-zoom-pan-pinch's bounds clamp math. */
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  /* Dusk-sky base — sole atmospheric tone per palette lock. */
+  background: #2a2438;
+  font-family: var(--font-mono, monospace);
+  color: #e8e0d4;
+  user-select: none;
+  /* Pointer Events path for mouse/finger/stylus parity per Camera/Input Locks. */
+  touch-action: none;
+}
+
+.transformWrapper {
+  width: 100%;
+  height: 100%;
+}
+
+.transformComponent {
+  /* The wrapper holds the bounds; the component is the moving content. */
+  width: 100%;
+  height: 100%;
+}
+
+/* ----- Scene canvas ----- */
+
+.scene {
+  /* 2.5x viewport wide, 1.5x tall per Visual Locks. We pin a baseline pixel
+     size so cursor-anchored zoom math stays predictable across screen sizes. */
+  width: 4800px;
+  height: 1620px;
+  position: relative;
+  background: linear-gradient(
+    to bottom,
+    #2a2438 0%,
+    #2a2438 60%,
+    #3d3344 64%,
+    #6b5d3e 67%,
+    #6b5d3e 100%
+  );
+}
+
+/* Background silhouette cluster — implies "town continues." */
+.bgCluster {
+  position: absolute;
+  bottom: 33%;
+  left: 8%;
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+  pointer-events: none;
+  opacity: 0.55;
+}
+.bgRoof {
+  width: 80px;
+  background: #1f1a2c;
+  border-top: 4px solid #18141f;
+}
+.bgRoof1 { height: 110px; }
+.bgRoof2 { height: 140px; clip-path: polygon(0 30%, 50% 0, 100% 30%, 100% 100%, 0 100%); }
+.bgRoof3 { height: 90px; }
+.bgRoof4 { height: 130px; clip-path: polygon(0 40%, 50% 0, 100% 40%, 100% 100%, 0 100%); }
+.bgRoof5 { height: 105px; }
+
+/* ----- Hero buildings (4 distinct silhouettes per Silhouette Locks) ----- */
+
+.building {
+  position: absolute;
+  cursor: pointer;
+  /* Crisp pixel-art edges for the eventual sprite swap in Iter 2. */
+  image-rendering: pixelated;
+  border: 2px solid rgba(0, 0, 0, 0.55);
+  /* Hover ring is the only affordance in Iter 1 — no real hotspot UI yet. */
+  transition: outline-color 0.12s ease-out;
+  outline: 2px solid transparent;
+  outline-offset: 4px;
+}
+.building:hover { outline-color: rgba(232, 224, 212, 0.6); }
+
+/* Forge: tall asymmetric chimney + squat stone base. Hero of the scene.
+   Built from layered absolutely-positioned children inside .forge. */
+.forge {
+  left: 30%;
+  bottom: 33%;
+  width: 320px;
+  height: 280px;
+  background: transparent;
+  border: none;
+  outline: none;
+}
+.forgeBase {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 70%;
+  background: #4a3a2e;
+  border: 2px solid #1a120c;
+}
+.forgeChimney {
+  position: absolute;
+  top: 0;
+  right: 18%;
+  width: 60px;
+  height: 100%;
+  background: #3a2d24;
+  border: 2px solid #1a120c;
+}
+.forgeDoor {
+  position: absolute;
+  bottom: 0;
+  left: 35%;
+  width: 80px;
+  height: 110px;
+  /* Sole warm emissive in the scene per Visual Locks. */
+  background: radial-gradient(ellipse at center, #fbbf24 0%, #fb923c 35%, #92400e 75%, #1a120c 100%);
+  border-top-left-radius: 40px;
+  border-top-right-radius: 40px;
+}
+/* Warm halo around the forge — the hero shot lighting cue. */
+.forgeGlow {
+  position: absolute;
+  left: -80px;
+  bottom: -40px;
+  width: 480px;
+  height: 360px;
+  pointer-events: none;
+  background: radial-gradient(
+    circle at 50% 60%,
+    rgba(251, 146, 60, 0.45) 0%,
+    rgba(249, 115, 22, 0.22) 25%,
+    rgba(249, 115, 22, 0.08) 50%,
+    transparent 70%
+  );
+  mix-blend-mode: screen;
+}
+/* Chimney smoke loop — CSS-only, reduced-motion-safe. */
+.smoke {
+  position: absolute;
+  top: -32px;
+  right: 22%;
+  width: 24px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(203, 213, 225, 0.5);
+  filter: blur(3px);
+  animation: smokeRise 3s ease-in infinite;
+  pointer-events: none;
+}
+@keyframes smokeRise {
+  0% { transform: translateY(0) scale(0.6); opacity: 0; }
+  20% { opacity: 0.7; }
+  100% { transform: translateY(-160px) scale(1.6); opacity: 0; }
+}
+/* Forge ember flicker — irregular timing to read as "fire," not "blink." */
+.ember {
+  position: absolute;
+  bottom: 12px;
+  left: calc(35% + 30px);
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: #fbbf24;
+  box-shadow: 0 0 8px 2px rgba(251, 191, 36, 0.7);
+  animation: emberFlicker 1.2s steps(8) infinite;
+  pointer-events: none;
+}
+@keyframes emberFlicker {
+  0%, 100% { opacity: 1; }
+  10% { opacity: 0.55; }
+  25% { opacity: 0.9; }
+  40% { opacity: 0.6; }
+  55% { opacity: 1; }
+  70% { opacity: 0.5; }
+  85% { opacity: 0.85; }
+}
+
+/* Barracks: long low rectangle + pitched roof + roofline pennants. */
+.barracks {
+  left: 50%;
+  bottom: 33%;
+  width: 460px;
+  height: 180px;
+  background: #3d4451;
+  border-color: #18141f;
+}
+.barracksRoof {
+  position: absolute;
+  top: -60px;
+  left: -10px;
+  right: -10px;
+  height: 60px;
+  background: #2c323d;
+  clip-path: polygon(0 100%, 50% 0, 100% 100%);
+}
+.barracksPennant {
+  position: absolute;
+  top: -90px;
+  width: 8px;
+  height: 32px;
+  background: #94a3b8;
+}
+.barracksPennant::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 8px;
+  width: 18px;
+  height: 12px;
+  background: #cbd5e1;
+  clip-path: polygon(0 0, 100% 50%, 0 100%);
+}
+.barracksPennant1 { left: 25%; }
+.barracksPennant2 { left: 50%; }
+.barracksPennant3 { left: 75%; }
+
+/* Gate: archway — negative space is the read. Sky shows through. */
+.gate {
+  left: 8%;
+  bottom: 33%;
+  width: 220px;
+  height: 320px;
+  background: #5a4a3e;
+  border-color: #1a120c;
+  /* Cutout reveals the dusk sky behind it. */
+  clip-path: polygon(
+    0 0, 100% 0, 100% 100%, 70% 100%,
+    70% 50%, 60% 35%, 40% 35%, 30% 50%, 30% 100%, 0 100%
+  );
+}
+
+/* Market: angular striped awning + parchment + accent stripe. */
+.market {
+  left: 78%;
+  bottom: 33%;
+  width: 200px;
+  height: 160px;
+  background: #6b5d3e;
+  border-color: #1a120c;
+}
+.marketAwning {
+  position: absolute;
+  top: -38px;
+  left: -16px;
+  right: -16px;
+  height: 44px;
+  background: repeating-linear-gradient(
+    90deg,
+    #e8e0d4 0 28px,
+    #f97316 28px 44px
+  );
+  clip-path: polygon(0 100%, 8% 0, 92% 0, 100% 100%);
+  border: 2px solid #1a120c;
+}
+
+/* ----- Building label badges (debug-friendly text on placeholders) ----- */
+.label {
+  position: absolute;
+  top: -24px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 2px 8px;
+  background: rgba(15, 14, 23, 0.85);
+  color: #e8e0d4;
+  font-size: 11px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  border: 1px solid #4a4a5a;
+  pointer-events: none;
+}
+
+/* ----- Props (~10 small uniform squares) ----- */
+.prop {
+  position: absolute;
+  width: 28px;
+  height: 28px;
+  background: #4a3a2e;
+  border: 2px solid #1a120c;
+  pointer-events: none;
+}
+
+/* ----- Dev affordances (live OUTSIDE TransformComponent, stay fixed) ----- */
+.zoomIndicator {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  padding: 8px 14px;
+  background: rgba(15, 14, 23, 0.85);
+  border: 1px solid #f97316;
+  color: #f97316;
+  font-size: 14px;
+  letter-spacing: 1px;
+  z-index: 10;
+  pointer-events: none;
+}
+.zoomButtons {
+  position: fixed;
+  top: 16px;
+  right: 16px;
+  display: flex;
+  gap: 8px;
+  z-index: 10;
+}
+.zoomBtn {
+  padding: 8px 14px;
+  background: rgba(15, 14, 23, 0.85);
+  border: 1px solid #4a4a5a;
+  color: #e8e0d4;
+  font-family: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  letter-spacing: 0.5px;
+}
+.zoomBtn:hover { border-color: #f97316; color: #f97316; }
+.zoomBtnActive { border-color: #f97316; color: #f97316; }
+
+/* ----- Reduced-motion lock: kill ambient loops, leave shapes intact. ----- */
+@media (prefers-reduced-motion: reduce) {
+  .smoke,
+  .ember {
+    animation: none;
+  }
+  .smoke { opacity: 0.3; }
+  .ember { opacity: 0.85; }
+}
