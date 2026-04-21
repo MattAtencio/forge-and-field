@@ -189,6 +189,24 @@ export default function ForgeScreen() {
     return items;
   }, [state.inventory, filterSlot, sortBy]);
 
+  // Track which item is in active long-press so we can apply the grow-pulse class.
+  const [longPressId, setLongPressId] = useState(null);
+
+  const startLongPress = (item) => {
+    if (item.equippedBy) return;
+    setLongPressId(item.id);
+    longPressRef.current = setTimeout(() => {
+      handleLongPress(item);
+      setLongPressId(null);
+    }, 400);
+  };
+
+  const cancelLongPress = () => {
+    if (longPressRef.current) clearTimeout(longPressRef.current);
+    longPressRef.current = null;
+    setLongPressId(null);
+  };
+
   const now = Date.now();
 
   return (
@@ -199,7 +217,7 @@ export default function ForgeScreen() {
 
       {/* Crafting Queue — always show all slots for stable layout */}
       <PixelFrame variant="iron" className={styles.queue}>
-        <h3 className={styles.subheading}>Crafting Queue</h3>
+        <h3 className={styles.sectionHeading}>Crafting Queue</h3>
         {Array.from({ length: maxSlots }, (_, i) => {
           const craft = state.craftingQueue[i];
           if (craft) {
@@ -254,7 +272,7 @@ export default function ForgeScreen() {
         })}
       </PixelFrame>
 
-      {/* Tab Switch */}
+      {/* Tab Switch — iron action zone */}
       <PixelFrame variant="iron" className={styles.tabs}>
         <button
           className={`${styles.tab} ${tab === "recipes" ? styles.tabActive : ""}`}
@@ -270,122 +288,136 @@ export default function ForgeScreen() {
         </button>
       </PixelFrame>
 
-      {/* Recipes List */}
-      {tab === "recipes" && (
-        <div className={styles.recipeList}>
-          {recipes.map((recipe) => {
-            const affordable = canCraft(recipe, state.resources);
-            const queueFull = state.craftingQueue.length >= maxSlots;
-            const invFull = state.inventory.length >= (state.inventoryCapacity || 20);
+      {/* Main Panel — parchment info zone wrapping recipes OR inventory.
+          Anvil-glow ambient lives at the bottom edge via ::after. */}
+      <PixelFrame variant="parchment" className={styles.mainPanel}>
+        <span className={styles.anvilGlow} aria-hidden="true" />
 
-            return (
-              <PixelFrame key={recipe.id} variant="iron" className={styles.recipeCard}>
-                <div className={styles.recipeHeader}>
-                  <span className={styles.recipeIcon}>
-                    <Sprite name={recipe.icon} size={28} />
-                  </span>
-                  <div>
-                    <span className={styles.recipeName}>{recipe.name}</span>
-                    <span className={styles.recipeTier}>Tier {recipe.tier} &middot; {recipe.slot}</span>
-                  </div>
-                </div>
-                <div className={styles.ingredients}>
-                  {Object.entries(recipe.ingredients).map(([res, cost]) => (
-                    <span
-                      key={res}
-                      className={styles.ingredient}
-                      style={{ color: (state.resources[res] || 0) >= cost ? RESOURCES[res]?.color : "#ef4444", display: "inline-flex", alignItems: "center", gap: 2 }}
+        {tab === "recipes" && (
+          <>
+            <h3 className={styles.sectionHeading}>Recipes</h3>
+            <div className={styles.recipeList}>
+              {recipes.map((recipe) => {
+                const affordable = canCraft(recipe, state.resources);
+                const queueFull = state.craftingQueue.length >= maxSlots;
+                const invFull = state.inventory.length >= (state.inventoryCapacity || 20);
+
+                return (
+                  <div
+                    key={recipe.id}
+                    className={`${styles.recipeCard} ${!affordable ? styles.recipeCardLocked : ""}`}
+                  >
+                    <div className={styles.recipeHeader}>
+                      <span className={styles.recipeIcon}>
+                        <Sprite name={recipe.icon} size={28} />
+                      </span>
+                      <div>
+                        <span className={styles.recipeName}>{recipe.name}</span>
+                        <span className={styles.recipeTier}>Tier {recipe.tier} &middot; {recipe.slot}</span>
+                      </div>
+                    </div>
+                    <div className={styles.ingredients}>
+                      {Object.entries(recipe.ingredients).map(([res, cost]) => (
+                        <span
+                          key={res}
+                          className={styles.ingredient}
+                          style={{ color: (state.resources[res] || 0) >= cost ? RESOURCES[res]?.color : "#ef4444", display: "inline-flex", alignItems: "center", gap: 2 }}
+                        >
+                          <Sprite name={RESOURCES[res]?.icon || res} size={12} /> {cost}
+                        </span>
+                      ))}
+                      <span className={styles.craftTime}>
+                        {Math.round(recipe.duration / 1000)}s
+                      </span>
+                    </div>
+                    <div className={styles.recipeStats}>
+                      {recipe.baseStats ? (
+                        <>
+                          {recipe.baseStats.atk > 0 && <span>ATK {recipe.baseStats.atk}</span>}
+                          {recipe.baseStats.def > 0 && <span>DEF {recipe.baseStats.def}</span>}
+                          {recipe.baseStats.spd !== 0 && <span>SPD {recipe.baseStats.spd > 0 ? "+" : ""}{recipe.baseStats.spd}</span>}
+                        </>
+                      ) : recipe.effect ? (
+                        <span className={styles.effectLabel}>{recipe.description}</span>
+                      ) : null}
+                    </div>
+                    <button
+                      className={`${styles.craftBtn} juiceBtn`}
+                      disabled={!affordable || queueFull || invFull}
+                      onClick={() => handleCraft(recipe)}
                     >
-                      <Sprite name={RESOURCES[res]?.icon || res} size={12} /> {cost}
-                    </span>
-                  ))}
-                  <span className={styles.craftTime}>
-                    {Math.round(recipe.duration / 1000)}s
-                  </span>
-                </div>
-                <div className={styles.recipeStats}>
-                  {recipe.baseStats ? (
-                    <>
-                      {recipe.baseStats.atk > 0 && <span>ATK {recipe.baseStats.atk}</span>}
-                      {recipe.baseStats.def > 0 && <span>DEF {recipe.baseStats.def}</span>}
-                      {recipe.baseStats.spd !== 0 && <span>SPD {recipe.baseStats.spd > 0 ? "+" : ""}{recipe.baseStats.spd}</span>}
-                    </>
-                  ) : recipe.effect ? (
-                    <span className={styles.effectLabel}>{recipe.description}</span>
-                  ) : null}
-                </div>
-                <button
-                  className={`${styles.craftBtn} juiceBtn`}
-                  disabled={!affordable || queueFull || invFull}
-                  onClick={() => handleCraft(recipe)}
-                >
-                  {invFull ? "Stores Full" : queueFull ? "Queue Full" : affordable ? "Craft" : "Gather More"}
-                </button>
-              </PixelFrame>
-            );
-          })}
-        </div>
-      )}
+                      {invFull ? "Stores Full" : queueFull ? "Queue Full" : affordable ? "Craft" : "Gather More"}
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          </>
+        )}
 
-      {/* Inventory */}
-      {tab === "inventory" && (
-        <>
-        <div className={styles.inventoryControls}>
-          <div className={styles.filterRow}>
-            {["all", "weapon", "armor", "accessory"].map((slot) => (
-              <button
-                key={slot}
-                className={`${styles.filterBtn} ${filterSlot === slot ? styles.filterActive : ""}`}
-                onClick={() => setFilterSlot(slot)}
-              >
-                {slot === "all" ? "All" : slot.charAt(0).toUpperCase() + slot.slice(1)}
-              </button>
-            ))}
-          </div>
-          <div className={styles.sortRow}>
-            <span className={styles.sortLabel}>Sort:</span>
-            {["rarity", "level", "type"].map((s) => (
-              <button
-                key={s}
-                className={`${styles.sortBtn} ${sortBy === s ? styles.sortActive : ""}`}
-                onClick={() => setSortBy(s)}
-              >
-                {s.charAt(0).toUpperCase() + s.slice(1)}
-              </button>
-            ))}
-          </div>
-        </div>
-        <div className={styles.inventoryGrid}>
-          {state.inventory.length === 0 ? (
-            <p className={styles.empty}>Your stores are bare. The forge awaits.</p>
-          ) : (
-            filteredAndSorted.map((item) => (
-              <div
-                key={item.id}
-                className={`${styles.selectableItem} ${selectionMode && selectedIds.has(item.id) ? styles.itemSelected : ""}`}
-                onPointerDown={() => {
-                  longPressRef.current = setTimeout(() => handleLongPress(item), 400);
-                }}
-                onPointerUp={() => clearTimeout(longPressRef.current)}
-                onPointerLeave={() => clearTimeout(longPressRef.current)}
-              >
-                {selectionMode && !item.equippedBy && selectedIds.has(item.id) && (
-                  <span className={styles.selectMark} />
-                )}
-                <ItemCard
-                  item={item}
-                  onClick={() => handleItemInteraction(item)}
-                />
+        {tab === "inventory" && (
+          <>
+            <h3 className={styles.sectionHeading}>Inventory</h3>
+            <div className={styles.inventoryControls}>
+              <div className={styles.filterRow}>
+                {["all", "weapon", "armor", "accessory"].map((slot) => (
+                  <button
+                    key={slot}
+                    className={`${styles.filterBtn} ${filterSlot === slot ? styles.filterActive : ""}`}
+                    onClick={() => setFilterSlot(slot)}
+                  >
+                    {slot === "all" ? "All" : slot.charAt(0).toUpperCase() + slot.slice(1)}
+                  </button>
+                ))}
               </div>
-            ))
-          )}
-        </div>
-        </>
-      )}
+              <div className={styles.sortRow}>
+                <span className={styles.sortLabel}>Sort:</span>
+                {["rarity", "level", "type"].map((s) => (
+                  <button
+                    key={s}
+                    className={`${styles.sortBtn} ${sortBy === s ? styles.sortActive : ""}`}
+                    onClick={() => setSortBy(s)}
+                  >
+                    {s.charAt(0).toUpperCase() + s.slice(1)}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div className={styles.inventoryGrid}>
+              {state.inventory.length === 0 ? (
+                <p className={styles.empty}>Your stores are bare. The forge awaits.</p>
+              ) : (
+                filteredAndSorted.map((item) => {
+                  const isSelected = selectionMode && selectedIds.has(item.id);
+                  const isPressing = longPressId === item.id;
+                  return (
+                    <div
+                      key={item.id}
+                      className={`${styles.selectableItem} ${isSelected ? styles.itemSelected : ""} ${isPressing ? styles.itemPressing : ""}`}
+                      onPointerDown={() => startLongPress(item)}
+                      onPointerUp={cancelLongPress}
+                      onPointerLeave={cancelLongPress}
+                      onPointerCancel={cancelLongPress}
+                    >
+                      {isSelected && !item.equippedBy && (
+                        <span className={styles.selectMark} />
+                      )}
+                      <ItemCard
+                        item={item}
+                        onClick={() => handleItemInteraction(item)}
+                      />
+                    </div>
+                  );
+                })
+              )}
+            </div>
+          </>
+        )}
+      </PixelFrame>
 
-      {/* Batch Sell Bar */}
+      {/* Batch Sell Bar — iron action drawer, fixed to bottom edge */}
       {selectionMode && (
-        <div className={styles.batchBar}>
+        <PixelFrame variant="iron" className={styles.batchBar}>
           <span className={styles.batchCount}>
             {selectedIds.size} item{selectedIds.size !== 1 ? "s" : ""} selected
           </span>
@@ -398,7 +430,7 @@ export default function ForgeScreen() {
             </button>
             <button
               ref={batchSellBtnRef}
-              className={`${styles.batchSellBtn} juiceBtn`}
+              className={`${styles.batchSellBtn} juiceBtn ${selectedIds.size > 0 ? styles.batchSellArmed : ""}`}
               disabled={selectedIds.size === 0}
               onClick={handleBatchSell}
             >
@@ -411,7 +443,7 @@ export default function ForgeScreen() {
                 }, 0)})
             </button>
           </div>
-        </div>
+        </PixelFrame>
       )}
 
       {/* Item Detail Modal */}
