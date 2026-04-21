@@ -10,7 +10,7 @@ export default function Modal({ children, onClose, title }) {
           <div className={styles.header}>
             <h3 className={styles.title}>{title}</h3>
             <button className={styles.close} onClick={onClose}>
-              \u2715
+              {"\u2715"}
             </button>
           </div>
         )}

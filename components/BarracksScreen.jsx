@@ -262,8 +262,8 @@ export default function BarracksScreen() {
             {["weapon", "armor", "accessory"].map((slot) => {
               const itemId = selectedHero.equipment[slot];
               const item = itemId ? state.inventory.find((i) => i.id === itemId) : null;
-              // Empty-slot silhouette hint per slot type.
-              const slotHintSprite = slot === "weapon" ? "item_sword" : slot === "armor" ? "item_shield" : "item_ring";
+              // Empty-slot silhouette hint per slot type — use registered icon keys, not sheet aliases.
+              const slotHintSprite = slot === "weapon" ? "iron_sword" : slot === "armor" ? "iron_shield" : "scouts_ring";
               const rarityTint = item ? getRarityColor(item.rarity) : null;
 
               return (

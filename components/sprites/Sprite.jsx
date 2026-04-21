@@ -33,7 +33,13 @@ function renderShape(shape, i) {
 }
 
 export default function Sprite({ name, size = 24, className = "", muted = false, animate = "", animated = true }) {
-  const data = getSpriteData(name);
+  let data = getSpriteData(name);
+
+  // Some recipe icons carry a rarity prefix (e.g. "star_iron_shield") that the
+  // registry doesn't have a sheet for; fall back to the base icon before going to text.
+  if (!data && typeof name === "string" && name.startsWith("star_")) {
+    data = getSpriteData(name.slice(5));
+  }
 
   // Fallback: render as text if sprite not found (handles emoji or unknown names)
   if (!data) {
