@@ -7,8 +7,10 @@
   overflow: hidden;
 }
 
-.header {
-  padding: 12px 16px 8px;
+/* ─── Top header frame ─── */
+.headerFrame {
+  margin: 10px 12px 8px;
+  padding: 10px 14px;
   flex-shrink: 0;
 }
 
@@ -34,11 +36,18 @@
   font-size: 0.75rem;
   font-family: var(--font-dm-serif), serif;
   cursor: pointer;
+  transition: transform 100ms ease, filter 100ms ease, box-shadow 100ms ease;
 }
 
 .retreatBtn:disabled {
   opacity: 0.4;
   cursor: not-allowed;
+}
+
+.retreatBtn:active:not(:disabled) {
+  transform: translateY(2px);
+  filter: brightness(0.88);
+  box-shadow: inset 0 2px 0 rgba(0, 0, 0, 0.25);
 }
 
 .heroInfo {
@@ -58,10 +67,28 @@
   font-size: 0.7rem;
   color: #94a3b8;
   margin-left: auto;
+  transition: color 0.3s ease;
+}
+
+.enduranceTextWarn {
+  color: #fbbf24;
+}
+
+.enduranceTextDanger {
+  color: #fca5a5;
+}
+
+/* Iron sub-frame around the bar — bordered plate look without nesting PixelFrame */
+.endurancePlate {
+  border: 1px solid #475569;
+  background: rgba(15, 23, 42, 0.55);
+  padding: 3px;
+  border-radius: 2px;
+  box-shadow: inset 0 0 0 1px rgba(100, 116, 139, 0.18);
 }
 
 .enduranceBar {
-  height: 4px;
+  height: 5px;
   background: #1e293b;
   border-radius: 2px;
   overflow: hidden;
@@ -73,24 +100,187 @@
   transition: width 0.3s ease, background 0.3s ease;
 }
 
+.enduranceFillWarn {
+  background: #f59e0b;
+  animation: endurancePulseWarm 1.6s ease-in-out infinite;
+}
+
+.enduranceFillDanger {
+  background: #ef4444;
+  animation: endurancePulseDanger 0.9s ease-in-out infinite;
+}
+
+.enduranceFillSafe {
+  background: #22c55e;
+}
+
+@keyframes endurancePulseWarm {
+  0%, 100% { filter: brightness(1); }
+  50% { filter: brightness(1.25); }
+}
+
+@keyframes endurancePulseDanger {
+  0%, 100% { filter: brightness(1); box-shadow: inset 0 0 0 0 rgba(239, 68, 68, 0); }
+  50% { filter: brightness(1.35); box-shadow: inset 0 0 4px 0 rgba(239, 68, 68, 0.5); }
+}
+
+.enduranceVoice {
+  margin-top: 6px;
+  font-family: var(--font-dm-serif), serif;
+  font-size: 0.72rem;
+  color: #fca5a5;
+  font-style: italic;
+  letter-spacing: 0.02em;
+  animation: voiceFade 380ms ease-out;
+}
+
+@keyframes voiceFade {
+  from { opacity: 0; transform: translateY(-2px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ─── Map viewport frame ─── */
+.mapFrame {
+  flex: 1;
+  margin: 0 12px;
+  padding: 10px;
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+
 .mapContainer {
   flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 8px 16px;
+  padding: 4px;
   overflow: hidden;
 }
 
 .mapSvg {
   width: 100%;
-  max-width: 400px;
+  max-width: 420px;
   max-height: 100%;
 }
 
+/* ─── SVG path lines ─── */
+.pathReachable {
+  stroke: #f59e0b;
+  stroke-width: 0.55;
+  opacity: 0.85;
+  animation: pathShimmer 2.2s ease-in-out infinite;
+}
+
+.pathVisited {
+  stroke: #92400e;
+  stroke-width: 0.45;
+  opacity: 0.55;
+}
+
+.pathLocked {
+  stroke: #334155;
+  stroke-width: 0.3;
+  opacity: 0.6;
+  stroke-dasharray: 1 1.2;
+}
+
+@keyframes pathShimmer {
+  0%, 100% { opacity: 0.7; }
+  50% { opacity: 1; }
+}
+
+/* ─── SVG nodes ─── */
+.nodeGroup {
+  cursor: default;
+}
+
+.nodeGroupAdj {
+  cursor: pointer;
+}
+
+/* Adjacent reachable: warm halo (~2s, 15% opacity) */
+.haloAdj {
+  animation: haloPulse 2s ease-in-out infinite;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+
+/* Boss adjacent: deeper golden glow replaces standard halo */
+.haloBoss {
+  animation: haloBossPulse 2.4s ease-in-out infinite;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+
+/* Current node ember ring */
+.ringCurrent {
+  animation: ringEmberPulse 1.6s ease-in-out infinite;
+  transform-origin: center;
+  transform-box: fill-box;
+}
+
+@keyframes haloPulse {
+  0%, 100% { opacity: 0.08; r: 4; }
+  50% { opacity: 0.18; r: 4.6; }
+}
+
+@keyframes haloBossPulse {
+  0%, 100% { opacity: 0.18; r: 5.4; }
+  50% { opacity: 0.32; r: 6.2; }
+}
+
+@keyframes ringEmberPulse {
+  0%, 100% { opacity: 0.55; stroke-width: 0.45; }
+  50% { opacity: 0.95; stroke-width: 0.6; }
+}
+
+.nodeBody {
+  transition: opacity 0.2s ease;
+}
+
+/* Current node: subtle scale lift */
+.nodeBodyCurrent {
+  transform: scale(1.05);
+  transform-origin: center;
+  transform-box: fill-box;
+}
+
+.nodeIcon {
+  pointer-events: none;
+  font-family: var(--font-dm-serif), serif;
+  fill: #1a1a1a;
+}
+
+.nodeIconMuted {
+  fill: rgba(26, 26, 26, 0.5);
+}
+
+.nodeCheck {
+  pointer-events: none;
+  fill: rgba(232, 224, 212, 0.55);
+  font-family: var(--font-dm-serif), serif;
+}
+
+/* Reduced motion: kill all map pulses */
+@media (prefers-reduced-motion: reduce) {
+  .pathReachable,
+  .haloAdj,
+  .haloBoss,
+  .ringCurrent,
+  .enduranceFillWarn,
+  .enduranceFillDanger {
+    animation: none;
+  }
+  .enduranceVoice {
+    animation: none;
+  }
+}
+
+/* ─── Node detail (already framed via PixelFrame) ─── */
 .nodeDetail {
   position: absolute;
-  bottom: 60px;
+  bottom: 70px;
   left: 12px;
   right: 12px;
   padding: 12px 16px;
@@ -147,12 +337,19 @@
   font-weight: 600;
   cursor: pointer;
   margin-left: auto;
+  transition: transform 100ms ease, filter 100ms ease, box-shadow 100ms ease;
 }
 
 .moveBtn:disabled {
   background: #334155;
   color: #64748b;
   cursor: not-allowed;
+}
+
+.moveBtn:active:not(:disabled) {
+  transform: translateY(2px);
+  filter: brightness(0.88);
+  box-shadow: inset 0 2px 0 rgba(0, 0, 0, 0.25);
 }
 
 .closeBtn {
@@ -165,24 +362,48 @@
   cursor: pointer;
 }
 
+/* ─── Action drawer (iron) ─── */
+.actionDrawer {
+  margin: 0 12px 12px;
+  padding: 8px 12px;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 40px;
+}
+
+.bossHint {
+  font-family: var(--font-dm-serif), serif;
+  font-size: 0.78rem;
+  color: #fbbf24;
+  font-style: italic;
+  letter-spacing: 0.02em;
+  margin-right: auto;
+  animation: voiceFade 380ms ease-out;
+}
+
 .consumableBar {
-  position: absolute;
-  bottom: 16px;
-  left: 16px;
   display: flex;
   gap: 6px;
-  z-index: 5;
+  margin-left: auto;
 }
 
 .consumableBtn {
   background: #1e293b;
   border: 1px solid #334155;
-  border-radius: 6px;
+  border-radius: 4px;
   padding: 4px 8px;
   display: flex;
   align-items: center;
   gap: 4px;
   cursor: pointer;
+  transition: transform 100ms ease, filter 100ms ease;
+}
+
+.consumableBtn:active {
+  transform: translateY(2px);
+  filter: brightness(0.88);
 }
 
 .consumableCount {
@@ -241,23 +462,36 @@
   margin-top: 8px;
 }
 
+/* ─── Retreat / Defeat result overlays ─── */
 .resultModal {
-  max-width: 340px;
+  max-width: 360px;
   width: 90%;
-  padding: 24px 20px;
+  padding: 24px 22px;
   text-align: center;
 }
 
-.resultTitle {
+.resultTitleRetreat {
   font-family: var(--font-dm-serif), serif;
-  font-size: 1.3rem;
+  font-size: 1.4rem;
+  color: #fbbf24;
   margin-bottom: 8px;
+  letter-spacing: 0.02em;
+}
+
+.resultTitleDefeat {
+  font-family: var(--font-dm-serif), serif;
+  font-size: 1.4rem;
+  color: #94a3b8;
+  margin-bottom: 8px;
+  letter-spacing: 0.02em;
 }
 
 .resultText {
   font-size: 0.9rem;
   color: #94a3b8;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
+  font-style: italic;
+  font-family: var(--font-dm-serif), serif;
 }
 
 .resultLoot {
@@ -268,35 +502,64 @@
   margin-bottom: 12px;
 }
 
+/* Bordered chip — clearer than the prior flat block */
 .resultResource {
   display: inline-flex;
   align-items: center;
-  gap: 4px;
-  background: #1e293b;
-  border-radius: 4px;
-  padding: 3px 8px;
-  font-size: 0.8rem;
+  gap: 5px;
+  background: rgba(30, 41, 59, 0.6);
+  border: 1px solid #475569;
+  border-radius: 3px;
+  padding: 3px 9px;
+  font-size: 0.78rem;
   color: #e8e0d4;
   font-family: var(--font-jetbrains-mono), monospace;
 }
 
-.resultItems {
-  font-size: 0.8rem;
-  color: #a855f7;
-  margin-bottom: 8px;
+.resultItemsChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: rgba(168, 85, 247, 0.12);
+  border: 1px solid #6b21a8;
+  border-radius: 3px;
+  padding: 3px 9px;
+  font-size: 0.78rem;
+  color: #d8b4fe;
+  font-family: var(--font-jetbrains-mono), monospace;
 }
 
+/* Iron press button: ~2px translate + ~80ms */
 .resultBtn {
   background: #f97316;
   color: #1a1a1a;
-  border: none;
+  border: 1px solid #c2410c;
   border-radius: 4px;
-  padding: 8px 24px;
+  padding: 8px 26px;
   font-family: var(--font-dm-serif), serif;
-  font-size: 0.9rem;
+  font-size: 0.92rem;
   font-weight: 600;
   cursor: pointer;
-  margin-top: 8px;
+  margin-top: 10px;
+  transition: transform 80ms ease, filter 80ms ease, box-shadow 80ms ease;
+}
+
+.resultBtn:active {
+  transform: translateY(2px);
+  filter: brightness(0.85);
+  box-shadow: inset 0 2px 0 rgba(0, 0, 0, 0.3);
+}
+
+.resultBtnDefeat {
+  background: #475569;
+  color: #e8e0d4;
+  border-color: #334155;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .resultBtn:active {
+    transform: none;
+  }
 }
 
 .tutorialModal {
