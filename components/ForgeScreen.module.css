@@ -19,6 +19,35 @@
   margin-bottom: 8px;
 }
 
+/* Section heading carries spec 35 ember divider underline so major
+   sections feel anchored on the parchment panel. */
+.sectionHeading {
+  position: relative;
+  font-size: 0.75rem;
+  color: #8888a0;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin: 0 0 10px;
+  padding-bottom: 6px;
+}
+
+.sectionHeading::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(249, 115, 22, 0.25) 20%,
+    rgba(249, 115, 22, 0.4) 50%,
+    rgba(249, 115, 22, 0.25) 80%,
+    transparent 100%
+  );
+}
+
 /* Crafting Queue */
 .queue {
   padding: 12px;
@@ -116,29 +145,94 @@
   50% { box-shadow: 0 0 0 6px rgba(34, 197, 94, 0); }
 }
 
-/* Tabs */
+/* Tabs — iron action zone (PixelFrame iron applied via JSX). */
 .tabs {
   display: flex;
   gap: 4px;
-  padding: 3px;
+  padding: 4px;
 }
 
 .tab {
+  position: relative;
   flex: 1;
   padding: 8px;
-  border: none;
-  background: none;
-  color: #6b6b80;
+  border: 1px solid transparent;
+  /* Inactive: muted parchment-toned plate so it reads as available-but-resting. */
+  background: rgba(232, 224, 212, 0.04);
+  color: #8888a0;
   font-size: 0.75rem;
   font-weight: 600;
-  border-radius: 8px;
+  border-radius: 6px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: background 100ms ease, color 100ms ease, border-color 100ms ease, transform 80ms ease;
+}
+
+.tab:hover:not(.tabActive) {
+  /* Warm lift + brighter border on inactive tab hover. */
+  background: rgba(249, 115, 22, 0.06);
+  border-color: rgba(249, 115, 22, 0.25);
+  color: #d6b288;
+  transform: translateY(-1px);
+}
+
+.tab:active:not(.tabActive) {
+  transform: translateY(2px);
 }
 
 .tabActive {
-  background: rgba(249, 115, 22, 0.12);
+  /* Active wears an iron plate look so it feels load-bearing. */
+  background: rgba(100, 116, 139, 0.18);
+  border-color: rgba(148, 163, 184, 0.45);
   color: #f97316;
+  box-shadow: inset 0 0 0 1px rgba(148, 163, 184, 0.12);
+}
+
+/* Ember underline on the active tab — the visual lock for "you are here". */
+.tabActive::after {
+  content: "";
+  position: absolute;
+  left: 12%;
+  right: 12%;
+  bottom: 2px;
+  height: 2px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(249, 115, 22, 0.85) 50%,
+    transparent 100%
+  );
+  box-shadow: 0 0 6px rgba(249, 115, 22, 0.5);
+}
+
+/* Main Panel — parchment info zone wrapping recipes/inventory.
+   Hosts the anvil-glow ambient via .anvilGlow. */
+.mainPanel {
+  position: relative;
+  padding: 14px 12px;
+  overflow: hidden;
+}
+
+/* Anvil ambient: thin warm gradient at the bottom edge, like fire behind the panel.
+   Fades in on mount once, then stays static (NOT a loop). */
+.anvilGlow {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 32px;
+  pointer-events: none;
+  background: linear-gradient(
+    to top,
+    rgba(249, 115, 22, 0.18) 0%,
+    rgba(251, 146, 60, 0.08) 40%,
+    transparent 100%
+  );
+  opacity: 0;
+  animation: anvilGlowIn 200ms ease-out 80ms forwards;
+}
+
+@keyframes anvilGlowIn {
+  to { opacity: 1; }
 }
 
 /* Recipe List */
@@ -146,10 +240,44 @@
   display: flex;
   flex-direction: column;
   gap: 8px;
+  /* Sit above the anvil glow so cards don't get bathed in it. */
+  position: relative;
+  z-index: 1;
 }
 
+/* Parchment sub-card — bordered, no double-frame against the parent PixelFrame. */
 .recipeCard {
+  position: relative;
   padding: 12px;
+  background: rgba(232, 224, 212, 0.03);
+  border: 1px solid rgba(146, 64, 14, 0.35);
+  border-radius: 4px;
+  transition: background 100ms ease, border-color 100ms ease, transform 80ms ease, box-shadow 100ms ease;
+}
+
+.recipeCard:hover {
+  background: rgba(249, 115, 22, 0.05);
+  border-color: rgba(249, 115, 22, 0.55);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(249, 115, 22, 0.15);
+}
+
+.recipeCard:active {
+  transform: translateY(2px);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.25);
+}
+
+/* Cannot-craft: muted with a thin red-tinted left edge bar. */
+.recipeCardLocked {
+  opacity: 0.7;
+  border-left: 3px solid rgba(239, 68, 68, 0.45);
+}
+
+.recipeCardLocked:hover {
+  border-color: rgba(239, 68, 68, 0.55);
+  border-left-color: rgba(239, 68, 68, 0.7);
+  background: rgba(239, 68, 68, 0.04);
+  box-shadow: none;
 }
 
 .recipeHeader {
@@ -159,7 +287,18 @@
   margin-bottom: 8px;
 }
 
-.recipeIcon { font-size: 1.2rem; }
+/* Dim backing plate so sprite silhouettes read on parchment. */
+.recipeIcon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: rgba(15, 15, 25, 0.4);
+  border: 1px solid rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.04);
+}
 
 .recipeName {
   font-size: 0.8rem;
@@ -176,18 +315,25 @@
 .ingredients {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 6px;
   margin-bottom: 6px;
 }
 
+/* Wrapping border on resource cost chips — applied here to avoid touching ResourceCost. */
 .ingredient {
   font-size: 0.7rem;
   font-variant-numeric: tabular-nums;
+  padding: 2px 6px;
+  background: rgba(232, 224, 212, 0.04);
+  border: 1px solid rgba(146, 64, 14, 0.3);
+  border-radius: 3px;
 }
 
 .craftTime {
   font-size: 0.65rem;
   color: #6b6b80;
+  padding: 2px 6px;
+  align-self: center;
 }
 
 .recipeStats {
@@ -225,6 +371,9 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
+  position: relative;
+  z-index: 1;
+  margin-bottom: 8px;
 }
 
 .filterRow {
@@ -232,21 +381,32 @@
   gap: 4px;
 }
 
+/* Iron-style press feedback on filter chips. */
 .filterBtn {
   flex: 1;
   padding: 5px 8px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  background: rgba(255, 255, 255, 0.03);
-  color: #6b6b80;
+  border: 1px solid rgba(100, 116, 139, 0.3);
+  background: rgba(148, 163, 184, 0.05);
+  color: #8888a0;
   font-size: 0.6rem;
   font-weight: 600;
-  border-radius: 6px;
+  border-radius: 4px;
   cursor: pointer;
+  transition: background 100ms ease, border-color 100ms ease, transform 80ms ease;
+}
+
+.filterBtn:hover {
+  border-color: rgba(249, 115, 22, 0.4);
+  background: rgba(249, 115, 22, 0.06);
+}
+
+.filterBtn:active {
+  transform: translateY(2px);
 }
 
 .filterActive {
-  background: rgba(249, 115, 22, 0.1);
-  border-color: rgba(249, 115, 22, 0.3);
+  background: rgba(249, 115, 22, 0.12);
+  border-color: rgba(249, 115, 22, 0.45);
   color: #f97316;
 }
 
@@ -264,18 +424,28 @@
 
 .sortBtn {
   padding: 3px 8px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
-  background: rgba(255, 255, 255, 0.03);
-  color: #6b6b80;
+  border: 1px solid rgba(100, 116, 139, 0.3);
+  background: rgba(148, 163, 184, 0.05);
+  color: #8888a0;
   font-size: 0.55rem;
   font-weight: 600;
-  border-radius: 5px;
+  border-radius: 4px;
   cursor: pointer;
+  transition: background 100ms ease, border-color 100ms ease, transform 80ms ease;
+}
+
+.sortBtn:hover {
+  border-color: rgba(249, 115, 22, 0.4);
+  background: rgba(249, 115, 22, 0.06);
+}
+
+.sortBtn:active {
+  transform: translateY(2px);
 }
 
 .sortActive {
-  background: rgba(249, 115, 22, 0.08);
-  border-color: rgba(249, 115, 22, 0.2);
+  background: rgba(249, 115, 22, 0.12);
+  border-color: rgba(249, 115, 22, 0.45);
   color: #f97316;
 }
 
@@ -284,6 +454,8 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
+  position: relative;
+  z-index: 1;
 }
 
 .empty {
@@ -463,13 +635,31 @@
 .selectableItem {
   position: relative;
   border-radius: 10px;
-  transition: background 0.15s;
+  transition: background 0.15s, transform 100ms ease, box-shadow 100ms ease;
+  /* Touch hint: prevent OS text-select / callout during long-press. */
+  touch-action: manipulation;
+  user-select: none;
 }
 
+/* Selected ring — ember accent applied via wrapper, NOT ItemCard. */
 .itemSelected {
-  background: rgba(249, 115, 22, 0.08);
-  outline: 2px solid rgba(249, 115, 22, 0.5);
+  background: rgba(249, 115, 22, 0.1);
+  outline: 2px solid rgba(249, 115, 22, 0.7);
+  outline-offset: 1px;
   border-radius: 10px;
+  box-shadow: 0 0 8px rgba(249, 115, 22, 0.3), 0 0 16px rgba(249, 115, 22, 0.12);
+}
+
+/* Long-press feedback — warm grow-pulse during the 400ms press window.
+   The animation duration matches the long-press timer; if released early
+   we simply remove the class and the transform unwinds. */
+.itemPressing {
+  animation: itemPressGrow 400ms ease-out forwards;
+}
+
+@keyframes itemPressGrow {
+  0% { transform: scale(1); box-shadow: 0 0 0 rgba(249, 115, 22, 0); }
+  100% { transform: scale(1.02); box-shadow: 0 0 12px rgba(249, 115, 22, 0.35); }
 }
 
 .selectMark {
@@ -490,20 +680,21 @@
   50% { box-shadow: 0 0 10px rgba(249, 115, 22, 0.9), 0 0 16px rgba(249, 115, 22, 0.4); }
 }
 
-/* Batch Sell Bar */
+/* Batch Sell Bar — iron action drawer fixed to bottom edge.
+   The PixelFrame iron wrapper handles border + rivets; we add fixed positioning
+   and the slide-in animation here. */
 .batchBar {
   position: fixed;
   bottom: 60px;
-  left: 0;
-  right: 0;
-  background: rgba(15, 15, 25, 0.95);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  padding: 12px 16px;
+  left: 8px;
+  right: 8px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  background: rgba(15, 15, 25, 0.96);
+  padding: 10px 14px;
   z-index: 50;
-  animation: slideUp 0.2s ease;
+  animation: slideUp 200ms ease;
 }
 
 .batchCount {
@@ -524,19 +715,43 @@
   color: #a0a0b8;
   font-size: 0.7rem;
   font-weight: 600;
-  border-radius: 8px;
+  border-radius: 6px;
   cursor: pointer;
+  transition: background 100ms ease, transform 80ms ease;
+}
+
+.batchCancel:hover {
+  background: rgba(255, 255, 255, 0.04);
+}
+
+.batchCancel:active {
+  transform: translateY(2px);
 }
 
 .batchSellBtn {
   padding: 8px 14px;
-  border: none;
+  border: 1px solid rgba(239, 68, 68, 0.35);
   background: rgba(239, 68, 68, 0.15);
   color: #ef4444;
   font-size: 0.7rem;
   font-weight: 700;
-  border-radius: 8px;
+  border-radius: 6px;
   cursor: pointer;
+  transition: background 100ms ease, border-color 100ms ease, transform 80ms ease, box-shadow 100ms ease;
+}
+
+/* Selling N items is a commitment — heavier 3px press. */
+.batchSellBtn:active:not(:disabled) {
+  transform: translateY(3px);
+  background: rgba(239, 68, 68, 0.28);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+/* Armed state (≥1 selected) gets a warm hover glow. */
+.batchSellArmed:hover {
+  background: rgba(239, 68, 68, 0.22);
+  border-color: rgba(249, 115, 22, 0.55);
+  box-shadow: 0 0 10px rgba(249, 115, 22, 0.3);
 }
 
 .batchSellBtn:disabled {
@@ -545,8 +760,8 @@
 }
 
 @keyframes slideUp {
-  from { transform: translateY(100%); }
-  to { transform: translateY(0); }
+  from { transform: translateY(100%); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }
 
 /* Craft Sparkle — fires on collect, forge ember palette */
@@ -637,5 +852,17 @@
   .coinFly {
     animation: none;
     display: none;
+  }
+  /* Anvil glow renders static immediately (no fade-in). */
+  .anvilGlow {
+    animation: none;
+    opacity: 1;
+  }
+  /* No grow-pulse during long-press — selection still toggles, just without motion. */
+  .itemPressing {
+    animation: none;
+  }
+  .batchBar {
+    animation: none;
   }
 }
