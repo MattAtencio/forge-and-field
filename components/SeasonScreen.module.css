@@ -1,142 +1,456 @@
 .screen {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 14px;
   padding-top: 12px;
 }
 
+/* ─── Banner ───────────────────────────────────────────────── */
+
 .banner {
   display: flex;
-  align-items: center;
-  gap: 12px;
+  align-items: flex-start;
+  gap: 14px;
   padding: 16px;
 }
 
 .bannerIcon {
-  font-size: 2rem;
+  flex-shrink: 0;
+  filter: drop-shadow(0 0 6px rgba(249, 115, 22, 0.25));
+}
+
+.bannerBody {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
 }
 
 .bannerName {
   font-family: var(--font-dm-serif), serif;
-  font-size: 1.1rem;
+  font-size: 1.4rem;
   color: var(--season-color, #f97316);
+  margin: 0;
+  line-height: 1.1;
 }
 
-.bannerDesc {
-  font-size: 0.7rem;
-  color: #a0a0b8;
-  margin-top: 2px;
-}
-
-.meta {
+.bannerBonus {
   display: flex;
-  gap: 8px;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.78rem;
+  color: #c0c0d4;
+  margin: 0;
 }
 
-.metaItem {
-  flex: 1;
-  padding: 10px;
-  text-align: center;
-}
-
-.metaLabel {
-  display: block;
-  font-size: 0.6rem;
-  color: #6b6b80;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 4px;
-}
-
-.metaValue {
-  font-size: 0.85rem;
+.bonusPct {
+  color: var(--season-color, #f97316);
   font-weight: 700;
-  color: #e8e8f0;
 }
+
+/* Tabular nums = stable digit width so the countdown doesn't jitter every second */
+.bannerCountdown {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 2px 0 0;
+  font-size: 0.78rem;
+  color: #8888a0;
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+.countdownLabel {
+  font-size: 0.6rem;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: #6b6b80;
+}
+
+.countdownValue {
+  font-family: ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
+  font-weight: 700;
+  color: #a0a0b8;
+}
+
+/* <24h: warm amber + slow gentle pulse — color shift is the always-on signal */
+.bannerCountdownUrgent .countdownValue {
+  color: #fbbf24;
+  animation: countdownPulse 2s ease-in-out infinite;
+}
+
+.bannerCountdownUrgent .countdownLabel {
+  color: #b45309;
+}
+
+@keyframes countdownPulse {
+  0%, 100% { opacity: 1; text-shadow: 0 0 0 rgba(251, 191, 36, 0); }
+  50% { opacity: 0.78; text-shadow: 0 0 6px rgba(251, 191, 36, 0.45); }
+}
+
+/* ─── XP overview ──────────────────────────────────────────── */
 
 .xpSection {
   padding: 0 4px;
 }
 
+/* ─── Section heading + ember divider underline (spec 35 pattern) ── */
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
 .subheading {
+  position: relative;
   font-size: 0.7rem;
   color: #8888a0;
   text-transform: uppercase;
   letter-spacing: 0.06em;
-  margin-bottom: 8px;
+  margin: 4px 0 4px;
+  padding-bottom: 6px;
 }
 
-.track {
+.subheading::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(249, 115, 22, 0.25) 20%,
+    rgba(249, 115, 22, 0.4) 50%,
+    rgba(249, 115, 22, 0.25) 80%,
+    transparent 100%
+  );
+  pointer-events: none;
+}
+
+/* ─── Reward Track ladder ──────────────────────────────────── */
+
+.ladder {
+  position: relative;
+  display: grid;
+  grid-template-columns: 14px 1fr;
+  gap: 8px;
+}
+
+/* Connector rail runs the full vertical length on the left side */
+.rail {
+  position: relative;
+  width: 4px;
+  margin: 16px 0 16px 5px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 2px;
+  overflow: visible;
+}
+
+.railFill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background: linear-gradient(180deg, #fbbf24 0%, #f97316 100%);
+  border-radius: 2px;
+  box-shadow: 0 0 6px rgba(249, 115, 22, 0.4);
+  transition: height 0.4s ease;
+}
+
+/* Player's exact XP position marker */
+.railMarker {
+  position: absolute;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  margin-left: -5px;
+  margin-top: -5px;
+  background: #fbbf24;
+  border: 1px solid #92400e;
+  border-radius: 50%;
+  box-shadow: 0 0 6px rgba(251, 191, 36, 0.6);
+  transition: top 0.4s ease;
+}
+
+.ladderRungs {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.rung {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  overflow: hidden;
+  transition: opacity 0.2s, border-color 0.2s;
+}
+
+.rungLocked {
+  opacity: 0.55;
+}
+
+.rungReady {
+  opacity: 1;
+  animation: readyPulse 2.4s ease-in-out infinite;
+}
+
+.rungClaimed {
+  opacity: 0.6;
+}
+
+@keyframes readyPulse {
+  0%, 100% { box-shadow: inset 0 0 0 1px rgba(249, 115, 22, 0.25); }
+  50% { box-shadow: inset 0 0 0 1px rgba(249, 115, 22, 0.55), 0 0 8px rgba(249, 115, 22, 0.25); }
+}
+
+.rungXP {
+  font-family: var(--font-dm-serif), serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #e8e0d4;
+  min-width: 52px;
+  text-align: center;
+}
+
+.rungXPUnit {
+  font-family: inherit;
+  font-size: 0.6rem;
+  color: #8888a0;
+  letter-spacing: 0.05em;
+}
+
+.rungReward {
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 8px;
+}
+
+/* ─── Daily Quests ─────────────────────────────────────────── */
+
+.questList {
   display: flex;
   flex-direction: column;
   gap: 6px;
 }
 
-.tier {
+.questCard {
+  position: relative;
   display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px;
-  opacity: 0.5;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 12px;
+  overflow: hidden;
   transition: opacity 0.2s;
 }
 
-.tierReady {
-  opacity: 1;
+.questReady {
+  animation: readyPulse 2.4s ease-in-out infinite;
 }
 
-.tierClaimed {
-  opacity: 0.6;
+.questClaimed {
+  opacity: 0.55;
 }
 
-.tierXP {
-  font-size: 0.65rem;
-  font-weight: 700;
-  color: #a0a0b8;
-  min-width: 50px;
-  text-align: center;
-}
-
-.tierReward {
-  flex: 1;
+.questHead {
   display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-}
-
-.rewardChip {
-  font-size: 0.65rem;
-  color: #c0c0d4;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
 }
 
 .questLabel {
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   font-weight: 600;
-  color: #e8e8f0;
-  display: block;
+  color: #e8e0d4;
+}
+
+.questProgress {
+  width: 100%;
+}
+
+.questFoot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
 }
 
 .questRewards {
   display: flex;
-  gap: 6px;
-  margin-top: 2px;
+  flex-wrap: wrap;
+  gap: 4px 8px;
 }
 
-.claimBtn {
-  background: rgba(34, 197, 94, 0.15);
-  color: #22c55e;
-  border: none;
-  border-radius: 8px;
-  padding: 6px 12px;
-  font-size: 0.65rem;
+/* ─── Reward chips ─────────────────────────────────────────── */
+
+.rewardChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 0.68rem;
+  color: #c0c0d4;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ─── Claimed chip ─────────────────────────────────────────── */
+
+.claimedChip {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.62rem;
   font-weight: 700;
-  cursor: pointer;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #f97316;
+  background: rgba(249, 115, 22, 0.1);
+  padding: 3px 8px;
+  border-radius: 4px;
   white-space: nowrap;
 }
 
-.claimBtn:disabled {
-  opacity: 0.4;
-  cursor: not-allowed;
-  color: #6b6b80;
+/* ─── Claim button ─────────────────────────────────────────── */
+
+.claimBtn {
   background: rgba(255, 255, 255, 0.04);
+  color: #6b6b80;
+  border: none;
+  border-radius: 6px;
+  padding: 7px 14px;
+  font-size: 0.68rem;
+  font-weight: 700;
+  cursor: pointer;
+  white-space: nowrap;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  transition: background 0.15s ease, color 0.15s ease, transform 80ms ease, box-shadow 0.2s ease;
+}
+
+.claimBtn:disabled {
+  cursor: not-allowed;
+}
+
+.claimBtnReady {
+  background: #f97316;
+  color: #fff;
+  box-shadow: 0 0 10px rgba(249, 115, 22, 0.35);
+  animation: btnGlow 2s ease-in-out infinite;
+}
+
+.claimBtnReady:hover {
+  background: #fb923c;
+}
+
+.claimBtnReady:active {
+  background: #ea580c;
+  transform: translateY(2px);
+}
+
+@keyframes btnGlow {
+  0%, 100% { box-shadow: 0 0 10px rgba(249, 115, 22, 0.3); }
+  50% { box-shadow: 0 0 14px rgba(249, 115, 22, 0.55); }
+}
+
+/* ─── Empty state line ─────────────────────────────────────── */
+
+.emptyLine {
+  font-family: var(--font-dm-serif), serif;
+  font-size: 0.78rem;
+  color: #6b6b80;
+  text-align: center;
+  font-style: italic;
+  margin: 4px 0 0;
+}
+
+/* ─── Claim beat — burst overlay + flying reward icons ─────── */
+
+/* Wrapping element kills any in-flight beat the moment a new one starts */
+.bursting { /* marker class — children beneath drive the visuals */ }
+
+.burst {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: radial-gradient(circle at center, rgba(251, 191, 36, 0.55) 0%, rgba(249, 115, 22, 0.2) 40%, transparent 70%);
+  animation: burstFlash 600ms ease-out forwards;
+  z-index: 2;
+}
+
+@keyframes burstFlash {
+  0% { opacity: 0; transform: scale(0.6); }
+  30% { opacity: 1; transform: scale(1.05); }
+  100% { opacity: 0; transform: scale(1.4); }
+}
+
+/* Three small embers fly outward and fade — pure CSS, no JS choreography */
+.flyA, .flyB, .flyC {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 6px;
+  height: 6px;
+  margin: -3px 0 0 -3px;
+  border-radius: 50%;
+  background: #fbbf24;
+  box-shadow: 0 0 6px rgba(251, 191, 36, 0.8);
+  pointer-events: none;
+  z-index: 3;
+  opacity: 0;
+}
+
+.flyA { animation: flyA 400ms ease-out forwards; }
+.flyB { animation: flyB 400ms ease-out forwards; }
+.flyC { animation: flyC 400ms ease-out forwards; }
+
+@keyframes flyA {
+  0% { opacity: 1; transform: translate(0, 0) scale(1); }
+  100% { opacity: 0; transform: translate(-40px, -28px) scale(0.4); }
+}
+
+@keyframes flyB {
+  0% { opacity: 1; transform: translate(0, 0) scale(1); }
+  100% { opacity: 0; transform: translate(40px, -22px) scale(0.4); }
+}
+
+@keyframes flyC {
+  0% { opacity: 1; transform: translate(0, 0) scale(1); }
+  100% { opacity: 0; transform: translate(0, -36px) scale(0.4); }
+}
+
+/* ─── Reduced motion ───────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  /* Countdown still tints amber but stops pulsing — color is the lasting signal */
+  .bannerCountdownUrgent .countdownValue {
+    animation: none;
+  }
+  .rungReady,
+  .questReady,
+  .claimBtnReady {
+    animation: none;
+  }
+  .claimBtn:active,
+  .claimBtnReady:active {
+    transform: none;
+  }
+  .burst {
+    animation: none;
+    opacity: 0;
+  }
+  .flyA, .flyB, .flyC {
+    animation: none;
+    opacity: 0;
+  }
+  .railFill,
+  .railMarker {
+    transition: none;
+  }
 }
