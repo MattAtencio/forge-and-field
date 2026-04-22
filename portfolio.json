@@ -6,7 +6,7 @@
   "category": "games",
   "status": "active",
   "liveUrl": "https://forge.mattatencio.com",
-  "githubUrl": "https://github.com/MattAtencio/forge-and-field",
+  "repoUrl": "https://github.com/MattAtencio/forge-and-field",
   "techStack": [
     "Next.js",
     "React 19",
